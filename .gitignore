@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.local
+/Machines/
+/4-Day Science-Based Muscle Gain and Strength Programme.md
+/backups/
+/playwright-report/
+/test-results/

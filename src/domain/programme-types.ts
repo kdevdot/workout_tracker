@@ -1,26 +1,12 @@
-export type WorkoutId = 'upperA' | 'lowerA' | 'upperB' | 'lowerB';
-export type Phase = 'intro' | 'baseline';
-export type LoadKind = 'smith' | 'dumbbell' | 'cable' | 'machine' | 'bodyweight';
-export type RepUnit = 'reps' | 'cycles' | 'seconds';
+import type { z } from 'zod';
+import type { exerciseSchema, phaseSchema, workoutIdSchema } from './state';
 
-export interface Exercise {
-  id: string;
-  name: string;
-  sets: number;
-  min: number;
-  max: number;
-  unit: RepUnit;
-  perSide: boolean;
-  restSeconds: number;
-  restLabel: string;
-  targetRir: string;
-  loadKind: LoadKind;
-  equipment: string;
-  primary: string[];
-  supporting: string[];
-  cues: string[];
-  alternative: { name: string; prescription: string; note: string };
-}
+// Types derive from the persisted schemas so stored data and the programme cannot drift apart.
+export type WorkoutId = z.infer<typeof workoutIdSchema>;
+export type Phase = z.infer<typeof phaseSchema>;
+export type Exercise = z.infer<typeof exerciseSchema>;
+export type LoadKind = Exercise['loadKind'];
+export type RepUnit = Exercise['unit'];
 
 export interface Workout {
   id: WorkoutId;

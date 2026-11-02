@@ -1,6 +1,7 @@
 import { getExercises } from './programme';
 import type { Phase, WorkoutId } from './programme-types';
-import { sessionSchema, setSchema, type AppState, type Session, type SetLog } from './state';
+import type { Exercise } from './programme-types';
+import { sessionSchema, setSchema, type Session, type SetLog } from './state';
 
 export function startSession(workoutId: WorkoutId, date: string, phase: Phase): Session {
   return sessionSchema.parse({
@@ -54,9 +55,13 @@ export function sessionProgress(session: Session): { done: number; total: number
   };
 }
 
-export function previousPerformance(state: AppState, session: Session, exerciseId: string) {
+export function previousPerformance(
+  sessions: readonly Session[],
+  session: Session,
+  exerciseId: string,
+) {
   return (
-    state.sessions
+    sessions
       .filter(
         (candidate) =>
           candidate.id !== session.id &&
@@ -72,4 +77,13 @@ export function previousPerformance(state: AppState, session: Session, exerciseI
         return entry?.logs.length ? [{ date: candidate.date, logs: entry.logs }] : [];
       })[0] ?? null
   );
+}
+
+export function formatLoad(log: SetLog): string {
+  return log.load === null ? 'BW' : `${log.load} kg`;
+}
+
+export function formatSet(log: SetLog, exercise: Exercise): string {
+  const reserve = exercise.unit === 'seconds' ? 's reserve' : 'RIR';
+  return `${formatLoad(log)} × ${log.reps} ${exercise.unit} · ${log.effort} ${reserve}`;
 }

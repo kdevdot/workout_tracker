@@ -122,7 +122,7 @@ describe('working app integration', () => {
     const wrapper = mount(TrainingApp);
     wrappers.push(wrapper);
     await vi.waitFor(() => expect(wrapper.text()).toContain('Nothing was reset'));
-    expect(wrapper.find('button.primary-button').exists()).toBe(false);
+    expect(wrapper.findAll('button').some((entry) => entry.text() === 'Start workout')).toBe(false);
     const reopened = await openDB(databaseName, 1);
     expect(await reopened.get('records', 'state')).toEqual({ schemaVersion: 999, retained: true });
     reopened.close();

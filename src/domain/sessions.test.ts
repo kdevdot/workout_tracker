@@ -59,19 +59,13 @@ describe('session lifecycle', () => {
       recordSet(startSession('upperA', '2026-11-16', 'intro'), exerciseId, set()),
     );
     const state = { ...emptyState(), sessions: [completed, current, future] };
-    expect(previousPerformance(state, current, exerciseId)?.date).toBe('2026-11-02');
+    expect(previousPerformance(state.sessions, current, exerciseId)?.date).toBe('2026-11-02');
   });
   it('does not conflate Smith and dumbbell movements', () => {
     const previous = startSession('upperA', '2026-11-02', 'intro');
     const completed = finishSession(recordSet(previous, previous.exercises[0]!.exercise.id, set()));
     const current = startSession('upperB', '2026-11-05', 'intro');
-    expect(
-      previousPerformance(
-        { ...emptyState(), sessions: [completed] },
-        current,
-        current.exercises[0]!.exercise.id,
-      ),
-    ).toBeNull();
+    expect(previousPerformance([completed], current, current.exercises[0]!.exercise.id)).toBeNull();
   });
   it('preserves distinct timed holds, full cycles, and per-side prescriptions', () => {
     const lower = startSession('lowerB', '2026-11-07', 'intro');

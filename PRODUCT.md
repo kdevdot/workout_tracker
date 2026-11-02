@@ -19,7 +19,7 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 
 ## Stack
 
-Vue 3, TypeScript, Vite. Small domain modules, IndexedDB persistence, Vitest. No backend or account system in milestone one. Stack follows the recommendation accepted in the conversation.
+Vue 3, TypeScript, Vite, Tailwind CSS v4 with shadcn-vue components (`src/components/ui`, owned source, regenerate with `npx shadcn-vue add`). Small domain modules, IndexedDB persistence, Vitest. No backend or account system in milestone one. Stack follows the recommendation accepted in the conversation.
 
 ## First milestone and acceptance
 

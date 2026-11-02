@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { shallowRef, watch } from 'vue';
+import { Cloud, Download, ShieldCheck, Upload } from '@lucide/vue';
 import {
   MAX_BACKUP_BYTES,
   encodeBackup,
   parseBackup,
   type AppState,
   type Backup,
-} from '../domain/state';
-import { localDate } from '../domain/dates';
-import type { Phase } from '../domain/programme-types';
+} from '@/domain/state';
+import { localDate } from '@/domain/dates';
+import type { Phase } from '@/domain/programme-types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const props = defineProps<{ state: AppState; busy: boolean }>();
 const emit = defineEmits<{
@@ -24,6 +30,7 @@ const pending = shallowRef<Backup | null>(null);
 const accepted = shallowRef(false);
 const exported = shallowRef(false);
 const base = import.meta.env.BASE_URL;
+
 watch(
   () => props.state.settings,
   (settings) => {
@@ -34,9 +41,13 @@ watch(
   },
   { immediate: true },
 );
+
+function optionalNumber(value: string | number) {
+  return String(value).trim() === '' ? null : Number(value);
+}
 function save() {
-  const calorieValue = String(calories.value).trim() === '' ? null : Number(calories.value);
-  const proteinValue = String(protein.value).trim() === '' ? null : Number(protein.value);
+  const calorieValue = optionalNumber(calories.value);
+  const proteinValue = optionalNumber(protein.value);
   if (
     !name.value.trim() ||
     [calorieValue, proteinValue].some(
@@ -87,113 +98,167 @@ async function readFile(event: Event) {
 </script>
 
 <template>
-  <h1>Your data. Your copy.</h1>
-  <p class="page-description">Local-first storage, with an independent backup you control.</p>
-  <section class="settings-section">
-    <h2>Training & product label</h2>
-    <form @submit.prevent="save">
+  <header class="flex flex-col gap-1">
+    <h1 class="text-[2.1rem] leading-tight font-extrabold tracking-tight">Your data. Your copy.</h1>
+    <p class="text-muted-foreground text-sm">
+      Local-first storage, with an independent backup you control.
+    </p>
+  </header>
+
+  <Card class="gap-4 py-5">
+    <CardHeader class="px-5">
+      <CardTitle>Training & product label</CardTitle>
+      <CardDescription
+        >No automatic increase. Existing sessions retain their original
+        prescriptions.</CardDescription
+      >
+    </CardHeader>
+    <CardContent class="px-5">
+      <form class="flex flex-col gap-4" @submit.prevent="save">
+        <div class="flex flex-col gap-1.5">
+          <Label for="phase">Default phase for new sessions</Label>
+          <select
+            id="phase"
+            v-model="phase"
+            class="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
+          >
+            <option value="intro">Introduction · 2 sets, 3 RIR</option>
+            <option value="baseline">Full baseline · when ready</option>
+          </select>
+          <p class="text-muted-foreground text-xs">Timed holds keep technical form reserve.</p>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="whey-name">Exact whey product / flavour</Label>
+          <Input id="whey-name" v-model="name" maxlength="250" required class="h-11" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1.5">
+            <Label for="whey-kcal">kcal per serving</Label>
+            <Input
+              id="whey-kcal"
+              v-model="calories"
+              type="number"
+              min="0"
+              max="10000"
+              step="any"
+              inputmode="decimal"
+              placeholder="Label needed"
+              class="h-11"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <Label for="whey-protein">Protein g per serving</Label>
+            <Input
+              id="whey-protein"
+              v-model="protein"
+              type="number"
+              min="0"
+              max="10000"
+              step="any"
+              inputmode="decimal"
+              placeholder="Label needed"
+              class="h-11"
+            />
+          </div>
+        </div>
+        <p class="text-muted-foreground text-xs">
+          Enter your label, not a generic brand value. Values apply to new whey entries only.
+        </p>
+        <Button type="submit" variant="secondary" size="lg" :disabled="busy">Save settings</Button>
+      </form>
+    </CardContent>
+  </Card>
+
+  <Card class="gap-4 py-5">
+    <CardHeader class="px-5">
+      <CardTitle>JSON backup</CardTitle>
+      <CardDescription>
+        {{ state.sessions.length }} workout sessions · {{ state.intakes.length }} supplement entries
+      </CardDescription>
+    </CardHeader>
+    <CardContent class="flex flex-col gap-3 px-5">
+      <Button size="lg" :disabled="busy" @click="download"><Download />Download JSON backup</Button>
+      <p v-if="exported" class="text-muted-foreground text-xs" role="status">
+        Download requested. Check your phone's Files or Downloads before relying on this copy.
+      </p>
       <label
-        >Default phase for new sessions<select v-model="phase">
-          <option value="intro">Introduction · 2 sets, 3 RIR</option>
-          <option value="baseline">Full baseline · when ready</option>
-        </select></label
+        class="hover:bg-muted/50 focus-within:ring-ring/50 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed text-sm font-medium focus-within:ring-3"
       >
-      <p class="fine-print">
-        No automatic increase. Existing sessions retain their original prescriptions. Timed holds
-        keep technical form reserve.
+        <Upload class="size-4" />Choose a backup to restore
+        <input
+          type="file"
+          accept=".json,application/json"
+          class="sr-only"
+          :disabled="busy"
+          @change="readFile"
+        />
+      </label>
+      <p class="text-muted-foreground text-xs">
+        Restoring replaces current records; it does not merge them. Export your current data first.
       </p>
-      <label>Exact whey product / flavour<input v-model="name" maxlength="250" required /></label>
-      <div class="two-fields">
-        <label
-          >kcal per serving<input
-            v-model="calories"
-            type="number"
-            min="0"
-            max="10000"
-            step="any"
-            inputmode="decimal"
-            placeholder="Label needed" /></label
-        ><label
-          >Protein g per serving<input
-            v-model="protein"
-            type="number"
-            min="0"
-            max="10000"
-            step="any"
-            inputmode="decimal"
-            placeholder="Label needed"
-        /></label>
+      <div v-if="pending" class="bg-coral-soft/60 flex flex-col gap-3 rounded-xl p-4">
+        <h3 class="font-bold">Review backup</h3>
+        <p class="text-sm">
+          {{ pending.data.sessions.length }} sessions · {{ pending.data.intakes.length }} intake
+          entries
+        </p>
+        <p class="text-muted-foreground text-xs">
+          Exported {{ new Date(pending.exportedAt).toLocaleString() }}
+        </p>
+        <Label class="flex items-start gap-2 text-sm leading-5 font-normal">
+          <Checkbox v-model="accepted" class="mt-0.5" />I understand this replaces my current saved
+          records.
+        </Label>
+        <Button
+          variant="destructive"
+          size="lg"
+          :disabled="!accepted || busy"
+          @click="emit('restore', pending.data)"
+          >Replace with this backup</Button
+        >
+        <Button variant="ghost" @click="pending = null">Cancel restore</Button>
       </div>
-      <p class="fine-print">
-        Enter your label, not a generic brand value. Values apply to new whey entries only.
-      </p>
-      <button class="secondary-button" :disabled="busy">Save settings</button>
-    </form>
-  </section>
-  <section class="settings-section">
-    <h2>JSON backup</h2>
-    <p>
-      {{ state.sessions.length }} workout sessions · {{ state.intakes.length }} supplement entries
-    </p>
-    <button class="primary-button" :disabled="busy" @click="download">Download JSON backup</button>
-    <p v-if="exported" class="fine-print" role="status">
-      Download requested. Check your phone's Files or Downloads before relying on this copy.
-    </p>
-    <label class="file-label"
-      >Choose a backup to restore<input
-        type="file"
-        accept=".json,application/json"
-        :disabled="busy"
-        @change="readFile"
-    /></label>
-    <p class="fine-print">
-      Restoring replaces current records; it does not merge them. Export your current data first.
-    </p>
-    <div v-if="pending" class="confirmation">
-      <h3>Review backup</h3>
-      <p>
-        {{ pending.data.sessions.length }} sessions · {{ pending.data.intakes.length }} intake
-        entries
-      </p>
-      <p class="fine-print">Exported {{ new Date(pending.exportedAt).toLocaleString() }}</p>
-      <label class="checkbox-label"
-        ><input v-model="accepted" type="checkbox" />I understand this replaces my current saved
-        records.</label
-      ><button
-        class="primary-button"
-        :disabled="!accepted || busy"
-        @click="emit('restore', pending.data)"
-      >
-        Replace with this backup</button
-      ><button class="text-button" @click="pending = null">Cancel restore</button>
-    </div>
-  </section>
-  <p v-if="error" class="error-text" role="alert">{{ error }}</p>
-  <section class="settings-section">
-    <h2>Google Drive</h2>
-    <p>
+    </CardContent>
+  </Card>
+  <p v-if="error" class="text-destructive text-sm font-medium" role="alert">{{ error }}</p>
+
+  <Card class="gap-3 py-5">
+    <CardHeader class="px-5">
+      <CardTitle class="flex items-center gap-2"><Cloud class="size-4" />Google Drive</CardTitle>
+    </CardHeader>
+    <CardContent class="text-muted-foreground px-5 text-sm leading-6">
       Not connected. Drive backup is a later milestone; no Google authorisation or cloud backup has
       happened.
-    </p>
-  </section>
-  <section class="settings-section">
-    <h2>Storage & privacy</h2>
-    <p class="fine-print">
-      Records live in this browser on this origin. Browser cleanup, private browsing, device loss,
-      or changing the app's address can make them unavailable. Export regularly, especially before
-      moving to the hosted app. This version does not promise an offline app shell.
-    </p>
-    <p class="fine-print">
-      The app has no analytics, account service, or server-side logging. No personal training data
-      is sent to GitHub.
-    </p>
-  </section>
-  <details class="warmup">
-    <summary>Body-map attribution</summary>
-    <p class="fine-print">
-      Adapted from react-body-highlighter by GV79, MIT licensed. Pinned revision:
-      28035c2c11d49038026e5c7e038c623f331edb60. Colours and rendering modified; broad regions only.
-    </p>
-    <a :href="`${base}muscles/LICENSE.txt`">Read the MIT licence</a>
-  </details>
+    </CardContent>
+  </Card>
+
+  <Card class="gap-3 py-5">
+    <CardHeader class="px-5">
+      <CardTitle class="flex items-center gap-2"
+        ><ShieldCheck class="size-4" />Storage & privacy</CardTitle
+      >
+    </CardHeader>
+    <CardContent class="text-muted-foreground flex flex-col gap-2 px-5 text-xs leading-5">
+      <p>
+        Records live in this browser on this origin. Browser cleanup, private browsing, device loss,
+        or changing the app's address can make them unavailable. Export regularly, especially before
+        moving to the hosted app. This version does not promise an offline app shell.
+      </p>
+      <p>
+        The app has no analytics, account service, or server-side logging. No personal training data
+        is sent to GitHub.
+      </p>
+      <details>
+        <summary class="text-foreground py-2 font-semibold">Body-map attribution</summary>
+        <p>
+          Adapted from react-body-highlighter by GV79, MIT licensed. Pinned revision:
+          28035c2c11d49038026e5c7e038c623f331edb60. Colours and rendering modified; broad regions
+          only.
+        </p>
+        <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
+          >Read the MIT licence</a
+        >
+      </details>
+    </CardContent>
+  </Card>
 </template>

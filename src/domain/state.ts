@@ -6,6 +6,8 @@ const timestamp = z.iso.datetime();
 const text = z.string().min(1).max(1000);
 const positive = z.number().finite().positive().max(10000);
 const nullableNutrition = z.number().finite().nonnegative().max(10000).nullable();
+export const workoutIdSchema = z.enum(['upperA', 'lowerA', 'upperB', 'lowerB']);
+export const phaseSchema = z.enum(['intro', 'baseline']);
 
 export const exerciseSchema = z
   .strictObject({
@@ -59,8 +61,8 @@ export const sessionSchema = z
   .strictObject({
     id: z.uuid(),
     date,
-    workoutId: z.enum(['upperA', 'lowerA', 'upperB', 'lowerB']),
-    phase: z.enum(['intro', 'baseline']),
+    workoutId: workoutIdSchema,
+    phase: phaseSchema,
     startedAt: timestamp,
     completedAt: timestamp.nullable(),
     status: z.enum(['active', 'completed']),
@@ -94,7 +96,7 @@ export const stateSchema = z
     revision: z.number().int().nonnegative(),
     savedAt: timestamp.nullable(),
     settings: z.strictObject({
-      phase: z.enum(['intro', 'baseline']),
+      phase: phaseSchema,
       whey: z.strictObject({ name: text, calories: nullableNutrition, protein: nullableNutrition }),
     }),
     sessions: z.array(sessionSchema).max(10000),

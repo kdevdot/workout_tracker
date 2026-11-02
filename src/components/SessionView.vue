@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import { computed, shallowRef, watch } from 'vue';
-import type { AppState, Session, SetLog } from '../domain/state';
-import { previousPerformance, sessionProgress } from '../domain/sessions';
-import { formatDate } from '../domain/dates';
-import { workouts } from '../domain/programme';
+import {
+  ArrowLeft,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  History,
+  Pencil,
+} from '@lucide/vue';
+import { formatDate } from '@/domain/dates';
+import { workouts } from '@/domain/programme';
+import { formatLoad, formatSet, previousPerformance, sessionProgress } from '@/domain/sessions';
+import type { Session, SetLog } from '@/domain/state';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import ExerciseGuide from './ExerciseGuide.vue';
-import UiIcon from './UiIcon.vue';
+import RestTimer from './RestTimer.vue';
+import SetForm from './SetForm.vue';
 
 const props = defineProps<{
   session: Session;
-  state: AppState;
+  history: Session[];
   busy: boolean;
   timerDisplay: string;
   timerDone: boolean;
@@ -21,25 +34,22 @@ const emit = defineEmits<{
   finish: [];
   stopTimer: [];
 }>();
+
 const selected = shallowRef(0);
-const editing = shallowRef<number | null>(null);
-const load = shallowRef<string | number>('');
-const reps = shallowRef<string | number>('');
-const effort = shallowRef<string | number>('');
-const formError = shallowRef('');
+const editing = shallowRef<SetLog | null>(null);
 const confirmingFinish = shallowRef(false);
 const entry = computed(() => props.session.exercises[selected.value]!);
 const exercise = computed(() => entry.value.exercise);
 const progress = computed(() => sessionProgress(props.session));
-const previous = computed(() => previousPerformance(props.state, props.session, exercise.value.id));
-const nextIndex = computed(
-  () =>
-    editing.value ??
-    Array.from({ length: exercise.value.sets }, (_, index) => index + 1).find(
-      (index) => !entry.value.logs.some((log) => log.index === index),
-    ) ??
-    null,
+const previous = computed(() =>
+  previousPerformance(props.history, props.session, exercise.value.id),
 );
+const nextIndex = computed(() => {
+  if (editing.value) return editing.value.index;
+  for (let index = 1; index <= exercise.value.sets; index++)
+    if (!entry.value.logs.some((log) => log.index === index)) return index;
+  return null;
+});
 const loadHint = computed(
   () =>
     ({
@@ -50,200 +60,171 @@ const loadHint = computed(
       bodyweight: 'Bodyweight movement: no external load required.',
     })[exercise.value.loadKind],
 );
-watch(
-  () => [props.session.id, selected.value],
-  () => resetForm(),
-  { immediate: true },
-);
-function resetForm() {
+const stats = computed(() => [
+  {
+    value: `${exercise.value.min}–${exercise.value.max}`,
+    label: `${exercise.value.unit}${exercise.value.perSide ? '/side' : ''}`,
+  },
+  {
+    value: exercise.value.targetRir,
+    label: exercise.value.unit === 'seconds' ? 'form reserve' : 'target RIR',
+  },
+  { value: exercise.value.restLabel, label: 'rest' },
+]);
+
+// A saved set (new or corrected) or a different exercise ends any correction in progress.
+watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   editing.value = null;
-  load.value = '';
-  reps.value = '';
-  effort.value = '';
-  formError.value = '';
-}
-function edit(log: SetLog) {
-  editing.value = log.index;
-  load.value = log.load === null ? '' : String(log.load);
-  reps.value = String(log.reps);
-  effort.value = String(log.effort);
-  formError.value = '';
-}
-function submit() {
-  formError.value = '';
-  if (nextIndex.value === null) return;
-  const numericLoad =
-    exercise.value.loadKind === 'bodyweight' && load.value === '' ? null : Number(load.value);
-  const numericReps = Number(reps.value);
-  const numericEffort = Number(effort.value);
-  if (
-    (exercise.value.loadKind !== 'bodyweight' && String(load.value).trim() === '') ||
-    (numericLoad !== null &&
-      (!Number.isFinite(numericLoad) || numericLoad < 0 || numericLoad > 1000)) ||
-    !Number.isInteger(numericReps) ||
-    numericReps <= 0 ||
-    numericReps > 3600 ||
-    String(effort.value).trim() === '' ||
-    !Number.isFinite(numericEffort) ||
-    numericEffort < 0 ||
-    numericEffort > (exercise.value.unit === 'seconds' ? 120 : 10)
-  ) {
-    formError.value =
-      'Enter a valid load, positive whole reps/time, and your actual effort reserve.';
-    return;
-  }
-  emit('record', exercise.value.id, {
-    index: nextIndex.value,
-    load: numericLoad,
-    reps: numericReps,
-    effort: numericEffort,
-    loggedAt: new Date().toISOString(),
-  });
-}
-watch(
-  () => JSON.stringify(entry.value.logs),
-  () => resetForm(),
-);
+});
 </script>
 
 <template>
-  <button class="back-button" @click="emit('back')"><UiIcon name="back" />Back to plan</button>
-  <p class="muted">
-    {{ formatDate(session.date, { weekday: 'short', day: 'numeric', month: 'short' }) }} ·
-    {{ workouts[session.workoutId].name }} · {{ progress.done }}/{{ progress.total }} sets saved
-  </p>
-  <label class="exercise-select"
-    >Exercise<select v-model="selected">
-      <option v-for="(item, index) in session.exercises" :key="item.exercise.id" :value="index">
-        {{ index + 1 }}. {{ item.exercise.name }}
-      </option>
-    </select></label
-  >
-  <h1 class="exercise-title">{{ exercise.name }}</h1>
-  <p class="muted">
-    {{ loadHint
-    }}{{ exercise.perSide ? ' Complete both sides for one set; match clean reps.' : '' }}
-  </p>
-  <div class="prescription-stats">
-    <div>
-      <strong>{{ exercise.min }}–{{ exercise.max }}</strong
-      ><span>{{ exercise.unit }}{{ exercise.perSide ? '/side' : '' }}</span>
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center justify-between gap-2">
+      <Button variant="ghost" class="-ml-3" @click="emit('back')"><ArrowLeft />Back to plan</Button>
+      <span class="text-muted-foreground text-xs font-medium">
+        {{ formatDate(session.date, { weekday: 'short', day: 'numeric', month: 'short' }) }} ·
+        {{ workouts[session.workoutId].name }}
+      </span>
     </div>
-    <div>
-      <strong>{{ exercise.targetRir }}</strong
-      ><span>{{ exercise.unit === 'seconds' ? 'form reserve' : 'target RIR' }}</span>
-    </div>
-    <div>
-      <strong>{{ exercise.restLabel }}</strong
-      ><span>rest</span>
+    <div class="flex items-center gap-3">
+      <Progress :model-value="(progress.done / progress.total) * 100" class="h-2.5" />
+      <span class="text-sm font-bold whitespace-nowrap tabular-nums"
+        >{{ progress.done }}/{{ progress.total }} sets saved</span
+      >
     </div>
   </div>
-  <details class="warmup">
-    <summary>Setup, technique & alternative</summary>
-    <ExerciseGuide :exercise="exercise" />
-  </details>
-  <section class="previous-performance">
-    <h3>Previous session</h3>
-    <p v-if="previous">
-      {{ formatDate(previous.date, { day: 'numeric', month: 'short' }) }} ·
-      {{
-        previous.logs
-          .map((log) => `${log.load === null ? 'BW' : `${log.load} kg`} × ${log.reps}`)
-          .join(' · ')
-      }}
+
+  <nav aria-label="Exercises" class="-mx-5 flex snap-x gap-2 overflow-x-auto px-5 pb-1">
+    <button
+      v-for="(item, index) in session.exercises"
+      :key="item.exercise.id"
+      :aria-pressed="selected === index"
+      :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
+      :class="
+        cn(
+          'flex shrink-0 snap-start items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition-colors',
+          'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
+          selected === index
+            ? 'bg-primary text-primary-foreground border-primary'
+            : 'bg-card hover:bg-muted',
+        )
+      "
+      @click="selected = index"
+    >
+      <Check v-if="item.logs.length >= item.exercise.sets" class="size-3.5" />
+      <span v-else class="tabular-nums">{{ index + 1 }}</span>
+      <span class="max-w-32 truncate">{{ item.exercise.name }}</span>
+    </button>
+  </nav>
+
+  <section class="flex flex-col gap-2">
+    <h1 class="text-[1.75rem] leading-tight font-extrabold tracking-tight">{{ exercise.name }}</h1>
+    <p class="text-muted-foreground text-sm leading-6">
+      {{ loadHint
+      }}{{ exercise.perSide ? ' Complete both sides for one set; match clean reps.' : '' }}
     </p>
-    <p v-else>No previous completed entries for this movement.</p>
   </section>
-  <ul v-if="entry.logs.length" class="logged-sets">
-    <li v-for="log in entry.logs" :key="log.index">
-      <UiIcon name="check" /><span
-        >Set {{ log.index }} · {{ log.load === null ? 'BW' : `${log.load} kg` }} × {{ log.reps }}
-        {{ exercise.unit }} · {{ log.effort }}
-        {{ exercise.unit === 'seconds' ? 's reserve' : 'RIR' }}</span
-      ><button :disabled="busy" @click="edit(log)">Edit</button>
+
+  <dl class="grid grid-cols-3 gap-2">
+    <div
+      v-for="stat in stats"
+      :key="stat.label"
+      class="bg-card flex flex-col-reverse items-center rounded-xl border px-2 py-3 text-center"
+    >
+      <dt class="text-muted-foreground text-xs">{{ stat.label }}</dt>
+      <dd class="text-lg font-extrabold tabular-nums">{{ stat.value }}</dd>
+    </div>
+  </dl>
+
+  <section class="bg-secondary/60 flex gap-3 rounded-xl p-4">
+    <History class="text-primary mt-0.5 size-4 shrink-0" />
+    <div class="flex flex-col gap-0.5 text-sm">
+      <h3 class="font-semibold">Previous session</h3>
+      <p v-if="previous" class="text-secondary-foreground">
+        {{ formatDate(previous.date, { day: 'numeric', month: 'short' }) }} ·
+        {{ previous.logs.map((log) => `${formatLoad(log)} × ${log.reps}`).join(' · ') }}
+      </p>
+      <p v-else class="text-muted-foreground">No previous completed entries for this movement.</p>
+    </div>
+  </section>
+
+  <ul v-if="entry.logs.length" class="flex flex-col gap-2">
+    <li
+      v-for="log in entry.logs"
+      :key="log.index"
+      class="bg-card flex items-center gap-3 rounded-xl border py-2 pr-2 pl-3 text-sm"
+    >
+      <span
+        class="bg-primary text-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+        >{{ log.index }}</span
+      >
+      <span class="flex-1 tabular-nums">{{ formatSet(log, exercise) }}</span>
+      <Button
+        variant="ghost"
+        size="sm"
+        :disabled="busy"
+        :aria-label="`Edit set ${log.index}`"
+        @click="editing = log"
+        ><Pencil />Edit</Button
+      >
     </li>
   </ul>
-  <form v-if="nextIndex !== null" class="set-form" @submit.prevent="submit">
-    <h3>{{ editing ? 'Edit' : 'Record' }} set {{ nextIndex }} of {{ exercise.sets }}</h3>
-    <div class="set-fields">
-      <label
-        >Load · kg<input
-          v-model="load"
-          type="number"
-          inputmode="decimal"
-          min="0"
-          max="1000"
-          step="any"
-          :required="exercise.loadKind !== 'bodyweight'"
-          :placeholder="exercise.loadKind === 'bodyweight' ? 'BW' : '—'" /></label
-      ><label
-        >{{ exercise.unit
-        }}<input
-          v-model="reps"
-          type="number"
-          inputmode="numeric"
-          min="1"
-          max="3600"
-          step="1"
-          required
-          placeholder="—" /></label
-      ><label
-        >{{ exercise.unit === 'seconds' ? 'Reserve · s' : 'Actual RIR'
-        }}<input
-          v-model="effort"
-          type="number"
-          inputmode="decimal"
-          min="0"
-          :max="exercise.unit === 'seconds' ? 120 : 10"
-          step="0.5"
-          required
-          placeholder="—"
-      /></label>
-    </div>
-    <p v-if="formError" class="error-text" role="alert">{{ formError }}</p>
-    <button class="primary-button" :disabled="busy">
-      <span>{{
-        busy ? 'Saving…' : editing ? 'Save corrected set' : `Record set ${nextIndex}`
-      }}</span
-      ><UiIcon name="check" /></button
-    ><button v-if="editing" type="button" class="text-button" @click="resetForm">
-      Cancel correction
-    </button>
-  </form>
-  <p v-else class="success-text">All planned sets for this exercise are saved.</p>
-  <p class="fine-print">
+
+  <SetForm
+    v-if="nextIndex !== null"
+    :key="`${exercise.id}:${nextIndex}:${entry.logs.length}:${editing?.index ?? 'new'}`"
+    :exercise="exercise"
+    :index="nextIndex"
+    :initial="editing"
+    :busy="busy"
+    @submit="emit('record', exercise.id, $event)"
+    @cancel="editing = null"
+  />
+  <p
+    v-else
+    class="bg-secondary text-secondary-foreground flex items-center gap-2 rounded-xl p-4 text-sm font-semibold"
+  >
+    <Check class="size-4" />All planned sets for this exercise are saved.
+  </p>
+
+  <details class="group bg-card rounded-xl border px-4">
+    <summary class="flex min-h-12 items-center text-sm font-semibold">
+      Setup, technique & alternative
+      <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
+    </summary>
+    <div class="pb-4"><ExerciseGuide :exercise="exercise" /></div>
+  </details>
+
+  <p class="text-muted-foreground text-xs leading-5">
     RIR = clean repetitions you could still perform. Record actual results, not just the target.
     Walkout reps are complete out-and-back cycles.
   </p>
-  <aside v-if="timerVisible" class="rest-timer" role="timer" aria-label="Rest timer">
-    <div>
-      <strong>{{ timerDone ? 'Rest complete' : timerDisplay }}</strong
-      ><span>{{
-        timerDone ? 'Continue when ready.' : 'Rest timer · continues when backgrounded'
-      }}</span>
-    </div>
-    <button class="text-button" :disabled="busy" @click="emit('stopTimer')">Dismiss</button>
-  </aside>
-  <div class="exercise-navigation">
-    <button class="secondary-button" :disabled="selected === 0" @click="selected--">Previous</button
-    ><button
-      class="secondary-button"
+
+  <div class="grid grid-cols-2 gap-2">
+    <Button variant="outline" size="lg" :disabled="selected === 0" @click="selected--"
+      ><ChevronLeft />Previous</Button
+    >
+    <Button
+      variant="outline"
+      size="lg"
       :disabled="selected === session.exercises.length - 1"
       @click="selected++"
-    >
-      Next exercise
-    </button>
+      >Next exercise<ChevronRight
+    /></Button>
   </div>
-  <div class="finish-section">
-    <button
-      class="secondary-button"
+
+  <section class="flex flex-col gap-3 border-t pt-5">
+    <Button
+      variant="secondary"
+      size="lg"
       :disabled="busy || !progress.done"
       @click="confirmingFinish = !confirmingFinish"
     >
       Finish workout
-    </button>
-    <div v-if="confirmingFinish" class="confirmation">
-      <p>
+    </Button>
+    <div v-if="confirmingFinish" class="bg-card flex flex-col gap-3 rounded-xl border p-4">
+      <p class="text-sm leading-6">
         {{ progress.done }} of {{ progress.total }} sets saved.
         {{
           progress.done < progress.total
@@ -251,8 +232,16 @@ watch(
             : 'Ready to complete this session?'
         }}
       </p>
-      <button class="primary-button" :disabled="busy" @click="emit('finish')">Confirm finish</button
-      ><button class="text-button" @click="confirmingFinish = false">Keep training</button>
+      <Button size="lg" :disabled="busy" @click="emit('finish')">Confirm finish</Button>
+      <Button variant="ghost" @click="confirmingFinish = false">Keep training</Button>
     </div>
-  </div>
+  </section>
+
+  <RestTimer
+    v-if="timerVisible"
+    :display="timerDisplay"
+    :done="timerDone"
+    :busy="busy"
+    @dismiss="emit('stopTimer')"
+  />
 </template>

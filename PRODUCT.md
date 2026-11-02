@@ -32,4 +32,4 @@ Vue 3, TypeScript, Vite, Tailwind CSS v4 with shadcn-vue components (`src/compon
 
 ## Deferred
 
-Google OAuth/Drive integration, audited exercise videos, automatic progression suggestions, installable/offline shell, remote repository and deployment. Product-label values remain user-supplied.
+Google OAuth/Drive integration, videos for the six movements without an open-licence clip, automatic progression suggestions, installable/offline shell, and deployment. Product-label values remain user-supplied.

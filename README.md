@@ -28,7 +28,7 @@ Open the URL printed by Vite. To test on your phone, use your computer's LAN add
 ## Intentional limits
 
 - No Google Drive connection or OAuth yet; no account or cloud backup exists.
-- No exercise videos until exact variations and licences have been audited.
+- Exercise videos only from openly licensed sources (wger, CC BY-SA 4.0), each checked by eye; clips of a close variant are labelled, and movements without a matching clip show none.
 - Alternatives are instructional in this milestone. Do not log a substitute under the original movement name; selectable substitutions require a future distinct exercise-log identity.
 - No installable/offline shell, automatic loading prescription, or automatic phase increase.
 - Saved sets are durable after the success message; unfinished form input is not autosaved.
@@ -46,7 +46,8 @@ Writes are validated and transactional. Every saved state must remain exportable
 - `src/storage/`: IndexedDB and optimistic revision checks.
 - `src/composables/`: application state updates and deadline-based rest timer.
 - `src/components/`: focused Vue presentation and feature containers.
-- `public/muscles/`: adapted diagram assets and the upstream MIT licence.
+- `public/muscles/`: wger muscle diagrams (recoloured) and the licence notice.
+- `public/videos/`: wger demo clips re-encoded by `scripts/fetch-videos.sh`; guide content in `src/domain/guides.ts`.
 
 The programme source was transcribed from the local research document. Baseline work sets: 17 / 15 / 19 / 15. Introductory work sets: 14 / 12 / 16 / 12. Optional lower introductory isolation volume remains individual guidance rather than an automatic rule.
 
@@ -64,4 +65,4 @@ Browser checks confirm recording and resuming a set after reload with its rest-t
 
 ## Muscle maps
 
-Derived from `react-body-highlighter`, GV79, revision `28035c2c11d49038026e5c7e038c623f331edb60`. Colours and raster rendering modified. See `public/muscles/LICENSE.txt`. These are broad target regions, not measurements of activation, fatigue, or recovery. The original diagram groups deltoid heads and back muscles.
+Muscle diagrams and exercise videos come from the wger exercise database (https://wger.de), CC BY-SA 4.0; videos by Goulart. Diagram colours changed; videos muted and re-encoded to 480p H.264. Modified files are shared under CC BY-SA 4.0. See `public/muscles/LICENSE.txt`. Highlights are target regions, not measured activation, fatigue, or recovery; wger draws one shoulder region for all deltoid heads.

@@ -190,7 +190,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
 
   <details class="group bg-card rounded-xl border px-4">
     <summary class="flex min-h-12 items-center text-sm font-semibold">
-      Setup, technique & alternative
+      How to do it · video & form check
       <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
     </summary>
     <div class="pb-4"><ExerciseGuide :exercise="exercise" /></div>

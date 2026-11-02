@@ -145,11 +145,7 @@ function chooseWorkout(event: Event) {
     </div>
   </details>
 
-  <MuscleMap
-    :workout-id="workoutId"
-    :primary="workout?.primary ?? []"
-    :supporting="workout?.supporting ?? []"
-  />
+  <MuscleMap :primary="workout?.primary ?? []" :supporting="workout?.supporting ?? []" />
 
   <template v-if="workout">
     <details class="group bg-coral-soft/60 rounded-xl px-4">

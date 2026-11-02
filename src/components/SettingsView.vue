@@ -249,14 +249,14 @@ async function readFile(event: Event) {
         is sent to GitHub.
       </p>
       <details>
-        <summary class="text-foreground py-2 font-semibold">Body-map attribution</summary>
+        <summary class="text-foreground py-2 font-semibold">Video and body-map credits</summary>
         <p>
-          Adapted from react-body-highlighter by GV79, MIT licensed. Pinned revision:
-          28035c2c11d49038026e5c7e038c623f331edb60. Colours and rendering modified; broad regions
-          only.
+          Exercise videos by Goulart and muscle diagrams from the wger exercise database (wger.de),
+          licensed CC BY-SA 4.0. Videos: audio removed and resized. Diagrams: highlight colours
+          changed. Modified files are shared under the same licence.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
-          >Read the MIT licence</a
+          >Read the licence notice</a
         >
       </details>
     </CardContent>

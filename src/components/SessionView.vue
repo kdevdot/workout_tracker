@@ -232,8 +232,9 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
 
   <section class="flex flex-col gap-3 border-t pt-5">
     <Button
-      variant="secondary"
+      variant="outline"
       size="lg"
+      class="border-primary/40 text-primary"
       :disabled="busy || !progress.done"
       @click="confirmingFinish = !confirmingFinish"
     >

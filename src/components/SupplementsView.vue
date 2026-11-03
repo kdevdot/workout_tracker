@@ -148,14 +148,9 @@ function remove(id: string) {
             class="h-11"
           />
         </div>
-        <Button
-          type="submit"
-          size="lg"
-          class="h-11"
-          :variant="product.kind === 'whey' ? 'default' : 'secondary'"
-          :disabled="busy || future"
-          >{{ product.action }}</Button
-        >
+        <Button type="submit" size="lg" class="h-11" :disabled="busy || future">{{
+          product.action
+        }}</Button>
       </form>
     </CardContent>
   </Card>

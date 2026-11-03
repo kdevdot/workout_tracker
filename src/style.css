@@ -173,16 +173,24 @@
   border-radius: 8px;
 }
 
-.hero-action:hover:not(:disabled) {
-  background: #075476;
-}
-
 .hero-action.is-done {
   background: var(--success);
 }
 
-.hero-action.is-done:hover:not(:disabled) {
-  background: #19733f;
+/* Hover only where a real pointer exists, so taps don't leave a stuck hover colour on phones. */
+@media (hover: hover) {
+  .hero-action:hover:not(:disabled) {
+    background: #075476;
+  }
+
+  .hero-action.is-done:hover:not(:disabled) {
+    background: #19733f;
+  }
+
+  .nav-item:hover:not([aria-current='page']):not(:disabled) {
+    background: var(--accent);
+    color: var(--primary);
+  }
 }
 
 .workout-layout {
@@ -243,11 +251,6 @@
 .nav-item[aria-current='page'] {
   background: var(--primary);
   color: var(--primary-foreground);
-}
-
-.nav-item:hover:not([aria-current='page']):not(:disabled) {
-  background: var(--accent);
-  color: var(--primary);
 }
 
 [data-slot='card'] {

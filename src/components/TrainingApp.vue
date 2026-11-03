@@ -154,7 +154,7 @@ const saveStatus = computed(() => {
           :disabled="busy"
           :class="
             cn(
-              'nav-item flex flex-col items-center justify-center text-[10px] font-semibold transition-colors disabled:opacity-50',
+              'nav-item flex flex-col items-center justify-center text-[10px] font-semibold transition-colors',
               'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 focus-visible:ring-inset',
             )
           "

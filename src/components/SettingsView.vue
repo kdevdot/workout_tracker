@@ -164,7 +164,7 @@ async function readFile(event: Event) {
         <p class="text-muted-foreground text-xs">
           Enter your label, not a generic brand value. Values apply to new whey entries only.
         </p>
-        <Button type="submit" variant="secondary" size="lg" :disabled="busy">Save settings</Button>
+        <Button type="submit" size="lg" :disabled="busy">Save settings</Button>
       </form>
     </CardContent>
   </Card>

@@ -6,7 +6,6 @@ import type { Video } from '@/domain/guides';
 
 const wrappers: VueWrapper[] = [];
 const video: Video = {
-  provider: 'youtube',
   id: 'O5viuEPDXKY',
   title: 'Smith Machine Bench Press',
   author: 'Renaissance Periodization',

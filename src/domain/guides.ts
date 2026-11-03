@@ -1,12 +1,11 @@
 export interface Video {
-  provider: 'youtube';
   id: string;
   title: string;
   author: string;
   variant?: string;
 }
 
-export interface Comparison {
+interface Comparison {
   topic: string;
   reel: string;
   /** Creator's order, best first. Attribution, not endorsement. */
@@ -32,7 +31,6 @@ const smithStop = 'Smith: test hooks and stops with a light load first.';
 export const guides: Record<string, Guide> = {
   'smith-flat-bench-press': {
     video: {
-      provider: 'youtube',
       id: 'O5viuEPDXKY',
       title: 'Smith Machine Bench Press',
       author: 'Renaissance Periodization',
@@ -46,7 +44,6 @@ export const guides: Record<string, Guide> = {
   },
   'fixed-handle-pull-up': {
     video: {
-      provider: 'youtube',
       id: 'iWpoegdfgtc',
       title: 'Normal Grip Pullup',
       author: 'Renaissance Periodization',
@@ -70,7 +67,6 @@ export const guides: Record<string, Guide> = {
   },
   'bench-supported-one-arm-db-row': {
     video: {
-      provider: 'youtube',
       id: 'DMo3HJoawrU',
       title: 'Single Arm Supported Dumbbell Row',
       author: 'Renaissance Periodization',
@@ -93,7 +89,6 @@ export const guides: Record<string, Guide> = {
   },
   'seated-db-shoulder-press': {
     video: {
-      provider: 'youtube',
       id: 'HzIiNhHhhtA',
       title: 'Seated Dumbbell Shoulder Press',
       author: 'Renaissance Periodization',
@@ -116,7 +111,6 @@ export const guides: Record<string, Guide> = {
   },
   'db-lateral-raise': {
     video: {
-      provider: 'youtube',
       id: 'OuG1smZTsQQ',
       title: 'Lateral Raise',
       author: 'Renaissance Periodization',
@@ -139,7 +133,6 @@ export const guides: Record<string, Guide> = {
   },
   'standing-db-curl': {
     video: {
-      provider: 'youtube',
       id: 'iixND1P2lik',
       title: 'Alternating Dumbbell Curl',
       author: 'Renaissance Periodization',
@@ -150,7 +143,6 @@ export const guides: Record<string, Guide> = {
   },
   'one-arm-cable-pushdown': {
     video: {
-      provider: 'youtube',
       id: 'Cp_bShvMY4c',
       title: 'Cable Single Arm Pushdown',
       author: 'Renaissance Periodization',
@@ -160,7 +152,6 @@ export const guides: Record<string, Guide> = {
   },
   'smith-squat': {
     video: {
-      provider: 'youtube',
       id: '-eO_VydErV0',
       title: 'Feet Forward Smith Squat',
       author: 'Renaissance Periodization',
@@ -175,7 +166,6 @@ export const guides: Record<string, Guide> = {
   },
   'db-romanian-deadlift': {
     video: {
-      provider: 'youtube',
       id: 'cYKYGwcg0U8',
       title: 'Dumbbell Stiff Legged Deadlift',
       author: 'Renaissance Periodization',
@@ -198,7 +188,6 @@ export const guides: Record<string, Guide> = {
   },
   'unica-leg-extension': {
     video: {
-      provider: 'youtube',
       id: 'm0FOpMEgero',
       title: 'Leg Extension',
       author: 'Renaissance Periodization',
@@ -209,7 +198,6 @@ export const guides: Record<string, Guide> = {
   },
   'supine-heel-walkout': {
     video: {
-      provider: 'youtube',
       id: '6yeyt5mUo94',
       title: 'Glute Bridge into Hamstring Walkout',
       author: 'Runna',
@@ -219,7 +207,6 @@ export const guides: Record<string, Guide> = {
   },
   'supported-single-leg-standing-db-calf-raise': {
     video: {
-      provider: 'youtube',
       id: '_gEx2ijsmNM',
       title: 'Single Leg Stair Calves',
       author: 'Renaissance Periodization',
@@ -234,7 +221,6 @@ export const guides: Record<string, Guide> = {
   },
   'dead-bug': {
     video: {
-      provider: 'youtube',
       id: 'GbSC02oU3To',
       title: 'How to Do a Dead Bug',
       author: 'Hinge Health',
@@ -248,7 +234,6 @@ export const guides: Record<string, Guide> = {
   },
   'low-incline-db-bench-press': {
     video: {
-      provider: 'youtube',
       id: 'B09ZkYsnKko',
       title: 'Low Incline Dumbbell Press',
       author: 'Renaissance Periodization',
@@ -258,7 +243,6 @@ export const guides: Record<string, Guide> = {
   },
   'machine-pec-fly': {
     video: {
-      provider: 'youtube',
       id: 'FDay9wFe5uE',
       title: 'Machine Flye',
       author: 'Renaissance Periodization',
@@ -272,7 +256,6 @@ export const guides: Record<string, Guide> = {
   },
   'machine-reverse-fly': {
     video: {
-      provider: 'youtube',
       id: '5YK4bgzXDp0',
       title: 'Machine Reverse Flye',
       author: 'Renaissance Periodization',
@@ -291,7 +274,6 @@ export const guides: Record<string, Guide> = {
   },
   'one-db-two-hand-overhead-triceps-extension': {
     video: {
-      provider: 'youtube',
       id: 'MPmeelJOmN8',
       title: 'Dumbbell Two Hand Overhead Tricep Extension',
       author: 'Bodhi Bodies',
@@ -305,7 +287,6 @@ export const guides: Record<string, Guide> = {
   },
   'smith-romanian-deadlift': {
     video: {
-      provider: 'youtube',
       id: 'CN_7cz3P-1U',
       title: 'Stiff Legged Deadlift',
       author: 'Renaissance Periodization',
@@ -328,7 +309,6 @@ export const guides: Record<string, Guide> = {
   },
   'db-stationary-split-squat': {
     video: {
-      provider: 'youtube',
       id: 'jNihW0WDIL4',
       title: 'Split Squat',
       author: 'Renaissance Periodization',
@@ -342,7 +322,6 @@ export const guides: Record<string, Guide> = {
   },
   'seated-db-calf-raise': {
     video: {
-      provider: 'youtube',
       id: 'UnBXxegoaCI',
       title: 'Dumbbell Seated Calf Raise',
       author: 'Josh Evans',
@@ -356,7 +335,6 @@ export const guides: Record<string, Guide> = {
   },
   'side-plank': {
     video: {
-      provider: 'youtube',
       id: 'iNbH7_edNI8',
       title: 'Side Plank Tutorial',
       author: 'Runna',

@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { emptyState, encodeBackup, stateSchema, type AppState } from '../domain/state';
 
-export class RevisionConflict extends Error {
+class RevisionConflict extends Error {
   constructor() {
     super('Another tab changed your records. Reload before saving again; this edit was not saved.');
   }

@@ -5,8 +5,6 @@ import type { exerciseSchema, phaseSchema, workoutIdSchema } from './state';
 export type WorkoutId = z.infer<typeof workoutIdSchema>;
 export type Phase = z.infer<typeof phaseSchema>;
 export type Exercise = z.infer<typeof exerciseSchema>;
-export type LoadKind = Exercise['loadKind'];
-export type RepUnit = Exercise['unit'];
 
 export interface Workout {
   id: WorkoutId;

@@ -123,7 +123,7 @@ export const stateSchema = z
     }
   });
 
-export const backupSchema = z.strictObject({
+const backupSchema = z.strictObject({
   format: z.literal('steady-backup'),
   exportedAt: timestamp,
   data: stateSchema,

@@ -4,6 +4,7 @@ import {
   finishSession,
   previousPerformance,
   recordSet,
+  restFor,
   sessionProgress,
   startSession,
 } from './sessions';
@@ -83,7 +84,24 @@ describe('session lifecycle', () => {
   });
 });
 
+describe('rest between sets', () => {
+  it('uses the programme rest unless the user picked minutes', () => {
+    const exercise = startSession('upperA', '2026-11-02', 'intro').exercises[0]!.exercise;
+    expect(restFor(exercise, null)).toEqual({ seconds: 180, label: '3 min' });
+    expect(restFor(exercise, 1.5)).toEqual({ seconds: 90, label: '1.5 min' });
+  });
+});
+
 describe('backup validation', () => {
+  it('loads older backups saved before the rest setting existed', () => {
+    const { restMinutes: _, ...oldSettings } = emptyState().settings;
+    const old = {
+      format: 'steady-backup',
+      exportedAt: new Date().toISOString(),
+      data: { ...emptyState(), settings: oldSettings },
+    };
+    expect(parseBackup(JSON.stringify(old)).data.settings.restMinutes).toBeNull();
+  });
   it('round-trips real records and prescription snapshots', () => {
     const session = startSession('upperA', '2026-11-02', 'intro');
     const state = {

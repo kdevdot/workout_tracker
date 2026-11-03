@@ -97,6 +97,8 @@ export const stateSchema = z
     savedAt: timestamp.nullable(),
     settings: z.strictObject({
       phase: phaseSchema,
+      // null = each exercise's programme rest. Older saves have no value and get the default.
+      restMinutes: z.number().min(0.5).max(10).nullable().default(null),
       whey: z.strictObject({ name: text, calories: nullableNutrition, protein: nullableNutrition }),
     }),
     sessions: z.array(sessionSchema).max(10000),
@@ -142,6 +144,7 @@ export function emptyState(): AppState {
     savedAt: null,
     settings: {
       phase: 'intro',
+      restMinutes: null,
       whey: { name: 'Optimum Nutrition whey', calories: null, protein: null },
     },
     sessions: [],

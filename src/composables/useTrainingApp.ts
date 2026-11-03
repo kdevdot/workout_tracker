@@ -1,8 +1,8 @@
-import { computed, onMounted, shallowRef, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue';
 import { localDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
-import { finishSession, recordSet, startSession } from '../domain/sessions';
+import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
 import { intakeSchema, type AppState, type SetLog } from '../domain/state';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
@@ -58,9 +58,22 @@ export function useTrainingApp() {
     () => state.value.settings.whey.calories !== null && state.value.settings.whey.protein !== null,
   );
 
-  onMounted(store.load);
-  watch(view, () => {
+  let hideMessage: ReturnType<typeof setTimeout> | undefined;
+  /** Shows a short confirmation toast that hides itself. */
+  function notify(text: string) {
+    clearTimeout(hideMessage);
+    message.value = text;
+    hideMessage = setTimeout(() => (message.value = ''), 3000);
+  }
+  function dismissMessage() {
+    clearTimeout(hideMessage);
     message.value = '';
+  }
+
+  onMounted(store.load);
+  onUnmounted(() => clearTimeout(hideMessage));
+  watch(view, () => {
+    dismissMessage();
     window.scrollTo({ top: 0, behavior: 'instant' });
   });
 
@@ -98,13 +111,12 @@ export function useTrainingApp() {
         : {
             sessionId: active.id,
             exerciseId,
-            endsAt: Date.now() + entry.exercise.restSeconds * 1000,
+            endsAt:
+              Date.now() + restFor(entry.exercise, current.settings.restMinutes).seconds * 1000,
           },
     }));
     if (saved)
-      message.value = correcting
-        ? 'Corrected set saved on this device.'
-        : 'Set saved on this device.';
+      notify(correcting ? 'Corrected set saved on this device.' : 'Set saved on this device.');
   }
   async function finish() {
     const active = currentSession.value;
@@ -142,7 +154,7 @@ export function useTrainingApp() {
         intakes: [...current.intakes, intakeSchema.parse(input)],
       }))
     )
-      message.value = 'Intake saved on this device.';
+      notify('Intake saved on this device.');
   }
   function removeIntake(id: string) {
     return update((current) => ({
@@ -152,14 +164,15 @@ export function useTrainingApp() {
   }
   async function saveSettings(settings: AppState['settings']) {
     if (await update((current) => ({ ...current, settings })))
-      message.value = 'Settings saved. Existing records are unchanged.';
+      notify('Settings saved. Existing records are unchanged.');
   }
   async function restore(imported: AppState) {
     if (await update(() => ({ ...imported, timer: null }))) {
       sessionId.value = null;
       override.value = undefined;
       view.value = 'plan';
-      message.value = 'Backup restored on this device.';
+      await nextTick(); // let the view change clear the old message first
+      notify('Backup restored on this device.');
     }
   }
 
@@ -175,6 +188,7 @@ export function useTrainingApp() {
     currentSession,
     hasLabel,
     message,
+    dismissMessage,
     changeDate,
     chooseWorkout,
     open,

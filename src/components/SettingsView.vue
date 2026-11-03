@@ -25,6 +25,8 @@ const name = shallowRef('');
 const calories = shallowRef<string | number>('');
 const protein = shallowRef<string | number>('');
 const phase = shallowRef<Phase>('intro');
+const restMinutes = shallowRef<number | null>(null);
+const restChoices = [1, 1.5, 2, 2.5, 3, 4, 5];
 const error = shallowRef('');
 const pending = shallowRef<Backup | null>(null);
 const accepted = shallowRef(false);
@@ -38,6 +40,7 @@ watch(
     calories.value = settings.whey.calories === null ? '' : String(settings.whey.calories);
     protein.value = settings.whey.protein === null ? '' : String(settings.whey.protein);
     phase.value = settings.phase;
+    restMinutes.value = settings.restMinutes;
   },
   { immediate: true },
 );
@@ -60,6 +63,7 @@ function save() {
   error.value = '';
   emit('settings', {
     phase: phase.value,
+    restMinutes: restMinutes.value,
     whey: { name: name.value.trim(), calories: calorieValue, protein: proteinValue },
   });
 }
@@ -126,6 +130,20 @@ async function readFile(event: Event) {
             <option value="baseline">Full baseline · when ready</option>
           </select>
           <p class="text-muted-foreground text-xs">Timed holds keep technical form reserve.</p>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="rest">Rest timer between sets</Label>
+          <select
+            id="rest"
+            v-model="restMinutes"
+            class="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
+          >
+            <option :value="null">Programme default · 60 s–3 min by exercise</option>
+            <option v-for="minutes in restChoices" :key="minutes" :value="minutes">
+              {{ minutes }} min for every exercise
+            </option>
+          </select>
+          <p class="text-muted-foreground text-xs">Applies to the next set you save.</p>
         </div>
         <div class="flex flex-col gap-1.5">
           <Label for="whey-name">Exact whey product / flavour</Label>

@@ -8,7 +8,7 @@ Live: https://kdevdot.github.io/workout_tracker/
 
 - Shows the scheduled workout for each day and lets you move through the week.
 - Logs working sets (load, reps or seconds, reps in reserve) and shows your previous performance for each exercise.
-- Runs a rest timer that survives reloads and backgrounding.
+- Runs a rest timer that survives reloads and backgrounding. Rest follows the programme per exercise, or a fixed time you pick in Settings.
 - Shows a demo video, a muscle map and short form checks for each exercise.
 - Tracks whey and creatine intake.
 - Exports and restores all data as a JSON backup.

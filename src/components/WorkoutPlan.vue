@@ -5,7 +5,7 @@ import { localDate } from '@/domain/dates';
 import { getExercises, workouts } from '@/domain/programme';
 import type { Phase, WorkoutId } from '@/domain/programme-types';
 import type { Session } from '@/domain/state';
-import { sessionProgress } from '@/domain/sessions';
+import { restFor, sessionProgress } from '@/domain/sessions';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import ExerciseGuide from './ExerciseGuide.vue';
@@ -18,6 +18,7 @@ const props = defineProps<{
   date: string;
   workoutId: WorkoutId | null;
   phase: Phase;
+  restMinutes: number | null;
   session: Session | null;
   completed: Session | null;
   doneDates: Set<string>;
@@ -198,7 +199,7 @@ function chooseWorkout(event: Event) {
               <span class="flex min-w-0 flex-1 flex-col gap-1.5">
                 <span class="text-sm leading-snug font-semibold">{{ exercise.name }}</span>
                 <small class="text-muted-foreground text-[10px] leading-relaxed sm:text-xs"
-                  >{{ exercise.restLabel }} rest · {{ exercise.targetRir
+                  >{{ restFor(exercise, restMinutes).label }} rest · {{ exercise.targetRir
                   }}{{ exercise.unit === 'seconds' ? '' : ' RIR' }}</small
                 >
               </span>

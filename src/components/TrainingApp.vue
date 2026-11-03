@@ -13,6 +13,7 @@ import { useTrainingApp, type View } from '@/composables/useTrainingApp';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import AppToast from './AppToast.vue';
 import HistoryView from './HistoryView.vue';
 import SessionView from './SessionView.vue';
 import SettingsView from './SettingsView.vue';
@@ -75,6 +76,7 @@ const saveStatus = computed(() => {
           :date="date"
           :workout-id="app.workoutId.value"
           :phase="state.settings.phase"
+          :rest-minutes="state.settings.restMinutes"
           :session="app.draft.value"
           :completed="app.completed.value"
           :done-dates="app.doneDates.value"
@@ -90,6 +92,7 @@ const saveStatus = computed(() => {
           :key="app.currentSession.value.id"
           :session="app.currentSession.value"
           :history="state.sessions"
+          :rest-minutes="state.settings.restMinutes"
           :busy="busy"
           :timer-display="timer.display.value"
           :timer-done="timer.seconds.value === 0"
@@ -130,13 +133,6 @@ const saveStatus = computed(() => {
           >
         </AlertDescription>
       </Alert>
-      <p
-        v-if="app.message.value"
-        class="bg-secondary text-secondary-foreground rounded-lg px-3 py-2 text-sm font-medium"
-        role="status"
-      >
-        {{ app.message.value }}
-      </p>
 
       <footer class="text-muted-foreground mt-auto flex items-start gap-2 pt-6 text-xs leading-5">
         <CloudOff class="mt-0.5 size-3.5 shrink-0" />
@@ -144,6 +140,8 @@ const saveStatus = computed(() => {
         Export regularly.
       </footer>
     </main>
+
+    <AppToast :message="app.message.value" @dismiss="app.dismissMessage" />
 
     <nav v-if="ready" class="app-nav" aria-label="Main navigation">
       <div class="grid grid-cols-4 gap-1">

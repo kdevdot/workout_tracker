@@ -11,7 +11,13 @@ import {
 } from '@lucide/vue';
 import { formatDate } from '@/domain/dates';
 import { workouts } from '@/domain/programme';
-import { formatLoad, formatSet, previousPerformance, sessionProgress } from '@/domain/sessions';
+import {
+  formatLoad,
+  formatSet,
+  previousPerformance,
+  restFor,
+  sessionProgress,
+} from '@/domain/sessions';
 import type { Session, SetLog } from '@/domain/state';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -23,6 +29,7 @@ import SetForm from './SetForm.vue';
 const props = defineProps<{
   session: Session;
   history: Session[];
+  restMinutes: number | null;
   busy: boolean;
   timerDisplay: string;
   timerDone: boolean;
@@ -78,7 +85,7 @@ const stats = computed(() => [
     value: exercise.value.targetRir,
     label: exercise.value.unit === 'seconds' ? 'form reserve' : 'target RIR',
   },
-  { value: exercise.value.restLabel, label: 'rest' },
+  { value: restFor(exercise.value, props.restMinutes).label, label: 'rest' },
 ]);
 
 const chipButtons = useTemplateRef<HTMLButtonElement[]>('chipButtons');

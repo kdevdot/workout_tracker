@@ -109,6 +109,37 @@ describe('working app integration', () => {
     expect((restored[1]!.element as HTMLInputElement).value).toBe('24');
   });
 
+  it('uses the rest minutes chosen in Settings for the timer', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Settings').trigger('click');
+    await wrapper.get('select#rest').setValue('2');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(async () => expect((await savedData()).settings.restMinutes).toBe(2));
+    await button(wrapper, 'Plan').trigger('click');
+    await begin(wrapper);
+    expect(wrapper.text()).toContain('2 min');
+    const inputs = wrapper.findAll('.set-fields input');
+    await inputs[0]!.setValue('20');
+    await inputs[1]!.setValue('7');
+    await inputs[2]!.setValue('3');
+    const before = Date.now();
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Set saved on this device.'));
+    const restMs = (await savedData()).timer!.endsAt - before;
+    expect(restMs).toBeGreaterThanOrEqual(120_000);
+    expect(restMs).toBeLessThan(125_000);
+  });
+
+  it('hides the save confirmation by itself', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Settings').trigger('click');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
+    await vi.waitFor(() => expect(wrapper.text()).not.toContain('Settings saved.'), {
+      timeout: 4000,
+    });
+  });
+
   it('records a set, reopens it after remount, corrects it, and completes a partial session', async () => {
     let wrapper = await app();
     await begin(wrapper);

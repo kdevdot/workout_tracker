@@ -87,3 +87,13 @@ export function formatSet(log: SetLog, exercise: Exercise): string {
   const reserve = exercise.unit === 'seconds' ? 's reserve' : 'RIR';
   return `${formatLoad(log)} × ${log.reps} ${exercise.unit} · ${log.effort} ${reserve}`;
 }
+
+/** Rest between sets: the user's chosen minutes, or the exercise's programme rest. */
+export function restFor(
+  exercise: Pick<Exercise, 'restSeconds' | 'restLabel'>,
+  minutes: number | null,
+) {
+  return minutes === null
+    ? { seconds: exercise.restSeconds, label: exercise.restLabel }
+    : { seconds: Math.round(minutes * 60), label: `${minutes} min` };
+}

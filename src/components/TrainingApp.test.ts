@@ -15,6 +15,7 @@ afterEach(async () => {
   await flushPromises();
   await deleteDB(databaseName);
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 async function app() {
   const wrapper = mount(TrainingApp);
@@ -105,6 +106,19 @@ describe('working app integration', () => {
     await button(wrapper, 'Settings').trigger('click');
     expect((wrapper.get('#whey-kcal').element as HTMLInputElement).value).toBe('120');
     expect((wrapper.get('#whey-protein').element as HTMLInputElement).value).toBe('24');
+  });
+
+  it('moves to the new day when the app is reopened after midnight', async () => {
+    vi.setSystemTime(new Date(2026, 10, 2, 23, 50));
+    const wrapper = await app();
+    const date = () => (wrapper.get('input[type="date"]').element as HTMLInputElement).value;
+    expect(date()).toBe('2026-11-02');
+    vi.setSystemTime(new Date(2026, 10, 3, 7, 0));
+    document.dispatchEvent(new Event('visibilitychange'));
+    await vi.waitFor(() => expect(date()).toBe('2026-11-03'));
+    expect(wrapper.get('[aria-label^="Monday 2 November"]').classes()).not.toContain(
+      'border-input',
+    );
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {

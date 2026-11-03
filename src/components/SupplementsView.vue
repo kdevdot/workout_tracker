@@ -2,14 +2,20 @@
 import { computed, ref, shallowRef } from 'vue';
 import { Info, Trash2 } from '@lucide/vue';
 import type { Intake } from '@/domain/state';
-import { formatDate, localDate } from '@/domain/dates';
+import { formatDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 type Kind = Intake['kind'];
-const props = defineProps<{ date: string; intakes: Intake[]; busy: boolean; hasLabel: boolean }>();
+const props = defineProps<{
+  date: string;
+  today: string;
+  intakes: Intake[];
+  busy: boolean;
+  hasLabel: boolean;
+}>();
 const emit = defineEmits<{
   date: [date: string];
   add: [kind: Kind, amount: number];
@@ -19,8 +25,7 @@ const emit = defineEmits<{
 
 const amounts = ref<Record<Kind, string | number>>({ whey: '1', creatine: '3.4' });
 const error = shallowRef('');
-const today = localDate();
-const future = computed(() => props.date > today);
+const future = computed(() => props.date > props.today);
 const entries = computed(() => props.intakes.filter((entry) => entry.date === props.date));
 const wheyEntries = computed(() => entries.value.filter((entry) => entry.kind === 'whey'));
 const labelMissing = computed(() =>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { ArrowRight, ChevronDown, CircleCheck, Flame, History, Repeat } from '@lucide/vue';
-import { localDate } from '@/domain/dates';
 import { getExercises, workouts } from '@/domain/programme';
 import type { Phase, WorkoutId } from '@/domain/programme-types';
 import type { Session } from '@/domain/state';
@@ -16,6 +15,7 @@ import WorkoutArt from './WorkoutArt.vue';
 
 const props = defineProps<{
   date: string;
+  today: string;
   workoutId: WorkoutId | null;
   phase: Phase;
   restMinutes: number | null;
@@ -44,7 +44,7 @@ const totalSets = computed(() => exercises.value.reduce((sum, exercise) => sum +
 const activePhase = computed(() => shown.value?.phase ?? props.phase);
 const progress = computed(() => (shown.value ? sessionProgress(shown.value) : null));
 const done = computed(() => !props.session && props.completed !== null);
-const future = computed(() => props.date > localDate());
+const future = computed(() => props.date > props.today);
 
 function chooseWorkout(event: Event) {
   const value = (event.target as HTMLSelectElement).value;
@@ -53,7 +53,7 @@ function chooseWorkout(event: Event) {
 </script>
 
 <template>
-  <WeekStrip :date="date" :done-dates="doneDates" @date="emit('date', $event)" />
+  <WeekStrip :date="date" :today="today" :done-dates="doneDates" @date="emit('date', $event)" />
 
   <section class="workout-hero screen-enter">
     <div class="flex items-center justify-between gap-3">

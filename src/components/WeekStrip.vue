@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Check, ChevronLeft, ChevronRight } from '@lucide/vue';
-import { formatDate, localDate, shiftDate, weekFor } from '@/domain/dates';
+import { formatDate, shiftDate, weekFor } from '@/domain/dates';
 import { workoutForDate, workouts } from '@/domain/programme';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const props = defineProps<{ date: string; doneDates: Set<string> }>();
+const props = defineProps<{ date: string; today: string; doneDates: Set<string> }>();
 const emit = defineEmits<{ date: [value: string] }>();
 
-const today = localDate();
 const days = computed(() =>
   weekFor(props.date).map((day) => {
     const workout = workoutForDate(day);
     return {
       day,
       selected: day === props.date,
-      today: day === today,
+      today: day === props.today,
       done: props.doneDates.has(day),
       workout: workout ? workouts[workout].name : null,
     };

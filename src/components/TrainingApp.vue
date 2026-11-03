@@ -21,7 +21,7 @@ import SupplementsView from './SupplementsView.vue';
 import WorkoutPlan from './WorkoutPlan.vue';
 
 const app = useTrainingApp();
-const { state, ready, busy, error, view, date, timer } = app;
+const { state, ready, busy, error, view, date, today, timer } = app;
 
 const nav = [
   { view: 'plan', label: 'Plan', icon: CalendarDays },
@@ -74,6 +74,7 @@ const saveStatus = computed(() => {
         <WorkoutPlan
           v-if="view === 'plan'"
           :date="date"
+          :today="today"
           :workout-id="app.workoutId.value"
           :phase="state.settings.phase"
           :rest-minutes="state.settings.restMinutes"
@@ -106,6 +107,7 @@ const saveStatus = computed(() => {
         <SupplementsView
           v-else-if="view === 'supplements'"
           :date="date"
+          :today="today"
           :intakes="state.intakes"
           :busy="busy"
           :has-label="app.hasLabel.value"

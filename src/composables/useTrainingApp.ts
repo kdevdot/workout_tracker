@@ -1,4 +1,5 @@
 import { computed, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue';
+import { useEventListener } from '@vueuse/core';
 import { localDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
@@ -15,7 +16,8 @@ export function useTrainingApp() {
   const { state, update } = store;
   const timer = useRestTimer(state);
   const view = shallowRef<View>('plan');
-  const date = shallowRef(localDate());
+  const today = shallowRef(localDate());
+  const date = shallowRef(today.value);
   const override = shallowRef<WorkoutId | null | undefined>(undefined);
   const sessionId = shallowRef<string | null>(null);
   const message = shallowRef('');
@@ -69,6 +71,14 @@ export function useTrainingApp() {
     clearTimeout(hideMessage);
     message.value = '';
   }
+
+  // Phones resume the app from memory, so re-check the calendar day whenever it comes back.
+  useEventListener(document, 'visibilitychange', () => {
+    const now = localDate();
+    if (document.visibilityState !== 'visible' || now === today.value) return;
+    if (date.value === today.value) changeDate(now);
+    today.value = now;
+  });
 
   onMounted(store.load);
   onUnmounted(() => clearTimeout(hideMessage));
@@ -180,6 +190,7 @@ export function useTrainingApp() {
     ...store,
     timer,
     view,
+    today,
     date,
     workoutId,
     draft,

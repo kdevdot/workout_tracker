@@ -90,9 +90,8 @@ describe('working app integration', () => {
   it('saves numeric whey label inputs and retains them after remount', async () => {
     let wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');
-    const inputs = wrapper.findAll('input[type="number"]');
-    await inputs[0]!.setValue('120');
-    await inputs[1]!.setValue('24');
+    await wrapper.get('#whey-kcal').setValue('120');
+    await wrapper.get('#whey-protein').setValue('24');
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
     expect((await savedData()).settings.whey).toMatchObject({ calories: 120, protein: 24 });
@@ -104,15 +103,17 @@ describe('working app integration', () => {
     wrappers.push(wrapper);
     await vi.waitFor(() => expect(wrapper.text()).toContain('Saved on this device'));
     await button(wrapper, 'Settings').trigger('click');
-    const restored = wrapper.findAll('input[type="number"]');
-    expect((restored[0]!.element as HTMLInputElement).value).toBe('120');
-    expect((restored[1]!.element as HTMLInputElement).value).toBe('24');
+    expect((wrapper.get('#whey-kcal').element as HTMLInputElement).value).toBe('120');
+    expect((wrapper.get('#whey-protein').element as HTMLInputElement).value).toBe('24');
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');
-    await wrapper.get('select#rest').setValue('2');
+    await wrapper.get('input#rest').setValue('20');
+    await wrapper.get('form').trigger('submit');
+    expect(wrapper.text()).toContain('Rest must be between 0.5 and 10 minutes');
+    await wrapper.get('input#rest').setValue('2');
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(async () => expect((await savedData()).settings.restMinutes).toBe(2));
     await button(wrapper, 'Plan').trigger('click');

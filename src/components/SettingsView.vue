@@ -25,8 +25,7 @@ const name = shallowRef('');
 const calories = shallowRef<string | number>('');
 const protein = shallowRef<string | number>('');
 const phase = shallowRef<Phase>('intro');
-const restMinutes = shallowRef<number | null>(null);
-const restChoices = [1, 1.5, 2, 2.5, 3, 4, 5];
+const restMinutes = shallowRef<string | number>('');
 const error = shallowRef('');
 const pending = shallowRef<Backup | null>(null);
 const accepted = shallowRef(false);
@@ -40,7 +39,7 @@ watch(
     calories.value = settings.whey.calories === null ? '' : String(settings.whey.calories);
     protein.value = settings.whey.protein === null ? '' : String(settings.whey.protein);
     phase.value = settings.phase;
-    restMinutes.value = settings.restMinutes;
+    restMinutes.value = settings.restMinutes === null ? '' : String(settings.restMinutes);
   },
   { immediate: true },
 );
@@ -51,6 +50,11 @@ function optionalNumber(value: string | number) {
 function save() {
   const calorieValue = optionalNumber(calories.value);
   const proteinValue = optionalNumber(protein.value);
+  const restValue = optionalNumber(restMinutes.value);
+  if (restValue !== null && !(restValue >= 0.5 && restValue <= 10)) {
+    error.value = 'Rest must be between 0.5 and 10 minutes, or blank for the programme default.';
+    return;
+  }
   if (
     !name.value.trim() ||
     [calorieValue, proteinValue].some(
@@ -63,7 +67,7 @@ function save() {
   error.value = '';
   emit('settings', {
     phase: phase.value,
-    restMinutes: restMinutes.value,
+    restMinutes: restValue,
     whey: { name: name.value.trim(), calories: calorieValue, protein: proteinValue },
   });
 }
@@ -132,18 +136,22 @@ async function readFile(event: Event) {
           <p class="text-muted-foreground text-xs">Timed holds keep technical form reserve.</p>
         </div>
         <div class="flex flex-col gap-1.5">
-          <Label for="rest">Rest timer between sets</Label>
-          <select
+          <Label for="rest">Rest between sets · minutes</Label>
+          <Input
             id="rest"
             v-model="restMinutes"
-            class="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
-          >
-            <option :value="null">Programme default · 60 s–3 min by exercise</option>
-            <option v-for="minutes in restChoices" :key="minutes" :value="minutes">
-              {{ minutes }} min for every exercise
-            </option>
-          </select>
-          <p class="text-muted-foreground text-xs">Applies to the next set you save.</p>
+            type="number"
+            min="0.5"
+            max="10"
+            step="any"
+            inputmode="decimal"
+            placeholder="Programme default"
+            class="h-11"
+          />
+          <p class="text-muted-foreground text-xs">
+            Any time from 0.5 to 10 minutes, e.g. 1.5 = 90 s. Leave blank to use each exercise's
+            programme rest (60 s–3 min). Applies to the next set you save.
+          </p>
         </div>
         <div class="flex flex-col gap-1.5">
           <Label for="whey-name">Exact whey product / flavour</Label>

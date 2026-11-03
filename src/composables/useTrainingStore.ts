@@ -19,6 +19,8 @@ export function useTrainingStore() {
       database ??= new WorkoutDatabase();
       state.value = await database.load();
       ready.value = true;
+      // Ask the browser not to clear this data when space runs low; it may silently decline.
+      void navigator.storage?.persist?.().catch(() => undefined);
     } catch {
       void database?.close().catch(() => undefined);
       database = undefined;

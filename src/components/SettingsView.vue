@@ -262,15 +262,14 @@ async function readFile(event: Event) {
           >.
         </p>
         <p>
-          Bundled exercise videos by Goulart and muscle diagrams from the wger exercise database
-          (wger.de), licensed CC BY-SA 4.0. Bundled videos: audio removed and resized. Diagrams:
+          Muscle diagrams from the wger exercise database (wger.de), licensed CC BY-SA 4.0, with
           highlight colours changed. Modified files are shared under the same licence.
         </p>
         <p class="mt-2">
-          Three demonstrations stream from Renaissance Periodization on YouTube, inside the exercise
-          guide. They load only when you tap Watch, require internet and may show ads. YouTube
-          receives that player connection; its privacy rules apply. These streams are not bundled or
-          licensed under the wger notice.
+          Demonstrations stream from YouTube creators (mainly Renaissance Periodization, plus Runna,
+          Hinge Health, Bodhi Bodies and Josh Evans) inside the exercise guide. They load only when
+          you tap Watch, require internet and may show ads. YouTube receives that player connection;
+          its privacy rules apply. These streams are not bundled or licensed under the wger notice.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
           >Read the licence notice</a

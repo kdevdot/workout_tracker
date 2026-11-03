@@ -32,21 +32,21 @@ npm run check   # format check, tests, type check, production build
 
 Stack: Vue 3 + TypeScript, Vite, Tailwind CSS v4, shadcn-vue, zod, idb, vite-plugin-pwa, Vitest.
 
-| Path               | Contents                                               |
-| ------------------ | ------------------------------------------------------ |
-| `src/domain/`      | Programme, dates, session rules, state schema, guides  |
-| `src/storage/`     | IndexedDB access and revision checks                   |
-| `src/composables/` | App state and rest timer                               |
-| `src/components/`  | Vue views and UI components                            |
-| `public/`          | Videos, muscle maps, exercise illustrations, app icons |
+| Path               | Contents                                              |
+| ------------------ | ----------------------------------------------------- |
+| `src/domain/`      | Programme, dates, session rules, state schema, guides |
+| `src/storage/`     | IndexedDB access and revision checks                  |
+| `src/composables/` | App state and rest timer                              |
+| `src/components/`  | Vue views and UI components                           |
+| `public/`          | Muscle maps, exercise illustrations, app icons        |
 
 Every push to `main` runs `.github/workflows/check.yml`. The `deploy.yml` workflow builds the app and publishes `dist` to GitHub Pages.
 
 ## Credits
 
-- Muscle maps and bundled videos: [wger](https://wger.de), CC BY-SA 4.0. Videos are by Goulart, muted and re-encoded to 480p (`scripts/fetch-videos.sh`); muscle colours were changed. See `public/muscles/LICENSE.txt`.
+- Muscle maps: [wger](https://wger.de), CC BY-SA 4.0, with colours changed. See `public/muscles/LICENSE.txt`.
 - Exercise illustrations: [Workout Guide](https://github.com/bryllim/workout-guide) / [Everkinetic](https://github.com/everkinetic/data), CC BY-SA 4.0. See `public/exercises/ATTRIBUTION.md`.
-- YouTube demos: [Renaissance Periodization](https://www.youtube.com/@RenaissancePeriodization), streamed through the privacy-enhanced embed and only loaded when you tap them.
+- Demo videos: YouTube clips, mainly [Renaissance Periodization](https://www.youtube.com/@RenaissancePeriodization), plus Runna, Hinge Health, Bodhi Bodies and Josh Evans. They stream through the privacy-enhanced embed and only load when you tap them. Links are in `src/domain/guides.ts`.
 - Fonts: Geist and Bricolage Grotesque, OFL.
 
 No licence has been chosen for the app's source code. The third-party assets keep their own licences.

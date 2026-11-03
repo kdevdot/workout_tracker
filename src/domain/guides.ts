@@ -1,22 +1,10 @@
-export interface LocalVideo {
-  provider: 'wger';
-  /** wger video ID; file is public/videos/wger-<id>.mp4 (+ .jpg poster). */
-  id: number;
-  /** wger exercise ID, for the attribution link. */
-  exercise: number;
-  /** Set when the clip shows a close variant rather than your exact setup. */
-  variant?: string;
-}
-
-export interface YouTubeVideo {
+export interface Video {
   provider: 'youtube';
   id: string;
   title: string;
   author: string;
   variant?: string;
 }
-
-export type Video = LocalVideo | YouTubeVideo;
 
 export interface Comparison {
   topic: string;
@@ -33,13 +21,6 @@ export interface Guide {
   stop: string[];
   comparison?: Comparison;
 }
-
-export const VIDEO_CREDIT = {
-  author: 'Goulart',
-  source: 'wger.de',
-  licence: 'CC BY-SA 4.0',
-  licenceUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-} as const;
 
 const reels = {
   shoulders: 'https://www.instagram.com/joshuaktl_/reel/DfMaQpzh19U/',
@@ -64,7 +45,13 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Stop for shoulder pain or losing bar control.'],
   },
   'fixed-handle-pull-up': {
-    video: { provider: 'wger', id: 71, exercise: 475 },
+    video: {
+      provider: 'youtube',
+      id: 'iWpoegdfgtc',
+      title: 'Normal Grip Pullup',
+      author: 'Renaissance Periodization',
+      variant: 'Bar pull-up shown; your fixed handles work the same way.',
+    },
     checks: [
       'Fixed handles, comfortable grip',
       'Pull elbows toward ribs',
@@ -105,7 +92,12 @@ export const guides: Record<string, Guide> = {
     },
   },
   'seated-db-shoulder-press': {
-    video: { provider: 'wger', id: 12, exercise: 567 },
+    video: {
+      provider: 'youtube',
+      id: 'HzIiNhHhhtA',
+      title: 'Seated Dumbbell Shoulder Press',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Backrest near upright, ribs down',
       'Press along a natural arc',
@@ -146,22 +138,34 @@ export const guides: Record<string, Guide> = {
     },
   },
   'standing-db-curl': {
-    video: { provider: 'wger', id: 48, exercise: 92 },
+    video: {
+      provider: 'youtube',
+      id: 'iixND1P2lik',
+      title: 'Alternating Dumbbell Curl',
+      author: 'Renaissance Periodization',
+      variant: 'Alternating arms shown; both-arm curls are fine too.',
+    },
     checks: ['Upper arms stay still', 'No hip drive', 'Lower to a comfortable straight elbow'],
     stop: ['Stop when swinging replaces clean elbow bending.'],
   },
   'one-arm-cable-pushdown': {
     video: {
-      provider: 'wger',
-      id: 55,
-      exercise: 659,
-      variant: 'Two-hand rope shown; you use one D-handle.',
+      provider: 'youtube',
+      id: 'Cp_bShvMY4c',
+      title: 'Cable Single Arm Pushdown',
+      author: 'Renaissance Periodization',
     },
     checks: ['Upper arm pinned beside torso', 'Extend fully, return under control', 'No rocking'],
     stop: ['Stop when the upper arm or body starts moving.'],
   },
   'smith-squat': {
-    video: { provider: 'wger', id: 42, exercise: 341 },
+    video: {
+      provider: 'youtube',
+      id: '-eO_VydErV0',
+      title: 'Feet Forward Smith Squat',
+      author: 'Renaissance Periodization',
+      variant: 'Feet-forward stance shown; use the stance you set up.',
+    },
     checks: [
       'Bar on upper back, not neck',
       'Whole foot planted, knees track over toes',
@@ -170,7 +174,13 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Set stops just below your bottom position.'],
   },
   'db-romanian-deadlift': {
-    video: { provider: 'wger', id: 2, exercise: 507 },
+    video: {
+      provider: 'youtube',
+      id: 'cYKYGwcg0U8',
+      title: 'Dumbbell Stiff Legged Deadlift',
+      author: 'Renaissance Periodization',
+      variant: 'Same hip hinge as the RDL; keep knees soft.',
+    },
     checks: [
       'DBs close to thighs, knees soft',
       'Push hips back, spine neutral',
@@ -187,19 +197,33 @@ export const guides: Record<string, Guide> = {
     },
   },
   'unica-leg-extension': {
+    video: {
+      provider: 'youtube',
+      id: 'm0FOpMEgero',
+      title: 'Leg Extension',
+      author: 'Renaissance Periodization',
+      variant: 'Dedicated machine shown; use the staff-confirmed UNICA setup.',
+    },
     checks: ['Knee lined up with the lever pivot', 'Pad on lower shin', 'Extend without kicking'],
     stop: ['Use only after staff confirm the setup; otherwise do split squats.'],
   },
   'supine-heel-walkout': {
+    video: {
+      provider: 'youtube',
+      id: '6yeyt5mUo94',
+      title: 'Glute Bridge into Hamstring Walkout',
+      author: 'Runna',
+    },
     checks: ['Hips up, heels planted', '2–3 small steps out, 2–3 back = 1 rep', 'Keep hips high'],
     stop: ['Stop if hips sag or hamstrings cramp.'],
   },
   'supported-single-leg-standing-db-calf-raise': {
     video: {
-      provider: 'wger',
-      id: 14,
-      exercise: 622,
-      variant: 'Two-leg version on a step shown; you do one leg, holding a DB.',
+      provider: 'youtube',
+      id: '_gEx2ijsmNM',
+      title: 'Single Leg Stair Calves',
+      author: 'Renaissance Periodization',
+      variant: 'On a stair shown; floor range is smaller without a step.',
     },
     checks: [
       'Light hand on a fixed upright',
@@ -209,6 +233,12 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop before bouncing or bending the knee to lift.'],
   },
   'dead-bug': {
+    video: {
+      provider: 'youtube',
+      id: 'GbSC02oU3To',
+      title: 'How to Do a Dead Bug',
+      author: 'Hinge Health',
+    },
     checks: [
       'Exhale, ribs and low back down',
       'Reach opposite arm and leg slowly',
@@ -217,11 +247,22 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop before your low back arches.'],
   },
   'low-incline-db-bench-press': {
-    video: { provider: 'wger', id: 24, exercise: 537 },
+    video: {
+      provider: 'youtube',
+      id: 'B09ZkYsnKko',
+      title: 'Low Incline Dumbbell Press',
+      author: 'Renaissance Periodization',
+    },
     checks: ['Bench about 15–30°, locked', 'Wrists over elbows', 'Same chest depth every rep'],
     stop: ['Avoid a steep, shoulder-press angle. No dropping DBs.'],
   },
   'machine-pec-fly': {
+    video: {
+      provider: 'youtube',
+      id: 'FDay9wFe5uE',
+      title: 'Machine Flye',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Handles at chest height, back on the pad',
       'Soft elbows',
@@ -231,10 +272,10 @@ export const guides: Record<string, Guide> = {
   },
   'machine-reverse-fly': {
     video: {
-      provider: 'wger',
-      id: 7,
-      exercise: 82,
-      variant: 'Bent-over DB version (your alternative) shown; the machine works the same way.',
+      provider: 'youtube',
+      id: '5YK4bgzXDp0',
+      title: 'Machine Reverse Flye',
+      author: 'Renaissance Periodization',
     },
     checks: ['Chest on the pad', 'Handles near shoulder height', 'Arms out wide, elbows soft'],
     stop: ['Stop when shrugging or jerking takes over.'],
@@ -249,7 +290,12 @@ export const guides: Record<string, Guide> = {
     },
   },
   'one-db-two-hand-overhead-triceps-extension': {
-    video: { provider: 'wger', id: 57, exercise: 211 },
+    video: {
+      provider: 'youtube',
+      id: 'MPmeelJOmN8',
+      title: 'Dumbbell Two Hand Overhead Tricep Extension',
+      author: 'Bodhi Bodies',
+    },
     checks: [
       'One DB held securely in both hands',
       'Brace, bend elbows to a comfortable depth',
@@ -259,10 +305,11 @@ export const guides: Record<string, Guide> = {
   },
   'smith-romanian-deadlift': {
     video: {
-      provider: 'wger',
-      id: 2,
-      exercise: 507,
-      variant: 'Dumbbell version shown; the hinge is the same on the Smith.',
+      provider: 'youtube',
+      id: 'CN_7cz3P-1U',
+      title: 'Stiff Legged Deadlift',
+      author: 'Renaissance Periodization',
+      variant: 'Free barbell shown; the hinge is the same on the Smith.',
     },
     checks: [
       'Bar close to thighs, knees soft',
@@ -280,6 +327,12 @@ export const guides: Record<string, Guide> = {
     },
   },
   'db-stationary-split-squat': {
+    video: {
+      provider: 'youtube',
+      id: 'jNihW0WDIL4',
+      title: 'Split Squat',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Both feet planted, hip-width stagger',
       'Drop straight down',
@@ -289,10 +342,10 @@ export const guides: Record<string, Guide> = {
   },
   'seated-db-calf-raise': {
     video: {
-      provider: 'wger',
-      id: 13,
-      exercise: 590,
-      variant: 'Machine shown; you rest DBs on your thighs.',
+      provider: 'youtube',
+      id: 'UnBXxegoaCI',
+      title: 'Dumbbell Seated Calf Raise',
+      author: 'Josh Evans',
     },
     checks: [
       'Knees about 90°',
@@ -302,6 +355,12 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop if the load slides or you start bouncing.'],
   },
   'side-plank': {
+    video: {
+      provider: 'youtube',
+      id: 'iNbH7_edNI8',
+      title: 'Side Plank Tutorial',
+      author: 'Runna',
+    },
     checks: ['Elbow under shoulder', 'Knees or feet, straight side line', 'Breathe steadily'],
     stop: ['End with 5–10 s of good form left, before hips sag.'],
   },

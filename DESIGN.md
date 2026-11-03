@@ -31,4 +31,4 @@ Preserve real date navigation, safe areas and touch targets. Preserve reduced-mo
 
 ## Media and truth
 
-Retain the audited exercise thumbnails on neutral grey, library equipment icons for missing/mismatched illustrations, and tap-to-load in-app videos. Keep credits and licences in Settings. Body maps show target regions, not measured activation, fatigue or recovery. No invented streaks, durations, calories burned or activity scores.
+Retain the audited exercise thumbnails on neutral grey, a drawing for every exercise, and tap-to-load in-app YouTube demos. Keep credits and licences in Settings. Body maps show target regions, not measured activation, fatigue or recovery. No invented streaks, durations, calories burned or activity scores.

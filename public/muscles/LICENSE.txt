@@ -2,6 +2,3 @@ Muscle diagrams: wger Workout Manager (https://wger.de, https://github.com/wger-
 Licensed under Creative Commons Attribution-ShareAlike 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
 Modified: highlight colours changed (primary #d0694f, supporting #6f9a82). These modified files are
 shared under the same CC BY-SA 4.0 licence.
-
-Exercise videos in /videos: wger exercise database, author Goulart, CC BY-SA 4.0.
-Modified: audio removed, re-encoded to 480p H.264, poster frame extracted. Shared under CC BY-SA 4.0.

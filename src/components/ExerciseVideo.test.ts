@@ -2,10 +2,10 @@ import { defineComponent, nextTick } from 'vue';
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import ExerciseVideo from './ExerciseVideo.vue';
-import type { YouTubeVideo } from '@/domain/guides';
+import type { Video } from '@/domain/guides';
 
 const wrappers: VueWrapper[] = [];
-const video: YouTubeVideo = {
+const video: Video = {
   provider: 'youtube',
   id: 'O5viuEPDXKY',
   title: 'Smith Machine Bench Press',
@@ -95,17 +95,11 @@ describe('inline exercise demonstration', () => {
     expect(open).not.toHaveBeenCalled();
   });
 
-  it('preserves local videos, attribution and variation warnings for other exercises', () => {
+  it('shows the variation warning when the clip differs from your setup', () => {
     const wrapper = mount(ExerciseVideo, {
-      props: {
-        video: { provider: 'wger', id: 71, exercise: 475, variant: 'Grip may differ.' },
-        exerciseName: 'Pull-up',
-      },
+      props: { video: { ...video, variant: 'Grip may differ.' }, exerciseName: 'Pull-up' },
     });
     wrappers.push(wrapper);
-    expect(wrapper.get('video').attributes('src')).toContain('videos/wger-71.mp4');
-    expect(wrapper.get('video').attributes('playsinline')).toBeDefined();
-    expect(wrapper.text()).toContain('CC BY-SA 4.0');
     expect(wrapper.text()).toContain('Grip may differ.');
     expect(wrapper.find('iframe').exists()).toBe(false);
   });

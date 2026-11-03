@@ -1,4 +1,3 @@
-import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { guides, hasMuscleMapping, musclesFor } from './guides';
 import { workouts } from './programme';
@@ -20,29 +19,11 @@ describe('exercise guides', () => {
     expect(musclesFor(['Chest', 'Front delts', 'Side delts'])).toEqual([4, 2]);
   });
 
-  it('reference video and poster files that ship with the app', () => {
+  it('give every exercise a valid YouTube demo with credit', () => {
     for (const guide of Object.values(guides)) {
-      if (guide.video?.provider !== 'wger') continue;
-      for (const extension of ['mp4', 'jpg'])
-        expect(existsSync(`public/videos/wger-${guide.video.id}.${extension}`)).toBe(true);
-    }
-  });
-
-  it('keeps the three selected external demos tied to their exact exercise IDs', () => {
-    const selected = Object.entries(guides).filter(
-      ([, guide]) => guide.video?.provider === 'youtube',
-    );
-    expect(selected.map(([id]) => id)).toEqual([
-      'smith-flat-bench-press',
-      'bench-supported-one-arm-db-row',
-      'db-lateral-raise',
-    ]);
-    for (const [, guide] of selected) {
       expect(guide.video?.id).toMatch(/^[A-Za-z0-9_-]{11}$/);
-      if (guide.video?.provider === 'youtube') {
-        expect(guide.video.author).toBe('Renaissance Periodization');
-        expect(guide.video.title).not.toBe('');
-      }
+      expect(guide.video?.author).not.toBe('');
+      expect(guide.video?.title).not.toBe('');
     }
   });
 

@@ -15,8 +15,6 @@ const embedUrl = computed(() => {
     playsinline: '1',
     rel: '0',
     autoplay: '1',
-    enablejsapi: '1',
-    origin: window.location.origin,
   });
   return `https://www.youtube-nocookie.com/embed/${props.video.id}?${params}`;
 });

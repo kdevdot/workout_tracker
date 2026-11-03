@@ -36,7 +36,7 @@ describe('inline exercise demonstration', () => {
     expect(source.origin).toBe('https://www.youtube-nocookie.com');
     expect(source.pathname).toBe('/embed/O5viuEPDXKY');
     expect(source.searchParams.get('playsinline')).toBe('1');
-    expect(source.searchParams.get('origin')).toBe(window.location.origin);
+    expect(source.searchParams.has('enablejsapi')).toBe(false);
     expect(frame.attributes('title')).toBe('Demonstration: Smith flat bench press');
     expect(frame.attributes('referrerpolicy')).toBe('strict-origin-when-cross-origin');
     expect(wrapper.find('a').exists()).toBe(false);

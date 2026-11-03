@@ -427,6 +427,400 @@
           "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
         }
       }
+    },
+    {
+      "id": "exercise-bench-press",
+      "slug": "bench-press",
+      "name": "Bench Press",
+      "exerciseType": "weight_reps",
+      "equipment": "Barbell",
+      "primaryMuscle": "Chest",
+      "secondaryMuscles": ["Triceps", "Shoulders"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/bench-press/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0042-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0042-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-tricep-pushdown",
+      "slug": "tricep-pushdown",
+      "name": "Tricep Pushdown",
+      "exerciseType": "weight_reps",
+      "equipment": "Cable",
+      "primaryMuscle": "Triceps",
+      "secondaryMuscles": ["Shoulders"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/tricep-pushdown/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0205-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0205-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-leg-extension",
+      "slug": "leg-extension",
+      "name": "Leg Extension",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Quads",
+      "secondaryMuscles": [],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/leg-extension/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0142-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0142-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-glute-bridge",
+      "slug": "glute-bridge",
+      "name": "Glute Bridge",
+      "exerciseType": "bodyweight_reps",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscles": ["Hamstrings"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/glute-bridge/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0109-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0109-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-single-leg-calf-raise",
+      "slug": "single-leg-calf-raise",
+      "name": "Single-Leg Calf Raise",
+      "exerciseType": "bodyweight_reps",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Calves",
+      "secondaryMuscles": ["Core"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/single-leg-calf-raise/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-dead-bug",
+      "slug": "dead-bug",
+      "name": "Dead Bug",
+      "exerciseType": "bodyweight_reps",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscles": ["Legs"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/dead-bug/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-incline-dumbbell-press",
+      "slug": "incline-dumbbell-press",
+      "name": "Incline Dumbbell Press",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Chest",
+      "secondaryMuscles": ["Shoulders", "Triceps"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/incline-dumbbell-press/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0061-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0061-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-pec-deck",
+      "slug": "pec-deck",
+      "name": "Pec Deck",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Chest",
+      "secondaryMuscles": ["Shoulders"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/pec-deck/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-reverse-pec-deck",
+      "slug": "reverse-pec-deck",
+      "name": "Reverse Pec Deck",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Rear Delts",
+      "secondaryMuscles": ["Upper Back"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/reverse-pec-deck/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-seated-calf-raise",
+      "slug": "seated-calf-raise",
+      "name": "Seated Calf Raise",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Calves",
+      "secondaryMuscles": [],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/seated-calf-raise/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0279-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0279-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
     }
   ]
 }

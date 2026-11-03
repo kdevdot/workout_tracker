@@ -8,6 +8,7 @@ import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import ExerciseIcon from './ExerciseIcon.vue';
 
 const props = defineProps<{ sessions: Session[] }>();
 const emit = defineEmits<{ resume: [id: string] }>();
@@ -87,14 +88,21 @@ const entries = computed(() =>
         {{ session.phase === 'intro' ? 'Introduction' : 'Baseline' }} · recorded prescriptions
         retained
       </p>
-      <div v-for="item in session.exercises" :key="item.exercise.id" class="text-sm">
-        <strong class="font-semibold">{{ item.exercise.name }}</strong>
-        <p v-if="!item.logs.length" class="text-muted-foreground">No sets recorded</p>
-        <ol v-else class="text-muted-foreground tabular-nums">
-          <li v-for="log in item.logs" :key="log.index">
-            Set {{ log.index }} · {{ formatSet(log, item.exercise) }}
-          </li>
-        </ol>
+      <div
+        v-for="item in session.exercises"
+        :key="item.exercise.id"
+        class="flex items-start gap-3 text-sm"
+      >
+        <ExerciseIcon :exercise-id="item.exercise.id" class="size-11 shrink-0" />
+        <div class="flex min-w-0 flex-col">
+          <strong class="font-semibold">{{ item.exercise.name }}</strong>
+          <p v-if="!item.logs.length" class="text-muted-foreground">No sets recorded</p>
+          <ol v-else class="text-muted-foreground tabular-nums">
+            <li v-for="log in item.logs" :key="log.index">
+              Set {{ log.index }} · {{ formatSet(log, item.exercise) }}
+            </li>
+          </ol>
+        </div>
       </div>
       <Button v-if="session.status === 'active'" @click="emit('resume', session.id)"
         >Resume this workout</Button

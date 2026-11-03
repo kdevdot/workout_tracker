@@ -58,7 +58,7 @@ describe('working app integration', () => {
     await wrapper.get('input[type="date"]').setValue('2026-11-02');
     const symbols = wrapper.findAll('[data-exercise-icon]');
     expect(symbols).toHaveLength(7);
-    expect(symbols[0]!.attributes('data-exercise-icon')).toBe('equipment');
+    expect(symbols[0]!.attributes('data-exercise-icon')).toBe('bench-press');
     expect(symbols[1]!.attributes('data-exercise-icon')).toBe('pull-up');
     const summaries = wrapper
       .findAll('summary')

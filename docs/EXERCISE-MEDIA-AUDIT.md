@@ -67,3 +67,7 @@ No package was installed, app media replaced, production code changed, or commit
 ## Subsequent thumbnail integration
 
 Following feedback on the hand-drawn list icons, the 11 static candidates were integrated as small decorative thumbnails using frame 1 SVGs. View boxes are cropped to square artwork bounds with padding; drawn paths are unchanged. The 8 related-only and 2 rejected candidates remain excluded. Those rows use Lucide equipment icons, not misleading exercise poses. Artwork is displayed in monochrome on neutral stone backgrounds, not the earlier green panels. In-app video demonstrations remain separate. Licence, credits and pinned per-frame provenance are bundled in `public/exercises/` and linked from Settings. This does not approve the source animations or change any training prescription.
+
+## Full thumbnail coverage (3 November 2026)
+
+At the user's request, every list row now shows a drawing. The 8 related-only candidates are used as identifying thumbnails, without changing their audit verdicts. The two rejected slots use substitutes: `bench-press` (flat barbell bench) for the Smith flat bench press, and `glute-bridge` (hips up, heels planted) for the heel-walkout start position. Thumbnails identify the exercise; they do not teach setup or technique. The video, muscle map and form checks remain the reference.

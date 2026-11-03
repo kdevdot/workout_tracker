@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Activity, Armchair, Cable, Dumbbell, Footprints } from '@lucide/vue';
+import { Dumbbell } from '@lucide/vue';
 
 const props = defineProps<{ exerciseId: string }>();
 const base = import.meta.env.BASE_URL;
 
 const illustrations: Readonly<Record<string, string>> = {
+  'smith-flat-bench-press': 'bench-press',
+  'one-arm-cable-pushdown': 'tricep-pushdown',
+  'unica-leg-extension': 'leg-extension',
+  'supine-heel-walkout': 'glute-bridge',
+  'supported-single-leg-standing-db-calf-raise': 'single-leg-calf-raise',
+  'dead-bug': 'dead-bug',
+  'low-incline-db-bench-press': 'incline-dumbbell-press',
+  'machine-pec-fly': 'pec-deck',
+  'machine-reverse-fly': 'reverse-pec-deck',
+  'seated-db-calf-raise': 'seated-calf-raise',
   'fixed-handle-pull-up': 'pull-up',
   'bench-supported-one-arm-db-row': 'one-arm-dumbbell-row',
   'seated-db-shoulder-press': 'seated-dumbbell-press',
@@ -19,23 +29,7 @@ const illustrations: Readonly<Record<string, string>> = {
   'side-plank': 'side-plank',
 };
 
-const equipmentIcons = {
-  'smith-flat-bench-press': Dumbbell,
-  'one-arm-cable-pushdown': Cable,
-  'unica-leg-extension': Armchair,
-  'supine-heel-walkout': Footprints,
-  'supported-single-leg-standing-db-calf-raise': Footprints,
-  'dead-bug': Activity,
-  'low-incline-db-bench-press': Dumbbell,
-  'machine-pec-fly': Armchair,
-  'machine-reverse-fly': Armchair,
-  'seated-db-calf-raise': Footprints,
-};
-
 const illustration = computed(() => illustrations[props.exerciseId]);
-const equipmentIcon = computed(
-  () => equipmentIcons[props.exerciseId as keyof typeof equipmentIcons] ?? Dumbbell,
-);
 </script>
 
 <template>
@@ -52,11 +46,6 @@ const equipmentIcon = computed(
       height="56"
       class="size-full object-contain p-0.5 opacity-80 brightness-0"
     />
-    <component
-      v-else
-      :is="equipmentIcon"
-      class="text-muted-foreground size-6"
-      :stroke-width="1.5"
-    />
+    <component v-else :is="Dumbbell" class="text-muted-foreground size-6" :stroke-width="1.5" />
   </span>
 </template>

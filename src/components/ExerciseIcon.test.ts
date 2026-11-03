@@ -5,7 +5,7 @@ import ExerciseIcon from './ExerciseIcon.vue';
 import { workouts } from '@/domain/programme';
 
 describe('exercise thumbnails', () => {
-  it('uses audited artwork or a library equipment icon for every programme movement', () => {
+  it('shows a drawing for every programme movement', () => {
     const exercises = new Map(
       Object.values(workouts).flatMap((workout) =>
         workout.exercises.map((exercise) => [exercise.id, exercise] as const),
@@ -25,21 +25,12 @@ describe('exercise thumbnails', () => {
       }
       wrapper.unmount();
     }
-    expect(illustrations).toBe(11);
+    expect(illustrations).toBe(exercises.size);
   });
 
-  it('excludes rejected and mismatched poses and retains asset provenance', () => {
-    for (const exerciseId of [
-      'smith-flat-bench-press',
-      'supine-heel-walkout',
-      'seated-db-calf-raise',
-    ]) {
-      const wrapper = mount(ExerciseIcon, { props: { exerciseId } });
-      expect(wrapper.find('img').exists()).toBe(false);
-      wrapper.unmount();
-    }
+  it('retains provenance for every bundled drawing', () => {
     const provenance = JSON.parse(readFileSync('public/exercises/provenance.json', 'utf8'));
-    expect(provenance.exercises).toHaveLength(11);
+    expect(provenance.exercises).toHaveLength(21);
     expect(existsSync('public/exercises/LICENSE-ASSETS')).toBe(true);
   });
 

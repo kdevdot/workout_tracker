@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
-import '@fontsource-variable/manrope';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/bricolage-grotesque';
 import App from './App.vue';
 import './style.css';
 

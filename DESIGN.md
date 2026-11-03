@@ -15,7 +15,7 @@ The user's uploaded dashboard screenshot is the visual reference. Replace the pr
 
 ## Typography and hierarchy
 
-Self-hosted Manrope Variable throughout. Sentence case, regular/medium body copy, semibold headings and clear numeric prescriptions. No condensed display font, oversized uppercase workout titles or high-contrast dark hero. Page headings are 24–32px; workout titles 28–32px; section headings 18px; exercise names 14px. Long names wrap. Dates stay prominent; the workout is named once. Page headers share a 12px title-to-description gap.
+Self-hosted Geist Variable for UI and body text; Bricolage Grotesque Variable for headings and large numbers (both OFL). Sentence case, regular/medium body copy, semibold headings and clear numeric prescriptions. No condensed display font, oversized uppercase workout titles or high-contrast dark hero. Page headings are 24–32px; workout titles 28–32px; section headings 18px; exercise names 14px. Long names wrap. Dates stay prominent; the workout is named once. Page headers share a 12px title-to-description gap.
 
 ## Surfaces
 
@@ -27,7 +27,7 @@ Every screen uses the same phone-first frame: fluid to 480px maximum, centred on
 
 The workout summary includes a small geometric SVG weight plate, with concentric rings, dashed perimeter and light-blue accents. Rest days use a matching moon motif. These are decorative equipment/recovery illustrations, not measured progress rings. Keep patterns local to this graphic rather than introducing noisy backgrounds or hand-drawn exercise figures.
 
-Preserve real date navigation, safe areas and touch targets. Preserve reduced-motion support, focus/disabled/error states, draft logging, timer deadlines, local storage, backup/restore and supplement calculations. A visual change does not imply new offline installation or cloud sync.
+Preserve real date navigation, safe areas and touch targets. Preserve reduced-motion support, focus/disabled/error states, draft logging, timer deadlines, local storage, backup/restore and supplement calculations. A visual change does not imply cloud sync.
 
 ## Media and truth
 

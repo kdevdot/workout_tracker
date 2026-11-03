@@ -95,7 +95,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     </div>
   </div>
 
-  <nav aria-label="Exercises" class="-mx-5 flex snap-x gap-2 overflow-x-auto px-5 pb-1">
+  <nav aria-label="Exercises" class="flex snap-x gap-2 overflow-x-auto pb-1">
     <button
       v-for="(item, index) in session.exercises"
       :key="item.exercise.id"
@@ -103,7 +103,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
       :class="
         cn(
-          'flex shrink-0 snap-start items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition-colors',
+          'flex min-h-11 shrink-0 snap-start items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors',
           'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
           selected === index
             ? 'bg-primary text-primary-foreground border-primary'
@@ -119,7 +119,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   </nav>
 
   <section class="flex flex-col gap-2">
-    <h1 class="text-[1.75rem] leading-tight font-extrabold tracking-tight">{{ exercise.name }}</h1>
+    <h1 class="page-heading">{{ exercise.name }}</h1>
     <p class="text-muted-foreground text-sm leading-6">
       {{ loadHint
       }}{{ exercise.perSide ? ' Complete both sides for one set; match clean reps.' : '' }}
@@ -130,10 +130,12 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <div
       v-for="stat in stats"
       :key="stat.label"
-      class="bg-card flex flex-col-reverse items-center rounded-xl border px-2 py-3 text-center"
+      class="flex flex-col-reverse items-center gap-1 border-y px-2 py-4 text-center"
     >
       <dt class="text-muted-foreground text-xs">{{ stat.label }}</dt>
-      <dd class="text-lg font-extrabold tabular-nums">{{ stat.value }}</dd>
+      <dd class="font-display text-3xl leading-none font-semibold tabular-nums">
+        {{ stat.value }}
+      </dd>
     </div>
   </dl>
 

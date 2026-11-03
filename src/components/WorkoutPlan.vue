@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ArrowRight, ChevronDown, Dumbbell, Flame, Moon, Repeat } from '@lucide/vue';
+import { ArrowRight, ChevronDown, Flame, Repeat } from '@lucide/vue';
 import { localDate } from '@/domain/dates';
 import { getExercises, workouts } from '@/domain/programme';
 import type { Phase, WorkoutId } from '@/domain/programme-types';
 import type { Session } from '@/domain/state';
 import { sessionProgress } from '@/domain/sessions';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import ExerciseGuide from './ExerciseGuide.vue';
+import ExerciseIcon from './ExerciseIcon.vue';
 import MuscleMap from './MuscleMap.vue';
 import WeekStrip from './WeekStrip.vue';
+import WorkoutArt from './WorkoutArt.vue';
 
 const props = defineProps<{
   date: string;
@@ -29,7 +29,6 @@ const emit = defineEmits<{
 }>();
 
 const workout = computed(() => (props.workoutId ? workouts[props.workoutId] : null));
-// A started session keeps its snapshotted prescriptions; otherwise show the current template.
 const exercises = computed(
   () =>
     props.session?.exercises.map((entry) => entry.exercise) ??
@@ -49,155 +48,149 @@ function chooseWorkout(event: Event) {
 <template>
   <WeekStrip :date="date" @date="emit('date', $event)" />
 
-  <section
-    class="bg-primary text-primary-foreground relative overflow-hidden rounded-2xl p-5 shadow-lg shadow-primary/15"
-  >
-    <component
-      :is="workout ? Dumbbell : Moon"
-      class="absolute -top-3 -right-3 size-28 opacity-10"
-      :stroke-width="1.2"
-    />
-    <div class="relative flex flex-col gap-4">
-      <div class="flex flex-col gap-1">
-        <Badge
-          v-if="workout"
-          class="bg-primary-foreground/15 text-primary-foreground w-fit border-0"
-        >
-          {{
-            activePhase === 'intro'
-              ? 'Introduction · 3 RIR for rep-based sets'
-              : 'Full baseline · exercise-specific RIR'
-          }}
-        </Badge>
-        <h2 class="text-3xl font-extrabold tracking-tight">{{ workout?.name ?? 'Rest day' }}</h2>
-        <p class="text-primary-foreground/80 text-sm">
-          {{
-            workout
-              ? `${exercises.length} exercises · ${totalSets} working sets`
-              : 'No lifting session scheduled'
-          }}
+  <section class="workout-hero screen-enter">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex min-w-0 flex-col gap-3">
+        <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
+        <p v-if="workout" class="text-muted-foreground text-xs leading-5 font-medium">
+          {{ exercises.length }} exercises<span class="mx-1.5">·</span>{{ totalSets }} working sets
+        </p>
+        <p v-else class="text-muted-foreground text-xs leading-5">
+          Recovery is part of your programme. Supplements stay on track, even today.
         </p>
       </div>
-
+      <WorkoutArt :rest="!workout" class="size-20 shrink-0" />
+    </div>
+    <div class="flex flex-col gap-4">
+      <p v-if="workout" class="text-muted-foreground flex items-start gap-2 text-xs leading-5">
+        <span class="bg-primary mt-1.5 size-1.5 shrink-0 rounded-full" />
+        {{
+          activePhase === 'intro'
+            ? 'Introduction · 3 RIR for rep-based sets'
+            : 'Full baseline · exercise-specific RIR'
+        }}
+      </p>
       <div v-if="progress" class="flex flex-col gap-2">
-        <div class="flex justify-between text-xs font-semibold">
+        <div class="flex justify-between text-xs font-medium">
           <span>{{ progress.done }} / {{ progress.total }} sets saved</span>
-          <span class="text-primary-foreground/70">Prescriptions locked to this session</span>
+          <span class="text-muted-foreground">Session targets locked</span>
         </div>
         <Progress
           :model-value="(progress.done / progress.total) * 100"
-          class="bg-primary-foreground/20 [&_[data-slot=progress-indicator]]:bg-coral"
+          class="bg-secondary [&_[data-slot=progress-indicator]]:bg-primary"
         />
       </div>
-
-      <template v-if="workout">
-        <p v-if="future" class="text-primary-foreground/80 text-xs">
-          Future date: preview only. Choose today or an earlier date to record actual training.
-        </p>
-        <Button
-          size="lg"
-          class="bg-coral hover:bg-coral/90 h-12 w-full text-base font-bold text-white"
-          :disabled="busy || future"
-          @click="emit('start')"
-        >
-          {{ session ? 'Resume workout' : 'Start workout' }}<ArrowRight class="size-5" />
-        </Button>
-      </template>
-      <template v-else>
-        <p class="text-primary-foreground/80 text-sm">
-          Rest is part of the plan. Your next session stays in the calendar.
-        </p>
-        <Button
-          size="lg"
-          variant="secondary"
-          class="h-12 w-full text-base font-bold"
-          @click="emit('supplements')"
-        >
-          Log supplements<ArrowRight class="size-5" />
-        </Button>
-      </template>
+      <p v-if="workout && future" class="text-muted-foreground text-xs leading-5">
+        Future date: preview only. Choose today or an earlier date to record actual training.
+      </p>
+      <Button
+        v-if="workout"
+        size="lg"
+        class="hero-action w-full justify-between px-5 text-sm font-bold"
+        :disabled="busy || future"
+        @click="emit('start')"
+      >
+        {{ session ? 'Resume workout' : 'Start workout' }}<ArrowRight class="size-5" />
+      </Button>
+      <Button
+        v-else
+        size="lg"
+        class="hero-action w-full justify-between px-5 text-sm font-bold"
+        @click="emit('supplements')"
+      >
+        Log supplements<ArrowRight class="size-5" />
+      </Button>
     </div>
   </section>
 
-  <details class="group bg-card rounded-xl border px-4">
-    <summary class="flex min-h-12 items-center gap-2 text-sm font-semibold">
-      <Repeat class="text-muted-foreground size-4" />Change this day's session
-      <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
-    </summary>
-    <div class="flex flex-col gap-2 pb-4">
-      <label class="flex flex-col gap-1.5 text-sm font-medium">
-        Workout
-        <select
-          :value="workoutId ?? ''"
-          :disabled="busy"
-          class="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 outline-none focus-visible:ring-3"
-          @change="chooseWorkout"
-        >
-          <option value="">Rest day</option>
-          <option v-for="option in workouts" :key="option.id" :value="option.id">
-            {{ option.name }}
-          </option>
-        </select>
-      </label>
-      <p class="text-muted-foreground text-xs">
-        Choose what you actually train; this does not change the weekly template.
-      </p>
-    </div>
-  </details>
-
-  <MuscleMap :primary="workout?.primary ?? []" :supporting="workout?.supporting ?? []" />
-
-  <template v-if="workout">
-    <details class="group bg-coral-soft/60 rounded-xl px-4">
-      <summary class="flex min-h-12 items-center gap-2 text-sm font-semibold">
-        <Flame class="text-coral size-4" />Warm-up & preparation
-        <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
-      </summary>
-      <div class="flex flex-col gap-2 pb-4 text-sm leading-6">
-        <p>{{ workout.warmup }}</p>
-        <p v-if="activePhase === 'intro'">
-          Use 2 working sets per exercise for the introduction. If this is substantially more than
-          recent training, reduce isolation work further. Increase only when recovery is acceptable.
-        </p>
-      </div>
-    </details>
-
-    <section class="flex flex-col gap-3">
-      <div class="flex items-baseline justify-between">
-        <h3 class="text-lg font-bold tracking-tight">Exercise order</h3>
-        <span class="text-muted-foreground text-xs font-medium">
-          Sets ×
-          {{ exercises.some((exercise) => exercise.unit === 'seconds') ? 'reps / time' : 'reps' }}
-        </span>
-      </div>
-      <Card class="gap-0 divide-y overflow-hidden p-0">
-        <details v-for="(exercise, index) in exercises" :key="exercise.id" class="group">
-          <summary class="hover:bg-muted/50 flex items-center gap-3 px-4 py-3.5 transition-colors">
-            <span
-              class="bg-secondary text-secondary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold tabular-nums"
-              >{{ String(index + 1).padStart(2, '0') }}</span
+  <div class="workout-layout">
+    <aside class="workout-sidebar flex min-w-0 flex-col gap-5">
+      <MuscleMap :primary="workout?.primary ?? []" :supporting="workout?.supporting ?? []" />
+      <details class="group border-b">
+        <summary class="flex min-h-12 items-center gap-2 text-xs font-semibold">
+          <Repeat class="text-muted-foreground size-4" />Change this day's session
+          <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
+        </summary>
+        <div class="flex flex-col gap-2 pb-4">
+          <label class="flex flex-col gap-1.5 text-sm font-medium">
+            Workout
+            <select
+              :value="workoutId ?? ''"
+              :disabled="busy"
+              class="border-input bg-card focus-visible:ring-ring/50 h-11 rounded-lg border px-3 outline-none focus-visible:ring-3"
+              @change="chooseWorkout"
             >
-            <span class="flex min-w-0 flex-1 flex-col">
-              <span class="text-[0.95rem] leading-snug font-semibold">{{ exercise.name }}</span>
-              <small class="text-muted-foreground text-xs">
-                {{ exercise.restLabel }} rest · {{ exercise.targetRir
-                }}{{ exercise.unit === 'seconds' ? '' : ' RIR' }}
-              </small>
-            </span>
-            <span class="flex flex-col items-end text-right">
-              <strong class="text-sm tabular-nums"
-                >{{ exercise.sets }} × {{ exercise.min }}–{{ exercise.max }}</strong
-              >
-              <small class="text-muted-foreground text-xs"
-                >{{ exercise.unit }}{{ exercise.perSide ? ' / side' : '' }}</small
-              >
-            </span>
-          </summary>
-          <div class="bg-muted/30 border-t px-4 py-4">
-            <ExerciseGuide :exercise="exercise" />
-          </div>
-        </details>
-      </Card>
-    </section>
-  </template>
+              <option value="">Rest day</option>
+              <option v-for="option in workouts" :key="option.id" :value="option.id">
+                {{ option.name }}
+              </option>
+            </select>
+          </label>
+          <p class="text-muted-foreground text-xs leading-5">
+            Choose what you actually train; this does not change the weekly template.
+          </p>
+        </div>
+      </details>
+    </aside>
+
+    <div v-if="workout" class="workout-content flex min-w-0 flex-col gap-6">
+      <details class="group bg-secondary rounded-xl px-4">
+        <summary class="flex min-h-14 items-center gap-3 text-sm font-semibold">
+          <Flame class="size-4" />Warm-up & preparation
+          <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
+        </summary>
+        <div class="flex flex-col gap-2 pb-4 text-sm leading-6">
+          <p>{{ workout.warmup }}</p>
+          <p v-if="activePhase === 'intro'">
+            Use 2 working sets per exercise for the introduction. If this is substantially more than
+            recent training, reduce isolation work further. Increase only when recovery is
+            acceptable.
+          </p>
+        </div>
+      </details>
+
+      <section class="flex flex-col gap-4">
+        <div class="flex items-end justify-between gap-2">
+          <h3 class="section-heading">Exercise order</h3>
+          <span class="text-muted-foreground text-[10px] font-medium"
+            >Sets ×
+            {{
+              exercises.some((exercise) => exercise.unit === 'seconds') ? 'reps / time' : 'reps'
+            }}</span
+          >
+        </div>
+        <div class="exercise-list">
+          <details v-for="exercise in exercises" :key="exercise.id" class="group/exercise">
+            <summary class="exercise-row">
+              <ExerciseIcon :exercise-id="exercise.id" class="size-14 shrink-0" />
+              <span class="flex min-w-0 flex-1 flex-col gap-1.5">
+                <span class="text-sm leading-snug font-semibold">{{ exercise.name }}</span>
+                <small class="text-muted-foreground text-[10px] leading-relaxed sm:text-xs"
+                  >{{ exercise.restLabel }} rest · {{ exercise.targetRir
+                  }}{{ exercise.unit === 'seconds' ? '' : ' RIR' }}</small
+                >
+              </span>
+              <span class="flex shrink-0 flex-col items-end gap-1 text-right">
+                <strong class="font-display text-[24px] leading-none font-semibold tabular-nums"
+                  >{{ exercise.sets }} × {{ exercise.min }}–{{ exercise.max }}</strong
+                >
+                <small
+                  v-if="exercise.perSide || exercise.unit !== 'reps'"
+                  class="text-muted-foreground text-[10px]"
+                  >{{ exercise.unit }}{{ exercise.perSide ? ' / side' : '' }}</small
+                >
+                <ChevronDown
+                  class="text-muted-foreground size-3.5 transition-transform group-open/exercise:rotate-180"
+                />
+              </span>
+            </summary>
+            <div class="bg-card rounded-xl border p-4"><ExerciseGuide :exercise="exercise" /></div>
+          </details>
+        </div>
+        <p class="text-muted-foreground text-xs leading-5">
+          Tap an exercise for its demonstration, setup and form checks.
+        </p>
+      </section>
+    </div>
+  </div>
 </template>

@@ -13,14 +13,14 @@ const emit = defineEmits<{ dismiss: [] }>();
     aria-label="Rest timer"
     :class="
       cn(
-        'fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-20 mx-auto flex w-[calc(100%-2.5rem)] max-w-[24rem] items-center gap-3 rounded-2xl p-3 pl-4 shadow-xl',
+        'fixed inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 mx-auto flex w-[calc(100%-2.5rem)] max-w-[28rem] items-center gap-3 rounded-xl p-4 shadow-lg',
         done ? 'bg-coral text-white' : 'bg-foreground text-background',
       )
     "
   >
     <component :is="done ? BellRing : Timer" class="size-6 shrink-0" />
     <div class="flex flex-1 flex-col">
-      <strong class="text-2xl leading-none font-extrabold tabular-nums">{{
+      <strong class="font-display text-3xl leading-none font-semibold tabular-nums">{{
         done ? 'Rest complete' : display
       }}</strong>
       <span class="text-xs opacity-75">{{

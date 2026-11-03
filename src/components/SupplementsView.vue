@@ -68,8 +68,8 @@ function remove(id: string) {
 </script>
 
 <template>
-  <header class="flex flex-col gap-1">
-    <h1 class="text-[2.1rem] leading-tight font-extrabold tracking-tight">Daily supplements</h1>
+  <header class="page-header screen-enter">
+    <h1 class="page-heading">Daily supplements</h1>
     <p class="text-muted-foreground text-sm">
       Whey and creatine, on training and rest days. No food diary.
     </p>
@@ -91,18 +91,18 @@ function remove(id: string) {
     />
   </label>
 
-  <section class="bg-primary text-primary-foreground flex flex-col gap-1 rounded-2xl p-5">
+  <section class="muscle-panel bg-card text-foreground flex flex-col gap-3 rounded-xl p-5">
     <h2 class="text-sm font-semibold opacity-80">Recorded whey nutrition</h2>
     <p v-if="!wheyEntries.length" class="text-lg font-bold">No whey entries for this date.</p>
     <p v-else class="flex items-baseline gap-4">
       <span
-        ><strong class="text-3xl font-extrabold tabular-nums">{{
+        ><strong class="font-display text-5xl leading-none font-semibold tabular-nums">{{
           Math.round(totals.calories)
         }}</strong>
         kcal</span
       >
       <span
-        ><strong class="text-3xl font-extrabold tabular-nums">{{
+        ><strong class="font-display text-5xl leading-none font-semibold tabular-nums">{{
           Math.round(totals.protein * 10) / 10
         }}</strong>
         g protein</span
@@ -162,7 +162,7 @@ function remove(id: string) {
   <p v-if="error" role="alert" class="text-destructive text-sm font-medium">{{ error }}</p>
 
   <section class="flex flex-col gap-2">
-    <h2 class="text-lg font-bold tracking-tight">Entries for this date</h2>
+    <h2 class="section-heading">Entries for this date</h2>
     <p v-if="!entries.length" class="text-muted-foreground text-sm">Nothing recorded yet.</p>
     <ul class="flex flex-col gap-2">
       <li

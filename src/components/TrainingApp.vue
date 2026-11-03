@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { CalendarDays, CircleAlert, CloudOff, History, Pill, Settings2 } from '@lucide/vue';
+import {
+  CalendarDays,
+  CircleAlert,
+  CloudOff,
+  History,
+  Pill,
+  Settings2,
+  MoveUpRight,
+} from '@lucide/vue';
 import { useTrainingApp, type View } from '@/composables/useTrainingApp';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -31,16 +39,16 @@ const saveStatus = computed(() => {
 </script>
 
 <template>
-  <div class="mx-auto flex min-h-dvh max-w-md flex-col">
+  <div class="app-shell flex flex-col">
     <header
-      class="bg-background/85 sticky top-0 z-20 flex items-center justify-between px-5 pt-[max(env(safe-area-inset-top),0.75rem)] pb-3 backdrop-blur"
+      class="app-header bg-background sticky top-0 z-20 mx-5 flex items-center justify-between border-b pb-3"
     >
-      <span class="text-xl font-extrabold tracking-tight"
-        >steady<span class="text-coral">.</span></span
-      >
+      <span class="wordmark flex items-center gap-1"
+        >steady<MoveUpRight class="size-5" :stroke-width="2.5"
+      /></span>
       <span
         v-if="ready"
-        class="text-muted-foreground flex items-center gap-1.5 text-xs font-medium"
+        class="text-muted-foreground flex max-w-48 items-center gap-2 text-right text-[10px] leading-relaxed font-medium"
         role="status"
       >
         <span
@@ -50,7 +58,7 @@ const saveStatus = computed(() => {
       </span>
     </header>
 
-    <main class="flex flex-1 flex-col gap-5 px-5 pt-2 pb-32">
+    <main class="app-main flex w-full flex-1 flex-col gap-5 px-5">
       <section v-if="!ready" class="flex flex-col items-start gap-3 py-16">
         <h1 class="text-2xl font-bold tracking-tight">
           {{ error ? 'Storage needs attention' : 'Opening your training log…' }}
@@ -134,12 +142,8 @@ const saveStatus = computed(() => {
       </footer>
     </main>
 
-    <nav
-      v-if="ready"
-      class="bg-card/95 fixed inset-x-0 bottom-0 z-30 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur"
-      aria-label="Main navigation"
-    >
-      <div class="mx-auto grid max-w-md grid-cols-4">
+    <nav v-if="ready" class="app-nav" aria-label="Main navigation">
+      <div class="grid grid-cols-4 gap-1">
         <button
           v-for="item in nav"
           :key="item.view"
@@ -147,21 +151,13 @@ const saveStatus = computed(() => {
           :disabled="busy"
           :class="
             cn(
-              'text-muted-foreground flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors disabled:opacity-50',
+              'nav-item flex flex-col items-center justify-center text-[10px] font-semibold transition-colors disabled:opacity-50',
               'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 focus-visible:ring-inset',
-              activeTab === item.view && 'text-primary',
             )
           "
           @click="view = item.view"
         >
-          <span
-            :class="
-              cn(
-                'flex h-7 w-12 items-center justify-center rounded-full transition-colors',
-                activeTab === item.view && 'bg-secondary',
-              )
-            "
-          >
+          <span class="flex items-center justify-center">
             <component :is="item.icon" class="size-5" :stroke-width="1.8" /> </span
           >{{ item.label }}
         </button>

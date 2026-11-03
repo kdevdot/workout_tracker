@@ -32,8 +32,8 @@ const entries = computed(() =>
 </script>
 
 <template>
-  <header class="flex flex-col gap-1">
-    <h1 class="text-[2.1rem] leading-tight font-extrabold tracking-tight">Training history</h1>
+  <header class="page-header screen-enter">
+    <h1 class="page-heading">Training history</h1>
     <p class="text-muted-foreground text-sm">
       Your real sessions. Partial workouts stay partial; drafts can be resumed.
     </p>

@@ -42,9 +42,9 @@ const label = computed(() =>
           class="absolute inset-x-0 top-0 w-full"
         />
       </div>
-      <figcaption class="text-muted-foreground text-[10px] font-semibold uppercase">
+      <span class="text-muted-foreground text-[9px] font-medium uppercase">
         {{ view.side }}
-      </figcaption>
+      </span>
     </div>
   </figure>
 </template>

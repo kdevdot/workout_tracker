@@ -57,12 +57,12 @@ function submit() {
 
 <template>
   <form
-    class="set-form bg-card flex flex-col gap-4 rounded-2xl border p-4 shadow-sm"
+    class="set-form bg-card flex flex-col gap-5 rounded-xl border p-5"
     novalidate
     @submit.prevent="submit"
   >
     <div class="flex items-baseline justify-between">
-      <h3 class="font-bold">{{ initial ? 'Edit' : 'Record' }} set {{ index }}</h3>
+      <h3 class="section-heading">{{ initial ? 'Edit' : 'Record' }} set {{ index }}</h3>
       <span class="text-muted-foreground text-xs font-medium">of {{ exercise.sets }}</span>
     </div>
     <div class="set-fields grid grid-cols-3 gap-2.5">

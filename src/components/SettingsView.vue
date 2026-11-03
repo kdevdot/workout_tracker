@@ -98,8 +98,8 @@ async function readFile(event: Event) {
 </script>
 
 <template>
-  <header class="flex flex-col gap-1">
-    <h1 class="text-[2.1rem] leading-tight font-extrabold tracking-tight">Your data. Your copy.</h1>
+  <header class="page-header screen-enter">
+    <h1 class="page-heading">Settings & data</h1>
     <p class="text-muted-foreground text-sm">
       Local-first storage, with an independent backup you control.
     </p>

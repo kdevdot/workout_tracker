@@ -1,33 +1,34 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Steady: warm off-white surface, forest-green actions, coral for primary muscle focus (DESIGN.md). */
 :root {
-  --radius: 0.875rem;
-  --background: oklch(0.972 0.007 110);
-  --foreground: oklch(0.27 0.035 155);
-  --card: oklch(0.995 0.003 110);
+  --radius: 0.75rem;
+  --background: #f3f4f6;
+  --foreground: #252a32;
+  --card: #ffffff;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.38 0.055 160);
-  --primary-foreground: oklch(0.98 0.01 120);
-  --secondary: oklch(0.93 0.025 135);
-  --secondary-foreground: oklch(0.3 0.045 155);
-  --muted: oklch(0.945 0.01 115);
-  --muted-foreground: oklch(0.5 0.03 145);
-  --accent: oklch(0.93 0.025 135);
-  --accent-foreground: oklch(0.3 0.045 155);
-  --coral: oklch(0.64 0.13 35);
-  --coral-soft: oklch(0.94 0.035 40);
-  --destructive: oklch(0.55 0.19 28);
-  --border: oklch(0.9 0.014 120);
-  --input: oklch(0.86 0.016 120);
-  --ring: oklch(0.64 0.13 35);
+  --primary: #09638b;
+  --primary-foreground: #ffffff;
+  --secondary: #edf1f6;
+  --secondary-foreground: #45546c;
+  --muted: #f3f4f6;
+  --muted-foreground: #677184;
+  --accent: #eaf2f8;
+  --accent-foreground: #09638b;
+  --coral: #a94f36;
+  --coral-soft: #f8eee9;
+  --destructive: #b33328;
+  --border: #e6e9ef;
+  --input: #b8c1cd;
+  --ring: #09638b;
+  --panel-shadow: 0 2px 5px #1c294014;
 }
 
 @theme inline {
   --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Manrope Variable', sans-serif;
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
@@ -61,13 +62,29 @@
   html {
     color-scheme: light;
     -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 6rem;
   }
   body {
     @apply bg-background text-foreground min-w-[320px] font-sans antialiased;
+    font-feature-settings: 'ss01';
   }
   button,
   summary {
     touch-action: manipulation;
+  }
+  button:not(:disabled),
+  select {
+    cursor: pointer;
+  }
+  input {
+    accent-color: var(--primary);
+    caret-color: var(--primary);
+  }
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 4px;
+    border-radius: 4px;
   }
   summary {
     @apply cursor-pointer list-none;
@@ -76,6 +93,216 @@
     display: none;
   }
   ::selection {
-    background: var(--secondary);
+    background: #d5e7f5;
+    color: var(--foreground);
+  }
+}
+
+.app-shell {
+  max-width: 480px;
+  margin-inline: auto;
+  min-height: 100dvh;
+}
+
+.app-header {
+  min-height: 68px;
+  padding-top: max(env(safe-area-inset-top), 16px);
+}
+
+.app-main {
+  padding-top: 16px;
+  padding-bottom: calc(128px + env(safe-area-inset-bottom));
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.page-heading {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+
+.workout-hero {
+  background: var(--card);
+  color: var(--foreground);
+  border-radius: 10px;
+  box-shadow: var(--panel-shadow);
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+}
+
+.workout-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.hero-action {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  min-height: 52px;
+  border-radius: 8px;
+}
+
+.hero-action:hover:not(:disabled) {
+  background: #075476;
+}
+
+.workout-layout {
+  display: grid;
+  gap: 20px;
+}
+
+.exercise-list {
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: var(--panel-shadow);
+  padding-inline: 16px;
+}
+
+.exercise-list > details + details {
+  border-top: 1px solid var(--border);
+}
+
+.exercise-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 88px;
+  padding: 14px 0;
+  transition: background 150ms ease;
+}
+
+.exercise-row:hover {
+  background: var(--muted);
+}
+
+.exercise-row [data-exercise-icon] {
+  background: var(--muted);
+  border-radius: 8px;
+}
+
+.app-nav {
+  position: fixed;
+  z-index: 30;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 24px), 448px);
+  background: var(--card);
+  color: var(--foreground);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 4px 20px #1c29401a;
+}
+
+.nav-item {
+  min-height: 60px;
+  gap: 5px;
+  color: var(--muted-foreground);
+  border-radius: 10px;
+}
+
+.nav-item[aria-current='page'] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.nav-item:hover:not([aria-current='page']):not(:disabled) {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+[data-slot='card'] {
+  border-color: transparent;
+  box-shadow: var(--panel-shadow);
+}
+
+[data-slot='card'],
+.muscle-panel,
+.workout-hero,
+.exercise-list,
+.set-form {
+  border-radius: 12px;
+}
+
+[data-slot='card-header'],
+[data-slot='card-content'] {
+  padding-inline: 20px;
+}
+
+.muscle-panel {
+  box-shadow: var(--panel-shadow);
+}
+
+[data-slot='card-title'].section-heading,
+.muscle-panel .section-heading {
+  font-size: 18px;
+}
+
+.exercise-row strong.font-display {
+  font-size: 18px;
+}
+
+.set-form {
+  border-color: transparent;
+  box-shadow: var(--panel-shadow);
+}
+
+.set-form input {
+  min-height: 60px;
+  background: var(--background);
+  font-family: var(--font-display);
+  font-size: 26px;
+}
+
+.screen-enter {
+  animation: screen-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

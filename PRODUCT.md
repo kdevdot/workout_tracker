@@ -10,7 +10,7 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 
 ## Confirmed constraints
 
-- Monday Upper A, Tuesday Lower A, Thursday Upper B, Saturday Lower B; other days rest.
+- Monday Upper A, Tuesday Lower A, Thursday Upper B, Friday Lower B; other days rest. If Friday is missed, Lower B moves to Saturday.
 - Preserve the researched exercise order, conditional equipment, introductory phase, and progression guidance.
 - Date-first interface; one session title; readable prescriptions and front/back target-region maps.
 - Device-local saving first, independent JSON backup/restore, Google Drive backup later.

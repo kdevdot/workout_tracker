@@ -68,7 +68,7 @@ describe('session lifecycle', () => {
     expect(previousPerformance([completed], current, current.exercises[0]!.exercise.id)).toBeNull();
   });
   it('preserves distinct timed holds, full cycles, and per-side prescriptions', () => {
-    const lower = startSession('lowerB', '2026-11-07', 'intro');
+    const lower = startSession('lowerB', '2026-11-06', 'intro');
     const plank = lower.exercises.find((entry) => entry.exercise.unit === 'seconds')!;
     const recorded = recordSet(lower, plank.exercise.id, {
       ...set(),

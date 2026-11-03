@@ -653,7 +653,7 @@ export function getExercises(workoutId: WorkoutId, phase: Phase): Exercise[] {
 export function workoutForDate(date: string): WorkoutId | null {
   const weekday = new Date(`${date}T12:00:00`).getDay();
   return (
-    ({ 1: 'upperA', 2: 'lowerA', 4: 'upperB', 6: 'lowerB' } as Partial<Record<number, WorkoutId>>)[
+    ({ 1: 'upperA', 2: 'lowerA', 4: 'upperB', 5: 'lowerB' } as Partial<Record<number, WorkoutId>>)[
       weekday
     ] ?? null
   );

@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import AppToast from './AppToast.vue';
+import UpdatePrompt from './UpdatePrompt.vue';
 import HistoryView from './HistoryView.vue';
 import SessionView from './SessionView.vue';
 import SettingsView from './SettingsView.vue';
@@ -144,6 +145,7 @@ const saveStatus = computed(() => {
     </main>
 
     <AppToast :message="app.message.value" @dismiss="app.dismissMessage" />
+    <UpdatePrompt :busy="busy" />
 
     <nav v-if="ready" class="app-nav" aria-label="Main navigation">
       <div class="grid grid-cols-4 gap-1">

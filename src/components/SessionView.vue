@@ -44,6 +44,15 @@ const progress = computed(() => sessionProgress(props.session));
 const previous = computed(() =>
   previousPerformance(props.history, props.session, exercise.value.id),
 );
+const previousSummary = computed(() =>
+  previous.value?.logs.map((log) => `${formatLoad(log)} × ${log.reps}`).join(' · '),
+);
+const chips = computed(() =>
+  props.session.exercises.map((item) => ({
+    item,
+    finished: item.logs.length >= item.exercise.sets,
+  })),
+);
 const nextIndex = computed(() => {
   if (editing.value) return editing.value.index;
   for (let index = 1; index <= exercise.value.sets; index++)
@@ -72,9 +81,13 @@ const stats = computed(() => [
   { value: exercise.value.restLabel, label: 'rest' },
 ]);
 
-const chips = useTemplateRef<HTMLButtonElement[]>('chips');
+const chipButtons = useTemplateRef<HTMLButtonElement[]>('chipButtons');
 function centreActive(behavior: ScrollBehavior) {
-  chips.value?.[selected.value]?.scrollIntoView?.({ inline: 'center', block: 'nearest', behavior });
+  chipButtons.value?.[selected.value]?.scrollIntoView?.({
+    inline: 'center',
+    block: 'nearest',
+    behavior,
+  });
 }
 onMounted(() => centreActive('instant'));
 watch(selected, () => nextTick(() => centreActive('smooth')));
@@ -104,8 +117,8 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
 
   <nav aria-label="Exercises" class="-mx-5 flex snap-x gap-2 overflow-x-auto px-[50%] pb-1">
     <button
-      v-for="(item, index) in session.exercises"
-      ref="chips"
+      v-for="({ item, finished }, index) in chips"
+      ref="chipButtons"
       :key="item.exercise.id"
       :aria-pressed="selected === index"
       :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
@@ -115,7 +128,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
           'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
           selected === index
             ? 'bg-primary text-primary-foreground border-primary'
-            : item.logs.length >= item.exercise.sets
+            : finished
               ? 'border-success/40 bg-success-soft hover:bg-success-soft/70'
               : 'bg-card hover:bg-muted',
         )
@@ -123,7 +136,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       @click="selected = index"
     >
       <span
-        v-if="item.logs.length >= item.exercise.sets"
+        v-if="finished"
         class="bg-success flex size-4 items-center justify-center rounded-full text-white"
         ><Check class="size-3 stroke-3"
       /></span>
@@ -159,7 +172,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       <h3 class="font-semibold">Previous session</h3>
       <p v-if="previous" class="text-secondary-foreground">
         {{ formatDate(previous.date, { day: 'numeric', month: 'short' }) }} ·
-        {{ previous.logs.map((log) => `${formatLoad(log)} × ${log.reps}`).join(' · ') }}
+        {{ previousSummary }}
       </p>
       <p v-else class="text-muted-foreground">No previous completed entries for this movement.</p>
     </div>

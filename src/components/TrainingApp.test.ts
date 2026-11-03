@@ -163,7 +163,7 @@ describe('working app integration', () => {
     const entries = (await savedData()).intakes;
     expect(entries[0]!.date).toBe('2026-11-01');
     expect(entries[0]!.calories).toBeNull();
-    expect(entries[1]!.amount).toBe(5);
+    expect(entries[1]!.amount).toBe(3.4);
   });
 
   it('shows a storage error instead of resetting an unsupported saved schema', async () => {

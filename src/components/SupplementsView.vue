@@ -17,7 +17,7 @@ const emit = defineEmits<{
   settings: [];
 }>();
 
-const amounts = ref<Record<Kind, string | number>>({ whey: '1', creatine: '5' });
+const amounts = ref<Record<Kind, string | number>>({ whey: '1', creatine: '3.4' });
 const error = shallowRef('');
 const today = localDate();
 const future = computed(() => props.date > today);

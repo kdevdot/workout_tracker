@@ -3,7 +3,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { deleteDB, openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TrainingApp from './TrainingApp.vue';
-import type { AppState } from '../domain/state';
+import { emptyState, encodeBackup, type AppState } from '../domain/state';
 
 const wrappers: VueWrapper[] = [];
 const databaseName = 'steady-workout-v1';
@@ -119,6 +119,38 @@ describe('working app integration', () => {
     expect(wrapper.get('[aria-label^="Monday 2 November"]').classes()).not.toContain(
       'border-input',
     );
+  });
+
+  it('restores a backup only after the replacement is confirmed', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Settings').trigger('click');
+    const intake = {
+      id: crypto.randomUUID(),
+      date: '2026-11-01',
+      kind: 'creatine' as const,
+      product: 'Optimum Nutrition creatine',
+      amount: 3.4,
+      calories: null,
+      protein: null,
+      recordedAt: new Date().toISOString(),
+    };
+    const file = new File([encodeBackup({ ...emptyState(), intakes: [intake] })], 'backup.json', {
+      type: 'application/json',
+    });
+    const input = wrapper.get('input[type="file"]');
+    Object.defineProperty(input.element, 'files', { value: [file] });
+    await input.trigger('change');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Review backup'));
+    const replace = button(wrapper, 'Replace with this backup');
+    expect(replace.attributes('disabled')).toBeDefined();
+    await replace.trigger('click');
+    expect(await savedData()).toBeUndefined();
+
+    await wrapper.get('[role="checkbox"]').trigger('click');
+    expect(replace.attributes('disabled')).toBeUndefined();
+    await replace.trigger('click');
+    await vi.waitFor(async () => expect((await savedData()).intakes).toEqual([intake]));
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Backup restored on this device.'));
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {

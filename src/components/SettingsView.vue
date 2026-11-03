@@ -249,11 +249,28 @@ async function readFile(event: Event) {
         is sent to GitHub.
       </p>
       <details>
-        <summary class="text-foreground py-2 font-semibold">Video and body-map credits</summary>
+        <summary class="text-foreground py-2 font-semibold">Exercise media credits</summary>
         <p>
-          Exercise videos by Goulart and muscle diagrams from the wger exercise database (wger.de),
-          licensed CC BY-SA 4.0. Videos: audio removed and resized. Diagrams: highlight colours
-          changed. Modified files are shared under the same licence.
+          Exercise-list artwork: Bryl Lim / Workout Guide and Everkinetic, CC BY-SA 4.0. Selected
+          stills are cropped and displayed in monochrome on neutral backgrounds, without animation.
+          Equipment icons mark exercises without a matching illustration; thumbnails do not replace
+          technique instructions.
+          <a
+            class="text-primary underline underline-offset-4"
+            :href="`${base}exercises/ATTRIBUTION.md`"
+            >Artwork credits and provenance</a
+          >.
+        </p>
+        <p>
+          Bundled exercise videos by Goulart and muscle diagrams from the wger exercise database
+          (wger.de), licensed CC BY-SA 4.0. Bundled videos: audio removed and resized. Diagrams:
+          highlight colours changed. Modified files are shared under the same licence.
+        </p>
+        <p class="mt-2">
+          Three demonstrations stream from Renaissance Periodization on YouTube, inside the exercise
+          guide. They load only when you tap Watch, require internet and may show ads. YouTube
+          receives that player connection; its privacy rules apply. These streams are not bundled or
+          licensed under the wger notice.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
           >Read the licence notice</a

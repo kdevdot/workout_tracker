@@ -1,57 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ArrowRightLeft, ExternalLink, Info, OctagonAlert, Scale } from '@lucide/vue';
+import { ArrowRightLeft, ExternalLink, OctagonAlert, Scale } from '@lucide/vue';
 import type { Exercise } from '@/domain/programme-types';
-import { guides, VIDEO_CREDIT } from '@/domain/guides';
+import { guides } from '@/domain/guides';
 import BodyMap from './BodyMap.vue';
+import ExerciseVideo from './ExerciseVideo.vue';
 
 const props = defineProps<{ exercise: Exercise }>();
 const guide = computed(() => guides[props.exercise.id]);
-const base = import.meta.env.BASE_URL;
 </script>
 
 <template>
   <div class="flex flex-col gap-4 text-sm">
-    <figure v-if="guide?.video" class="flex flex-col gap-1.5">
-      <video
-        :src="`${base}videos/wger-${guide.video.id}.mp4`"
-        :poster="`${base}videos/wger-${guide.video.id}.jpg`"
-        :aria-label="`Demonstration: ${exercise.name}`"
-        class="bg-muted aspect-video w-full rounded-xl object-cover"
-        controls
-        muted
-        loop
-        playsinline
-        preload="none"
-      />
-      <p
-        v-if="guide.video.variant"
-        class="bg-coral-soft flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium"
-      >
-        <Info class="mt-0.5 size-3.5 shrink-0" />{{ guide.video.variant }}
-      </p>
-      <figcaption class="text-muted-foreground text-[11px]">
-        Video: {{ VIDEO_CREDIT.author }} ·
-        <a
-          class="underline underline-offset-2"
-          :href="`https://wger.de/en/exercise/${guide.video.exercise}/view/`"
-          target="_blank"
-          rel="noopener"
-          >{{ VIDEO_CREDIT.source }}</a
-        >
-        ·
-        <a
-          class="underline underline-offset-2"
-          :href="VIDEO_CREDIT.licenceUrl"
-          target="_blank"
-          rel="noopener"
-          >{{ VIDEO_CREDIT.licence }}</a
-        >
-        · audio removed, resized
-      </figcaption>
-    </figure>
+    <ExerciseVideo v-if="guide?.video" :video="guide.video" :exercise-name="exercise.name" />
     <p v-else class="text-muted-foreground bg-muted rounded-lg px-3 py-2 text-xs">
-      No open-licence video of this exact movement yet.
+      No matching demonstration has been selected for this movement yet.
     </p>
 
     <div class="grid grid-cols-[7.5rem_1fr] items-start gap-4">

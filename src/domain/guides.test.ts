@@ -22,9 +22,27 @@ describe('exercise guides', () => {
 
   it('reference video and poster files that ship with the app', () => {
     for (const guide of Object.values(guides)) {
-      if (!guide.video) continue;
+      if (guide.video?.provider !== 'wger') continue;
       for (const extension of ['mp4', 'jpg'])
         expect(existsSync(`public/videos/wger-${guide.video.id}.${extension}`)).toBe(true);
+    }
+  });
+
+  it('keeps the three selected external demos tied to their exact exercise IDs', () => {
+    const selected = Object.entries(guides).filter(
+      ([, guide]) => guide.video?.provider === 'youtube',
+    );
+    expect(selected.map(([id]) => id)).toEqual([
+      'smith-flat-bench-press',
+      'bench-supported-one-arm-db-row',
+      'db-lateral-raise',
+    ]);
+    for (const [, guide] of selected) {
+      expect(guide.video?.id).toMatch(/^[A-Za-z0-9_-]{11}$/);
+      if (guide.video?.provider === 'youtube') {
+        expect(guide.video.author).toBe('Renaissance Periodization');
+        expect(guide.video.title).not.toBe('');
+      }
     }
   });
 

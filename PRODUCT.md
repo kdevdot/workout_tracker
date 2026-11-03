@@ -16,6 +16,7 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 - Device-local saving first, independent JSON backup/restore, Google Drive backup later.
 - Personal research, gym photos, logs, and supplement labels must not enter public source control by default.
 - Exact video variations and licences must be audited; no placeholder pretending to play a video.
+- Demonstrations must play inside the exercise guide without requiring an external search or another app. Three creator-hosted YouTube demos are a tap-to-load integration; other movements still use the existing local media or have no demo. Internet/provider restrictions remain explicit.
 
 ## Stack
 

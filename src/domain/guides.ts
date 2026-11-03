@@ -1,7 +1,5 @@
-// Visual exercise guides: open-licence demo video, short form checks, and the research verdict on
-// the Instagram "Bad / Okay / Great" comparisons. Reference content only; never persisted in sessions.
-
-export interface Video {
+export interface LocalVideo {
+  provider: 'wger';
   /** wger video ID; file is public/videos/wger-<id>.mp4 (+ .jpg poster). */
   id: number;
   /** wger exercise ID, for the attribution link. */
@@ -9,6 +7,16 @@ export interface Video {
   /** Set when the clip shows a close variant rather than your exact setup. */
   variant?: string;
 }
+
+export interface YouTubeVideo {
+  provider: 'youtube';
+  id: string;
+  title: string;
+  author: string;
+  variant?: string;
+}
+
+export type Video = LocalVideo | YouTubeVideo;
 
 export interface Comparison {
   topic: string;
@@ -42,7 +50,12 @@ const smithStop = 'Smith: test hooks and stops with a light load first.';
 
 export const guides: Record<string, Guide> = {
   'smith-flat-bench-press': {
-    video: { id: 23, exercise: 73, variant: 'Free barbell shown; you use the Smith machine.' },
+    video: {
+      provider: 'youtube',
+      id: 'O5viuEPDXKY',
+      title: 'Smith Machine Bench Press',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Bar to mid/lower chest, forearms vertical',
       'Feet planted, shoulder blades set',
@@ -51,7 +64,7 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Stop for shoulder pain or losing bar control.'],
   },
   'fixed-handle-pull-up': {
-    video: { id: 71, exercise: 475 },
+    video: { provider: 'wger', id: 71, exercise: 475 },
     checks: [
       'Fixed handles, comfortable grip',
       'Pull elbows toward ribs',
@@ -69,6 +82,12 @@ export const guides: Record<string, Guide> = {
     },
   },
   'bench-supported-one-arm-db-row': {
+    video: {
+      provider: 'youtube',
+      id: 'DMo3HJoawrU',
+      title: 'Single Arm Supported Dumbbell Row',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Hand (and knee) on bench, hips square',
       'Row toward hip / lower ribs',
@@ -86,7 +105,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'seated-db-shoulder-press': {
-    video: { id: 12, exercise: 567 },
+    video: { provider: 'wger', id: 12, exercise: 567 },
     checks: [
       'Backrest near upright, ribs down',
       'Press along a natural arc',
@@ -104,7 +123,12 @@ export const guides: Record<string, Guide> = {
     },
   },
   'db-lateral-raise': {
-    video: { id: 6, exercise: 348 },
+    video: {
+      provider: 'youtube',
+      id: 'OuG1smZTsQQ',
+      title: 'Lateral Raise',
+      author: 'Renaissance Periodization',
+    },
     checks: [
       'Soft elbows, raise slightly forward of the sides',
       'Up to about shoulder height',
@@ -122,17 +146,22 @@ export const guides: Record<string, Guide> = {
     },
   },
   'standing-db-curl': {
-    video: { id: 48, exercise: 92 },
+    video: { provider: 'wger', id: 48, exercise: 92 },
     checks: ['Upper arms stay still', 'No hip drive', 'Lower to a comfortable straight elbow'],
     stop: ['Stop when swinging replaces clean elbow bending.'],
   },
   'one-arm-cable-pushdown': {
-    video: { id: 55, exercise: 659, variant: 'Two-hand rope shown; you use one D-handle.' },
+    video: {
+      provider: 'wger',
+      id: 55,
+      exercise: 659,
+      variant: 'Two-hand rope shown; you use one D-handle.',
+    },
     checks: ['Upper arm pinned beside torso', 'Extend fully, return under control', 'No rocking'],
     stop: ['Stop when the upper arm or body starts moving.'],
   },
   'smith-squat': {
-    video: { id: 42, exercise: 341 },
+    video: { provider: 'wger', id: 42, exercise: 341 },
     checks: [
       'Bar on upper back, not neck',
       'Whole foot planted, knees track over toes',
@@ -141,7 +170,7 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Set stops just below your bottom position.'],
   },
   'db-romanian-deadlift': {
-    video: { id: 2, exercise: 507 },
+    video: { provider: 'wger', id: 2, exercise: 507 },
     checks: [
       'DBs close to thighs, knees soft',
       'Push hips back, spine neutral',
@@ -167,6 +196,7 @@ export const guides: Record<string, Guide> = {
   },
   'supported-single-leg-standing-db-calf-raise': {
     video: {
+      provider: 'wger',
       id: 14,
       exercise: 622,
       variant: 'Two-leg version on a step shown; you do one leg, holding a DB.',
@@ -187,7 +217,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop before your low back arches.'],
   },
   'low-incline-db-bench-press': {
-    video: { id: 24, exercise: 537 },
+    video: { provider: 'wger', id: 24, exercise: 537 },
     checks: ['Bench about 15–30°, locked', 'Wrists over elbows', 'Same chest depth every rep'],
     stop: ['Avoid a steep, shoulder-press angle. No dropping DBs.'],
   },
@@ -201,6 +231,7 @@ export const guides: Record<string, Guide> = {
   },
   'machine-reverse-fly': {
     video: {
+      provider: 'wger',
       id: 7,
       exercise: 82,
       variant: 'Bent-over DB version (your alternative) shown; the machine works the same way.',
@@ -218,7 +249,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'one-db-two-hand-overhead-triceps-extension': {
-    video: { id: 57, exercise: 211 },
+    video: { provider: 'wger', id: 57, exercise: 211 },
     checks: [
       'One DB held securely in both hands',
       'Brace, bend elbows to a comfortable depth',
@@ -228,6 +259,7 @@ export const guides: Record<string, Guide> = {
   },
   'smith-romanian-deadlift': {
     video: {
+      provider: 'wger',
       id: 2,
       exercise: 507,
       variant: 'Dumbbell version shown; the hinge is the same on the Smith.',
@@ -256,7 +288,12 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop if balance goes or the back leg does the work.'],
   },
   'seated-db-calf-raise': {
-    video: { id: 13, exercise: 590, variant: 'Machine shown; you rest DBs on your thighs.' },
+    video: {
+      provider: 'wger',
+      id: 13,
+      exercise: 590,
+      variant: 'Machine shown; you rest DBs on your thighs.',
+    },
     checks: [
       'Knees about 90°',
       'DBs on thighs above the knee, never on kneecaps',

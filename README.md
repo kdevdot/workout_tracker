@@ -28,7 +28,9 @@ Open the URL printed by Vite. To test on your phone, use your computer's LAN add
 ## Intentional limits
 
 - No Google Drive connection or OAuth yet; no account or cloud backup exists.
-- Exercise videos only from openly licensed sources (wger, CC BY-SA 4.0), each checked by eye; clips of a close variant are labelled, and movements without a matching clip show none.
+- Smith bench press, supported one-arm DB row, and DB lateral raise now have tap-to-load YouTube demonstrations inside their exercise guides. Watching does not require a new tab or leaving the workout. Closing the player, collapsing the exercise, changing movement, or leaving the screen unloads the embedded video; unfinished workout fields stay in place when opening/closing it.
+- YouTube playback requires an internet connection and can be blocked by the provider or browser. Ads and provider controls may appear. Use the inline retry if needed; the app does not force an external-video redirect. No YouTube requests are initiated by this player until Watch is tapped, and no footage is downloaded or relicensed.
+- Other exercises retain the existing local wger videos (CC BY-SA 4.0), labelled variants, or an honest no-demonstration state. The three external demos are a limited integration, not a claim of complete programme coverage.
 - Alternatives are instructional in this milestone. Do not log a substitute under the original movement name; selectable substitutions require a future distinct exercise-log identity.
 - No installable/offline shell, automatic loading prescription, or automatic phase increase.
 - Saved sets are durable after the success message; unfinished form input is not autosaved.
@@ -48,6 +50,7 @@ Writes are validated and transactional. Every saved state must remain exportable
 - `src/components/`: focused Vue presentation and feature containers.
 - `public/muscles/`: wger muscle diagrams (recoloured) and the licence notice.
 - `public/videos/`: wger demo clips re-encoded by `scripts/fetch-videos.sh`; guide content in `src/domain/guides.ts`.
+- `src/components/ExerciseVideo.vue`: local video and tap-to-load inline YouTube playback. Provider metadata is a discriminated union in `src/domain/guides.ts`, separate from saved workout records.
 
 The programme source was transcribed from the local research document. Baseline work sets: 17 / 15 / 19 / 15. Introductory work sets: 14 / 12 / 16 / 12. Optional lower introductory isolation volume remains individual guidance rather than an automatic rule.
 
@@ -65,4 +68,6 @@ Browser checks confirm recording and resuming a set after reload with its rest-t
 
 ## Muscle maps
 
-Muscle diagrams and exercise videos come from the wger exercise database (https://wger.de), CC BY-SA 4.0; videos by Goulart. Diagram colours changed; videos muted and re-encoded to 480p H.264. Modified files are shared under CC BY-SA 4.0. See `public/muscles/LICENSE.txt`. Highlights are target regions, not measured activation, fatigue, or recovery; wger draws one shoulder region for all deltoid heads.
+Muscle diagrams and bundled exercise videos come from the wger exercise database (https://wger.de), CC BY-SA 4.0; bundled videos by Goulart. Diagram colours changed; bundled videos muted and re-encoded to 480p H.264. Modified files are shared under CC BY-SA 4.0. See `public/muscles/LICENSE.txt`. Highlights are target regions, not measured activation, fatigue, or recovery; wger draws one shoulder region for all deltoid heads.
+
+The three YouTube demonstrations are hosted by Renaissance Periodization: [Smith Machine Bench Press](https://www.youtube.com/watch?v=O5viuEPDXKY), [Single Arm Supported Dumbbell Row](https://www.youtube.com/watch?v=DMo3HJoawrU), and [Lateral Raise](https://www.youtube.com/watch?v=OuG1smZTsQQ). They stream through YouTube's privacy-enhanced embedded player; they are not bundled CC-licensed assets. Creator controls and platform availability still apply. No training-log data is deliberately passed to the player.

@@ -1,0 +1,432 @@
+{
+  "source": "https://github.com/bryllim/workout-guide",
+  "revision": "aac599224bb9780305239607ef98540b7e0ce389",
+  "selection": "Original frame 1 only; static decorative workout-list thumbnails, not technique instructions.",
+  "exercises": [
+    {
+      "id": "exercise-seated-dumbbell-press",
+      "slug": "seated-dumbbell-press",
+      "name": "Dumbbell Seated Shoulder Press",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Shoulders",
+      "secondaryMuscles": ["Triceps"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/seated-dumbbell-press/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-lateral-raise",
+      "slug": "lateral-raise",
+      "name": "Lateral Raise",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Shoulders",
+      "secondaryMuscles": ["Upper Back"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/lateral-raise/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0018-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0018-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-one-arm-dumbbell-row",
+      "slug": "one-arm-dumbbell-row",
+      "name": "One-Arm Dumbbell Row",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Back",
+      "secondaryMuscles": ["Biceps"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/one-arm-dumbbell-row/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-pull-up",
+      "slug": "pull-up",
+      "name": "Pull-up",
+      "exerciseType": "bodyweight_reps",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Lats",
+      "secondaryMuscles": ["Biceps", "Core"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/pull-up/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0087-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0087-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-bicep-curl",
+      "slug": "bicep-curl",
+      "name": "Bicep Curl",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Biceps",
+      "secondaryMuscles": ["Forearms"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/bicep-curl/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0224-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0224-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-side-plank",
+      "slug": "side-plank",
+      "name": "Side Plank",
+      "exerciseType": "duration",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscles": ["Shoulders"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/side-plank/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0113-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0113-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-smith-machine-squat",
+      "slug": "smith-machine-squat",
+      "name": "Smith Machine Squat",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Quads",
+      "secondaryMuscles": ["Glutes", "Core"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/smith-machine-squat/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0124-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0124-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    },
+    {
+      "id": "exercise-split-squat",
+      "slug": "split-squat",
+      "name": "Split Squat",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Quads",
+      "secondaryMuscles": ["Glutes", "Core"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/split-squat/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-smith-machine-romanian-deadlift",
+      "slug": "smith-machine-romanian-deadlift",
+      "name": "Smith Machine Romanian Deadlift",
+      "exerciseType": "weight_reps",
+      "equipment": "Machine",
+      "primaryMuscle": "Hamstrings",
+      "secondaryMuscles": ["Glutes", "Lower Back"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/smith-machine-romanian-deadlift/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-dumbbell-romanian-deadlift",
+      "slug": "dumbbell-romanian-deadlift",
+      "name": "Dumbbell Romanian Deadlift",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Hamstrings",
+      "secondaryMuscles": ["Glutes", "Lower Back"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/dumbbell-romanian-deadlift/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    },
+    {
+      "id": "exercise-dumbbell-overhead-tricep-extension",
+      "slug": "dumbbell-overhead-tricep-extension",
+      "name": "Dumbbell Overhead Tricep Extension",
+      "exerciseType": "weight_reps",
+      "equipment": "Dumbbell",
+      "primaryMuscle": "Triceps",
+      "secondaryMuscles": ["Shoulders"],
+      "isStretch": false,
+      "frames": [
+        {
+          "index": 1,
+          "path": "assets/dumbbell-overhead-tricep-extension/frame-1.svg",
+          "width": 512,
+          "height": 512,
+          "format": "svg",
+          "attribution": {
+            "creator": "Bryl Lim",
+            "creatorUrl": "https://bryllim.com",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+            "source": {
+              "name": "Everkinetic",
+              "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0194-tension.svg",
+              "license": "CC BY-SA 4.0",
+              "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+            }
+          }
+        }
+      ],
+      "attribution": {
+        "creator": "Bryl Lim",
+        "creatorUrl": "https://bryllim.com",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "source": {
+          "name": "Everkinetic",
+          "url": "https://github.com/everkinetic/data/blob/main/dist/svg/0194-tension.svg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Rasterized on a transparent 512 × 512 canvas, recolored for monochrome display, and vector-traced."
+        }
+      }
+    }
+  ]
+}

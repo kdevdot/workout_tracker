@@ -2,7 +2,7 @@
 
 ## Platform
 
-Phone-first web application. Static hosting on GitHub Pages is the intended deployment target; no deployment is authorised yet.
+Phone-first web application. Static hosting on GitHub Pages, installable as a PWA.
 
 ## User and purpose
 
@@ -33,4 +33,4 @@ Vue 3, TypeScript, Vite, Tailwind CSS v4 with shadcn-vue components (`src/compon
 
 ## Deferred
 
-Google OAuth/Drive integration, videos for the six movements without an open-licence clip, automatic progression suggestions, installable/offline shell, and deployment. Product-label values remain user-supplied.
+Google OAuth/Drive integration, videos for the six movements without an open-licence clip, automatic progression suggestions and offline demo videos. Product-label values remain user-supplied.

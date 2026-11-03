@@ -32,7 +32,7 @@ Open the URL printed by Vite. To test on your phone, use your computer's LAN add
 - YouTube playback requires an internet connection and can be blocked by the provider or browser. Ads and provider controls may appear. Use the inline retry if needed; the app does not force an external-video redirect. No YouTube requests are initiated by this player until Watch is tapped, and no footage is downloaded or relicensed.
 - Other exercises retain the existing local wger videos (CC BY-SA 4.0), labelled variants, or an honest no-demonstration state. The three external demos are a limited integration, not a claim of complete programme coverage.
 - Alternatives are instructional in this milestone. Do not log a substitute under the original movement name; selectable substitutions require a future distinct exercise-log identity.
-- No installable/offline shell, automatic loading prescription, or automatic phase increase.
+- Installable PWA: the app shell, illustrations and muscle maps work offline; demo videos need a connection. No automatic loading prescription or automatic phase increase.
 - Saved sets are durable after the success message; unfinished form input is not autosaved.
 - History is read-only after finishing. In-progress sets can be corrected before completion.
 
@@ -56,9 +56,9 @@ The programme source was transcribed from the local research document. Baseline 
 
 ## Git and privacy
 
-The local research profile, gym photographs, environment files, downloaded backups, and generated build/dependency files are ignored. Public app data contains exercise prescriptions, not the personal profile or training logs. Review staged files before every commit. The GitHub remote is `git@github.com:kdevdot/workout_tracker.git`. Hosting is not configured and no app-source licence has been chosen. Third-party licences remain in force.
+The local research profile, gym photographs, environment files, downloaded backups, and generated build/dependency files are ignored. Public app data contains exercise prescriptions, not the personal profile or training logs. Review staged files before every commit. The GitHub remote is `git@github.com:kdevdot/workout_tracker.git`. The app is hosted on GitHub Pages at https://kdevdot.github.io/workout_tracker/. No app-source licence has been chosen. Third-party licences remain in force.
 
-CI runs formatting, tests, type checking, and the production build; it does not deploy. Once a GitHub repository is chosen, configure Pages separately and review its public contents. Relative Vite asset paths support a repository subpath without a router rewrite.
+CI runs formatting, tests, type checking, and the production build. The Deploy workflow repeats those checks and publishes `dist` to GitHub Pages on every push to `main` (Settings → Pages → Source: GitHub Actions). The hosted site is public; review its contents. Relative Vite asset paths support a repository subpath without a router rewrite.
 
 ## Milestone validation
 

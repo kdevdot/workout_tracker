@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ChevronLeft, ChevronRight } from '@lucide/vue';
+import { Check, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { formatDate, localDate, shiftDate, weekFor } from '@/domain/dates';
 import { workoutForDate, workouts } from '@/domain/programme';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const props = defineProps<{ date: string }>();
+const props = defineProps<{ date: string; doneDates: Set<string> }>();
 const emit = defineEmits<{ date: [value: string] }>();
 
 const today = localDate();
@@ -17,6 +17,7 @@ const days = computed(() =>
       day,
       selected: day === props.date,
       today: day === today,
+      done: props.doneDates.has(day),
       workout: workout ? workouts[workout].name : null,
     };
   }),
@@ -58,7 +59,7 @@ const days = computed(() =>
         v-for="item in days"
         :key="item.day"
         :aria-pressed="item.selected"
-        :aria-label="`${formatDate(item.day, { weekday: 'long', day: 'numeric', month: 'long' })}${item.workout ? `, ${item.workout}` : ', rest day'}`"
+        :aria-label="`${formatDate(item.day, { weekday: 'long', day: 'numeric', month: 'long' })}${item.workout ? `, ${item.workout}` : ', rest day'}${item.done ? ', completed' : ''}`"
         :class="
           cn(
             'flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border border-transparent text-xs transition-colors',
@@ -77,7 +78,12 @@ const days = computed(() =>
         <strong class="font-display text-[26px] leading-none font-semibold tabular-nums">{{
           Number(item.day.slice(-2))
         }}</strong>
+        <Check
+          v-if="item.done"
+          :class="cn('size-3.5 stroke-3', item.selected ? 'text-white' : 'text-success')"
+        />
         <span
+          v-else
           :class="
             cn(
               'size-1.5 rounded-full',

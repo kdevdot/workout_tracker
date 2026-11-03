@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef, watch } from 'vue';
+import { computed, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
 import {
   ArrowLeft,
   Check,
@@ -72,6 +72,13 @@ const stats = computed(() => [
   { value: exercise.value.restLabel, label: 'rest' },
 ]);
 
+const chips = useTemplateRef<HTMLButtonElement[]>('chips');
+function centreActive(behavior: ScrollBehavior) {
+  chips.value?.[selected.value]?.scrollIntoView?.({ inline: 'center', block: 'nearest', behavior });
+}
+onMounted(() => centreActive('instant'));
+watch(selected, () => nextTick(() => centreActive('smooth')));
+
 // A saved set (new or corrected) or a different exercise ends any correction in progress.
 watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   editing.value = null;
@@ -95,26 +102,33 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     </div>
   </div>
 
-  <nav aria-label="Exercises" class="flex snap-x gap-2 overflow-x-auto pb-1">
+  <nav aria-label="Exercises" class="-mx-5 flex snap-x gap-2 overflow-x-auto px-[50%] pb-1">
     <button
       v-for="(item, index) in session.exercises"
+      ref="chips"
       :key="item.exercise.id"
       :aria-pressed="selected === index"
       :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
       :class="
         cn(
-          'flex min-h-11 shrink-0 snap-start items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors',
+          'flex min-h-11 shrink-0 snap-center items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors',
           'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
           selected === index
             ? 'bg-primary text-primary-foreground border-primary'
-            : 'bg-card hover:bg-muted',
+            : item.logs.length >= item.exercise.sets
+              ? 'border-success/40 bg-success-soft hover:bg-success-soft/70'
+              : 'bg-card hover:bg-muted',
         )
       "
       @click="selected = index"
     >
-      <Check v-if="item.logs.length >= item.exercise.sets" class="size-3.5" />
+      <span
+        v-if="item.logs.length >= item.exercise.sets"
+        class="bg-success flex size-4 items-center justify-center rounded-full text-white"
+        ><Check class="size-3 stroke-3"
+      /></span>
       <span v-else class="tabular-nums">{{ index + 1 }}</span>
-      <span class="max-w-32 truncate">{{ item.exercise.name }}</span>
+      <span>{{ item.exercise.name }}</span>
     </button>
   </nav>
 
@@ -185,9 +199,9 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   />
   <p
     v-else
-    class="bg-secondary text-secondary-foreground flex items-center gap-2 rounded-xl p-4 text-sm font-semibold"
+    class="bg-success-soft text-success flex items-center gap-2 rounded-xl p-4 text-sm font-semibold"
   >
-    <Check class="size-4" />All planned sets for this exercise are saved.
+    <Check class="size-4 stroke-3" />All planned sets for this exercise are saved.
   </p>
 
   <details class="group bg-card rounded-xl border px-4">

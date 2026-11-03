@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ArrowRight, ChevronDown, Flame, Repeat } from '@lucide/vue';
+import { ArrowRight, ChevronDown, CircleCheck, Flame, History, Repeat } from '@lucide/vue';
 import { localDate } from '@/domain/dates';
 import { getExercises, workouts } from '@/domain/programme';
 import type { Phase, WorkoutId } from '@/domain/programme-types';
@@ -19,6 +19,8 @@ const props = defineProps<{
   workoutId: WorkoutId | null;
   phase: Phase;
   session: Session | null;
+  completed: Session | null;
+  doneDates: Set<string>;
   busy: boolean;
 }>();
 const emit = defineEmits<{
@@ -26,17 +28,21 @@ const emit = defineEmits<{
   workout: [value: WorkoutId | null];
   start: [];
   supplements: [];
+  history: [];
 }>();
 
 const workout = computed(() => (props.workoutId ? workouts[props.workoutId] : null));
+// An active draft wins; otherwise a finished session shows what was actually done.
+const shown = computed(() => props.session ?? props.completed);
 const exercises = computed(
   () =>
-    props.session?.exercises.map((entry) => entry.exercise) ??
+    shown.value?.exercises.map((entry) => entry.exercise) ??
     (props.workoutId ? getExercises(props.workoutId, props.phase) : []),
 );
 const totalSets = computed(() => exercises.value.reduce((sum, exercise) => sum + exercise.sets, 0));
-const activePhase = computed(() => props.session?.phase ?? props.phase);
-const progress = computed(() => (props.session ? sessionProgress(props.session) : null));
+const activePhase = computed(() => shown.value?.phase ?? props.phase);
+const progress = computed(() => (shown.value ? sessionProgress(shown.value) : null));
+const done = computed(() => !props.session && props.completed !== null);
 const future = computed(() => props.date > localDate());
 
 function chooseWorkout(event: Event) {
@@ -46,11 +52,19 @@ function chooseWorkout(event: Event) {
 </script>
 
 <template>
-  <WeekStrip :date="date" @date="emit('date', $event)" />
+  <WeekStrip :date="date" :done-dates="doneDates" @date="emit('date', $event)" />
 
   <section class="workout-hero screen-enter">
     <div class="flex items-center justify-between gap-3">
       <div class="flex min-w-0 flex-col gap-3">
+        <p
+          v-if="done && progress"
+          class="bg-success-soft text-success flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
+        >
+          <CircleCheck class="size-4" />{{
+            progress.done < progress.total ? 'Completed · partial' : 'Completed'
+          }}
+        </p>
         <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
         <p v-if="workout" class="text-muted-foreground text-xs leading-5 font-medium">
           {{ exercises.length }} exercises<span class="mx-1.5">·</span>{{ totalSets }} working sets
@@ -72,19 +86,37 @@ function chooseWorkout(event: Event) {
       </p>
       <div v-if="progress" class="flex flex-col gap-2">
         <div class="flex justify-between text-xs font-medium">
-          <span>{{ progress.done }} / {{ progress.total }} sets saved</span>
-          <span class="text-muted-foreground">Session targets locked</span>
+          <span>{{ progress.done }} / {{ progress.total }} sets {{ done ? 'done' : 'saved' }}</span>
+          <span class="text-muted-foreground">{{
+            done ? 'Saved to history' : 'Session targets locked'
+          }}</span>
         </div>
         <Progress
           :model-value="(progress.done / progress.total) * 100"
-          class="bg-secondary [&_[data-slot=progress-indicator]]:bg-primary"
+          :class="
+            done
+              ? 'bg-success-soft [&_[data-slot=progress-indicator]]:bg-success'
+              : 'bg-secondary [&_[data-slot=progress-indicator]]:bg-primary'
+          "
         />
       </div>
       <p v-if="workout && future" class="text-muted-foreground text-xs leading-5">
         Future date: preview only. Choose today or an earlier date to record actual training.
       </p>
+      <template v-if="workout && done">
+        <Button
+          size="lg"
+          class="hero-action is-done w-full justify-between px-5 text-sm font-bold"
+          @click="emit('history')"
+        >
+          View in history<History class="size-5" />
+        </Button>
+        <Button variant="ghost" :disabled="busy || future" @click="emit('start')">
+          Train this session again
+        </Button>
+      </template>
       <Button
-        v-if="workout"
+        v-else-if="workout"
         size="lg"
         class="hero-action w-full justify-between px-5 text-sm font-bold"
         :disabled="busy || future"

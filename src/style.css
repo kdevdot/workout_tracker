@@ -20,6 +20,8 @@
   --coral: #a94f36;
   --coral-soft: #f8eee9;
   --destructive: #b33328;
+  --success: #1f8a4c;
+  --success-soft: #e6f4eb;
   --border: #e6e9ef;
   --input: #b8c1cd;
   --ring: #09638b;
@@ -50,6 +52,8 @@
   --color-coral: var(--coral);
   --color-coral-soft: var(--coral-soft);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -172,6 +176,14 @@
 
 .hero-action:hover:not(:disabled) {
   background: #075476;
+}
+
+.hero-action.is-done {
+  background: var(--success);
+}
+
+.hero-action.is-done:hover:not(:disabled) {
+  background: #19733f;
 }
 
 .workout-layout {

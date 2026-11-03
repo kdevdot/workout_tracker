@@ -32,6 +32,25 @@ export function useTrainingApp() {
           session.status === 'active',
       ) ?? null,
   );
+  const completed = computed(
+    () =>
+      state.value.sessions
+        .filter(
+          (session) =>
+            session.date === date.value &&
+            session.workoutId === workoutId.value &&
+            session.status === 'completed',
+        )
+        .at(-1) ?? null,
+  );
+  const doneDates = computed(
+    () =>
+      new Set(
+        state.value.sessions
+          .filter((session) => session.status === 'completed')
+          .map((session) => session.date),
+      ),
+  );
   const currentSession = computed(
     () => state.value.sessions.find((session) => session.id === sessionId.value) ?? null,
   );
@@ -151,6 +170,8 @@ export function useTrainingApp() {
     date,
     workoutId,
     draft,
+    completed,
+    doneDates,
     currentSession,
     hasLabel,
     message,

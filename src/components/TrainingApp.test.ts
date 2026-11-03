@@ -143,6 +143,12 @@ describe('working app integration', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('Completed · partial'));
     expect((await savedData()).sessions[0]!.status).toBe('completed');
     expect((await savedData()).timer).toBeNull();
+
+    await button(wrapper, 'Plan').trigger('click');
+    await wrapper.get('input[type="date"]').setValue('2026-11-02');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('View in history'));
+    expect(wrapper.text()).toContain('Completed · partial');
+    expect(wrapper.find('[aria-label$=", completed"]').exists()).toBe(true);
   });
 
   it('logs supplements on a rest day without inventing missing nutrition', async () => {

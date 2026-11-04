@@ -2,7 +2,7 @@
 import { computed, shallowRef, watch } from 'vue';
 import { Flame, Plus, RotateCcw, Trophy, Undo2 } from '@lucide/vue';
 import { formatDate } from '@/domain/dates';
-import { CHALLENGE_DAYS, challengeDays, challengeStats, type ChallengeDay } from '@/domain/pushups';
+import { calendarWeeks, challengeDays, challengeStats, type ChallengeDay } from '@/domain/pushups';
 import type { AppState } from '@/domain/state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,7 +32,9 @@ watch(
 
 const days = computed(() => challengeDays(props.challenge, props.today));
 const stats = computed(() => challengeStats(days.value, props.today));
-const day = computed(() => days.value.find((item) => item.date === selected.value) ?? null);
+const weeks = computed(() => calendarWeeks(props.challenge, props.today));
+const dayIndex = computed(() => days.value.findIndex((item) => item.date === selected.value));
+const day = computed(() => days.value[dayIndex.value] ?? null);
 const target = computed(() => props.challenge.dailyTarget);
 const reps = computed(() => day.value?.reps ?? 0);
 const ring = computed(() => {
@@ -66,10 +68,11 @@ const dayClass: Record<ChallengeDay['state'], string> = {
   missed: 'bg-muted text-muted-foreground/60',
   today: 'bg-card text-primary border-primary border-2',
   upcoming: 'border-border text-muted-foreground/50 border border-dashed',
+  before: 'text-muted-foreground/30',
 };
 function dayLabel(item: ChallengeDay) {
   const when = formatDate(item.date, { weekday: 'short', day: 'numeric', month: 'short' });
-  return `Day ${item.number}, ${when}: ${item.reps} of ${target.value} push-ups`;
+  return `${when}: ${item.reps} of ${target.value} push-ups`;
 }
 function addCustom() {
   if (!validCustom.value) return;
@@ -80,10 +83,9 @@ function addCustom() {
 
 <template>
   <header class="page-header screen-enter">
-    <h1 class="page-heading">100-day push-ups</h1>
+    <h1 class="page-heading">Daily push-ups</h1>
     <p class="text-muted-foreground text-sm">
-      Hit your daily target every day for {{ CHALLENGE_DAYS }} days. Spread it over the day in small
-      sets.
+      Hit your daily target every day. Spread it over the day in small sets.
     </p>
   </header>
 
@@ -93,8 +95,8 @@ function addCustom() {
         <Flame class="size-6" />
       </span>
       <div>
-        <h2 class="section-heading">Start your challenge</h2>
-        <p class="text-muted-foreground text-sm">Day 1 is today. One square per day.</p>
+        <h2 class="section-heading">Start tracking</h2>
+        <p class="text-muted-foreground text-sm">Day 1 is today. No end date.</p>
       </div>
     </div>
     <form class="flex items-end gap-2" @submit.prevent="validTarget && emit('start', targetValue)">
@@ -154,12 +156,8 @@ function addCustom() {
         </div>
         <div class="flex min-w-0 flex-col gap-1">
           <p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            <template v-if="day">Day {{ day.number }} of {{ CHALLENGE_DAYS }}</template>
-            <template v-else-if="stats.finished">Challenge finished</template>
-            <template v-else
-              >Starts
-              {{ formatDate(challenge.startDate, { day: 'numeric', month: 'short' }) }}</template
-            >
+            <template v-if="day">Day {{ dayIndex + 1 }}</template>
+            <template v-else>Before you started</template>
           </p>
           <h2 class="font-display text-2xl leading-tight font-semibold">
             {{ !day ? 'Push-ups' : reps >= target ? 'Target hit ✓' : `${target - reps} to go` }}
@@ -233,29 +231,42 @@ function addCustom() {
 
     <section class="bg-card flex flex-col gap-3 rounded-xl p-4 shadow-[var(--panel-shadow)]">
       <div class="flex items-baseline justify-between">
-        <h2 class="section-heading">{{ stats.completed }} / {{ CHALLENGE_DAYS }} days</h2>
+        <h2 class="section-heading">Last 12 weeks</h2>
         <span class="text-muted-foreground text-xs">Tap a day to log or review it</span>
       </div>
-      <div class="grid grid-cols-10 gap-1" role="group" aria-label="Challenge days">
-        <button
-          v-for="item in days"
-          :key="item.date"
-          type="button"
-          :aria-label="dayLabel(item)"
-          :aria-pressed="item.date === selected"
-          :disabled="item.state === 'upcoming'"
-          :class="
-            cn(
-              'flex aspect-square items-center justify-center rounded-[5px] text-[10px] font-semibold tabular-nums transition-transform',
-              'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 enabled:active:scale-90',
-              dayClass[item.state],
-              item.date === selected && 'ring-foreground ring-2 ring-offset-1',
-            )
-          "
-          @click="selected = item.date"
+      <div class="flex gap-1">
+        <ol class="text-muted-foreground grid grid-rows-7 gap-1 text-[10px]" aria-hidden="true">
+          <li v-for="letter in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" class="flex w-3 items-center">
+            {{ letter }}
+          </li>
+        </ol>
+        <div
+          class="grid flex-1 grid-flow-col grid-rows-7 gap-1"
+          role="group"
+          aria-label="Push-up days"
         >
-          {{ item.number }}
-        </button>
+          <template v-for="week in weeks" :key="week[0]!.date">
+            <button
+              v-for="item in week"
+              :key="item.date"
+              type="button"
+              :aria-label="dayLabel(item)"
+              :aria-pressed="item.date === selected"
+              :disabled="item.state === 'upcoming' || item.state === 'before'"
+              :class="
+                cn(
+                  'flex aspect-square items-center justify-center rounded-[4px] text-[9px] font-semibold tabular-nums transition-transform',
+                  'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 enabled:active:scale-90',
+                  dayClass[item.state],
+                  item.date === selected && 'ring-foreground ring-2 ring-offset-1',
+                )
+              "
+              @click="selected = item.date"
+            >
+              {{ Number(item.date.slice(-2)) }}
+            </button>
+          </template>
+        </div>
       </div>
       <ul class="text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 text-[11px]">
         <li class="flex items-center gap-1">
@@ -272,7 +283,7 @@ function addCustom() {
     </section>
 
     <details class="group bg-card rounded-xl px-4 shadow-[var(--panel-shadow)]">
-      <summary class="flex min-h-12 items-center text-sm font-semibold">Challenge settings</summary>
+      <summary class="flex min-h-12 items-center text-sm font-semibold">Tracker settings</summary>
       <div class="flex flex-col gap-3 pb-4">
         <form
           class="flex items-end gap-2"
@@ -305,7 +316,7 @@ function addCustom() {
           variant="ghost"
           class="text-destructive w-fit"
           @click="confirmingReset = true"
-          ><RotateCcw />Restart challenge</Button
+          ><RotateCcw />Start over from today</Button
         >
         <div v-else class="bg-coral-soft/60 flex flex-col gap-2 rounded-lg p-3 text-sm">
           <p>This deletes all push-up entries and starts from zero. It can't be undone.</p>

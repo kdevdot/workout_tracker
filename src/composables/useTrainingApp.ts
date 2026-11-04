@@ -177,7 +177,7 @@ export function useTrainingApp() {
   }
   async function startPushups(dailyTarget: number) {
     if (await savePushups(() => ({ startDate: today.value, dailyTarget, entries: [] })))
-      notify('Challenge started. Day 1 is today.');
+      notify('Tracking started. Day 1 is today.');
   }
   async function addPushups(day: string, reps: number) {
     if (day > localDate()) return;
@@ -207,7 +207,7 @@ export function useTrainingApp() {
   }
   async function resetPushups() {
     if (await savePushups((pushups) => ({ ...pushups, startDate: null, entries: [] })))
-      notify('Challenge cleared.');
+      notify('Push-up history cleared.');
   }
   async function saveSettings(settings: AppState['settings']) {
     if (await update((current) => ({ ...current, settings })))

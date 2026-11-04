@@ -11,7 +11,7 @@ Live: https://kdevdot.github.io/workout_tracker/
 - Runs a rest timer that survives reloads and backgrounding. Rest follows the programme per exercise, or a fixed time you pick in Settings.
 - Shows a demo video, a muscle map and short form checks for each exercise.
 - Tracks whey and creatine intake.
-- Runs a 100-day push-up challenge: a daily target, quick-add buttons, streaks and a 10 × 10 day grid.
+- Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a 12-week calendar.
 - Exports and restores all data as a JSON backup.
 
 ## How it works

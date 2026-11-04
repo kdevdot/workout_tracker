@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { challengeDays, challengeStats } from './pushups';
+import { calendarWeeks, challengeDays, challengeStats } from './pushups';
 import { emptyState, encodeBackup, parseBackup } from './state';
 
 const entry = (date: string, reps: number) => ({
@@ -14,18 +14,15 @@ const challenge = (entries: ReturnType<typeof entry>[]) => ({
   entries,
 });
 
-describe('push-up challenge', () => {
-  it('builds 100 days and adds up several sets on one day', () => {
+describe('daily push-ups', () => {
+  it('tracks every day from the start with no end, adding up sets on one day', () => {
     const days = challengeDays(
       challenge([entry('2026-11-01', 60), entry('2026-11-01', 40)]),
       '2026-11-03',
     );
-    expect(days).toHaveLength(100);
-    expect(days[0]).toMatchObject({ number: 1, reps: 100, state: 'done' });
-    expect(days[1]!.state).toBe('missed');
-    expect(days[2]!.state).toBe('today');
-    expect(days[3]!.state).toBe('upcoming');
-    expect(days[99]!.date).toBe('2027-02-08');
+    expect(days.map((day) => day.state)).toEqual(['done', 'missed', 'today']);
+    expect(days[0]!.reps).toBe(100);
+    expect(challengeDays(challenge([]), '2027-11-01')).toHaveLength(366);
   });
 
   it('keeps the streak alive while today is still open, and resets it after a missed day', () => {
@@ -39,13 +36,23 @@ describe('push-up challenge', () => {
     expect(stats).toMatchObject({ dayNumber: 5, completed: 3, total: 350, streak: 2, best: 2 });
   });
 
-  it('reports not started, then finished, around the 100 days', () => {
-    const days = challengeDays(challenge([]), '2026-10-30');
-    expect(challengeStats(days, '2026-10-30')).toMatchObject({ dayNumber: 0, finished: false });
-    expect(challengeStats(days, '2027-02-09')).toMatchObject({ dayNumber: 100, finished: true });
+  it('lays out Monday-first calendar weeks ending this week', () => {
+    const weeks = calendarWeeks(challenge([entry('2026-11-02', 100)]), '2026-11-04');
+    expect(weeks).toHaveLength(12);
+    expect(weeks.at(-1)!.map((day) => day.state)).toEqual([
+      'done',
+      'missed',
+      'today',
+      'upcoming',
+      'upcoming',
+      'upcoming',
+      'upcoming',
+    ]);
+    expect(weeks.at(-2)!.at(-1)).toMatchObject({ date: '2026-11-01', state: 'missed' });
+    expect(weeks[0]![0]!.state).toBe('before');
   });
 
-  it('loads older backups that have no challenge yet', () => {
+  it('loads older backups that have no tracker yet', () => {
     const { pushups: _, ...old } = emptyState();
     const backup = JSON.parse(encodeBackup(emptyState()));
     backup.data = old;

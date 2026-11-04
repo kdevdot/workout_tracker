@@ -153,13 +153,15 @@ describe('working app integration', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('Backup restored on this device.'));
   });
 
-  it('runs the 100-day push-up challenge: start, log, undo', async () => {
+  it('tracks daily push-ups: start, log, undo', async () => {
     const wrapper = await app();
     await button(wrapper, 'Push-ups').trigger('click');
     await wrapper.get('#pushup-target').setValue('50');
     await wrapper.get('form').trigger('submit');
-    await vi.waitFor(() => expect(wrapper.text()).toContain('Day 1 of 100'));
-    expect(wrapper.findAll('[aria-label="Challenge days"] button')).toHaveLength(100);
+    await vi.waitFor(() =>
+      expect(wrapper.findAll('[aria-label="Push-up days"] button')).toHaveLength(84),
+    );
+    expect(wrapper.text()).toContain('Day 1');
 
     await button(wrapper, '+25').trigger('click');
     await vi.waitFor(() => expect(wrapper.text()).toContain('25 to go'));

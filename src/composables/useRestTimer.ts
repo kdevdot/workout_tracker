@@ -1,21 +1,11 @@
-import { computed, onMounted, onUnmounted, shallowRef, type Ref } from 'vue';
+import { computed, type Ref } from 'vue';
+import { useEventListener, useIntervalFn, useTimestamp } from '@vueuse/core';
 import type { AppState } from '../domain/state';
 
 export function useRestTimer(state: Ref<AppState>) {
-  const now = shallowRef(Date.now());
-  let interval: ReturnType<typeof setInterval>;
-  const refresh = () => {
-    now.value = Date.now();
-  };
-  onMounted(() => {
-    refresh();
-    interval = setInterval(refresh, 250);
-    document.addEventListener('visibilitychange', refresh);
-  });
-  onUnmounted(() => {
-    clearInterval(interval);
-    document.removeEventListener('visibilitychange', refresh);
-  });
+  const now = useTimestamp({ scheduler: (tick) => useIntervalFn(tick, 250) });
+  // Background tabs throttle intervals, so catch up the moment the app is visible again.
+  useEventListener(document, 'visibilitychange', () => (now.value = Date.now()));
   const seconds = computed(() =>
     Math.max(0, Math.ceil(((state.value.timer?.endsAt ?? 0) - now.value) / 1000)),
   );

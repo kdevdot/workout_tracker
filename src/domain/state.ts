@@ -90,6 +90,13 @@ export const intakeSchema = z.strictObject({
   recordedAt: timestamp,
 });
 
+const pushupSchema = z.strictObject({
+  id: z.uuid(),
+  date,
+  reps: z.number().int().min(1).max(1000),
+  recordedAt: timestamp,
+});
+
 export const stateSchema = z
   .strictObject({
     schemaVersion: z.literal(1),
@@ -103,6 +110,14 @@ export const stateSchema = z
     }),
     sessions: z.array(sessionSchema).max(10000),
     intakes: z.array(intakeSchema).max(50000),
+    // Older saves have no challenge yet and get an empty, not-started one.
+    pushups: z
+      .strictObject({
+        startDate: date.nullable(),
+        dailyTarget: z.number().int().min(1).max(1000),
+        entries: z.array(pushupSchema).max(100000),
+      })
+      .default({ startDate: null, dailyTarget: 100, entries: [] }),
     timer: z
       .strictObject({
         sessionId: z.uuid(),
@@ -112,7 +127,7 @@ export const stateSchema = z
       .nullable(),
   })
   .superRefine((state, context) => {
-    for (const records of [state.sessions, state.intakes]) {
+    for (const records of [state.sessions, state.intakes, state.pushups.entries]) {
       if (new Set(records.map((record) => record.id)).size !== records.length) {
         context.addIssue({ code: 'custom', message: 'Duplicate record ID' });
       }
@@ -149,6 +164,7 @@ export function emptyState(): AppState {
     },
     sessions: [],
     intakes: [],
+    pushups: { startDate: null, dailyTarget: 100, entries: [] },
     timer: null,
   };
 }

@@ -4,6 +4,7 @@ import {
   CalendarDays,
   CircleAlert,
   CloudOff,
+  Flame,
   History,
   Pill,
   Settings2,
@@ -16,6 +17,7 @@ import { cn } from '@/lib/utils';
 import AppToast from './AppToast.vue';
 import UpdatePrompt from './UpdatePrompt.vue';
 import HistoryView from './HistoryView.vue';
+import PushupsView from './PushupsView.vue';
 import SessionView from './SessionView.vue';
 import SettingsView from './SettingsView.vue';
 import SupplementsView from './SupplementsView.vue';
@@ -27,6 +29,7 @@ const { state, ready, busy, error, view, date, today, timer } = app;
 const nav = [
   { view: 'plan', label: 'Plan', icon: CalendarDays },
   { view: 'history', label: 'History', icon: History },
+  { view: 'pushups', label: 'Push-ups', icon: Flame },
   { view: 'supplements', label: 'Supplements', icon: Pill },
   { view: 'settings', label: 'Settings', icon: Settings2 },
 ] as const;
@@ -105,6 +108,17 @@ const saveStatus = computed(() => {
           @stop-timer="app.stopTimer"
         />
         <HistoryView v-else-if="view === 'history'" :sessions="state.sessions" @resume="app.open" />
+        <PushupsView
+          v-else-if="view === 'pushups'"
+          :challenge="state.pushups"
+          :today="today"
+          :busy="busy"
+          @start="app.startPushups"
+          @add="app.addPushups"
+          @undo="app.undoPushups"
+          @target="app.setPushupTarget"
+          @reset="app.resetPushups"
+        />
         <SupplementsView
           v-else-if="view === 'supplements'"
           :date="date"
@@ -148,7 +162,7 @@ const saveStatus = computed(() => {
     <UpdatePrompt :busy="busy" />
 
     <nav v-if="ready" class="app-nav" aria-label="Main navigation">
-      <div class="grid grid-cols-4 gap-1">
+      <div class="grid grid-cols-5 gap-1">
         <button
           v-for="item in nav"
           :key="item.view"

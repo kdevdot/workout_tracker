@@ -8,7 +8,7 @@ import { intakeSchema, type AppState, type SetLog } from '../domain/state';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
 
-export type View = 'plan' | 'session' | 'history' | 'supplements' | 'settings';
+export type View = 'plan' | 'session' | 'history' | 'pushups' | 'supplements' | 'settings';
 
 /** App-level orchestration: navigation state plus every persisted user action. */
 export function useTrainingApp() {
@@ -172,6 +172,43 @@ export function useTrainingApp() {
       intakes: current.intakes.filter((entry) => entry.id !== id),
     }));
   }
+  function savePushups(change: (pushups: AppState['pushups']) => AppState['pushups']) {
+    return update((current) => ({ ...current, pushups: change(current.pushups) }));
+  }
+  async function startPushups(dailyTarget: number) {
+    if (await savePushups(() => ({ startDate: today.value, dailyTarget, entries: [] })))
+      notify('Challenge started. Day 1 is today.');
+  }
+  async function addPushups(day: string, reps: number) {
+    if (day > localDate()) return;
+    const entry = {
+      id: crypto.randomUUID(),
+      date: day,
+      reps,
+      recordedAt: new Date().toISOString(),
+    };
+    if (await savePushups((pushups) => ({ ...pushups, entries: [...pushups.entries, entry] })))
+      notify(`+${reps} push-ups saved.`);
+  }
+  async function undoPushups(day: string) {
+    const last = state.value.pushups.entries.findLastIndex((entry) => entry.date === day);
+    if (last === -1) return;
+    if (
+      await savePushups((pushups) => ({
+        ...pushups,
+        entries: pushups.entries.filter((_, index) => index !== last),
+      }))
+    )
+      notify('Last push-up entry removed.');
+  }
+  async function setPushupTarget(dailyTarget: number) {
+    if (await savePushups((pushups) => ({ ...pushups, dailyTarget })))
+      notify(`Daily target set to ${dailyTarget}.`);
+  }
+  async function resetPushups() {
+    if (await savePushups((pushups) => ({ ...pushups, startDate: null, entries: [] })))
+      notify('Challenge cleared.');
+  }
   async function saveSettings(settings: AppState['settings']) {
     if (await update((current) => ({ ...current, settings })))
       notify('Settings saved. Existing records are unchanged.');
@@ -210,6 +247,11 @@ export function useTrainingApp() {
     addIntake,
     removeIntake,
     saveSettings,
+    startPushups,
+    addPushups,
+    undoPushups,
+    setPushupTarget,
+    resetPushups,
     restore,
   };
 }

@@ -153,6 +153,25 @@ describe('working app integration', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('Backup restored on this device.'));
   });
 
+  it('runs the 100-day push-up challenge: start, log, undo', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Push-ups').trigger('click');
+    await wrapper.get('#pushup-target').setValue('50');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Day 1 of 100'));
+    expect(wrapper.findAll('[aria-label="Challenge days"] button')).toHaveLength(100);
+
+    await button(wrapper, '+25').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('25 to go'));
+    await button(wrapper, '+25').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Target hit'));
+    expect((await savedData()).pushups.entries.map((entry) => entry.reps)).toEqual([25, 25]);
+
+    await wrapper.get('[aria-label="Undo last entry"]').trigger('click');
+    await vi.waitFor(async () => expect((await savedData()).pushups.entries).toHaveLength(1));
+    expect(wrapper.text()).toContain('25 to go');
+  });
+
   it('uses the rest minutes chosen in Settings for the timer', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');

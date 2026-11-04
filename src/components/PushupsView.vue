@@ -19,7 +19,13 @@ const emit = defineEmits<{
 }>();
 
 const quickAdds = [5, 10, 20, 25];
+const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const targetInput = shallowRef<string | number>(props.challenge.dailyTarget);
+// Keep the field in step when the target changes elsewhere (restore, reset, save).
+watch(
+  () => props.challenge.dailyTarget,
+  (value) => (targetInput.value = value),
+);
 const customReps = shallowRef<string | number>('');
 const confirmingReset = shallowRef(false);
 const selected = shallowRef(props.today);
@@ -73,6 +79,10 @@ const dayClass: Record<ChallengeDay['state'], string> = {
 function dayLabel(item: ChallengeDay) {
   const when = formatDate(item.date, { weekday: 'short', day: 'numeric', month: 'short' });
   return `${when}: ${item.reps} of ${target.value} push-ups`;
+}
+function reset() {
+  emit('reset');
+  confirmingReset.value = false;
 }
 function addCustom() {
   if (!validCustom.value) return;
@@ -236,7 +246,7 @@ function addCustom() {
       </div>
       <div class="flex gap-1">
         <ol class="text-muted-foreground grid grid-rows-7 gap-1 text-[10px]" aria-hidden="true">
-          <li v-for="letter in ['M', 'T', 'W', 'T', 'F', 'S', 'S']" class="flex w-3 items-center">
+          <li v-for="(letter, index) in weekdays" :key="index" class="flex w-3 items-center">
             {{ letter }}
           </li>
         </ol>
@@ -321,10 +331,7 @@ function addCustom() {
         <div v-else class="bg-coral-soft/60 flex flex-col gap-2 rounded-lg p-3 text-sm">
           <p>This deletes all push-up entries and starts from zero. It can't be undone.</p>
           <div class="flex gap-2">
-            <Button
-              variant="destructive"
-              :disabled="busy"
-              @click="(emit('reset'), (confirmingReset = false))"
+            <Button variant="destructive" :disabled="busy" @click="reset"
               >Delete and restart</Button
             >
             <Button variant="ghost" @click="confirmingReset = false">Keep it</Button>

@@ -13,19 +13,17 @@ const emit = defineEmits<{ dismiss: [] }>();
     aria-label="Rest timer"
     :class="
       cn(
-        'fixed inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 mx-auto flex w-[calc(100%-2.5rem)] max-w-[28rem] items-center gap-3 rounded-xl p-4 shadow-lg',
+        'fixed inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 mx-auto flex w-[calc(100%-2.5rem)] max-w-[28rem] items-center gap-3 rounded-xl py-2.5 pr-2 pl-4 shadow-lg',
         done ? 'bg-coral text-white' : 'bg-foreground text-background',
       )
     "
   >
-    <component :is="done ? BellRing : Timer" class="size-6 shrink-0" />
-    <div class="flex flex-1 flex-col">
-      <strong class="font-display text-3xl leading-none font-semibold tabular-nums">{{
+    <component :is="done ? BellRing : Timer" class="size-5 shrink-0" />
+    <div class="flex flex-1 items-baseline gap-2">
+      <strong class="font-display text-2xl leading-none font-semibold tabular-nums">{{
         done ? 'Rest complete' : display
       }}</strong>
-      <span class="text-xs opacity-75">{{
-        done ? 'Continue when ready.' : 'Rest timer · continues when backgrounded'
-      }}</span>
+      <span class="text-xs opacity-75">{{ done ? 'Go when ready' : 'rest' }}</span>
     </div>
     <Button
       variant="ghost"

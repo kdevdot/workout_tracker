@@ -282,6 +282,8 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     </div>
   </section>
 
+  <!-- Room to scroll the form above the floating timer. -->
+  <div v-if="timerVisible" class="h-14 shrink-0" aria-hidden="true" />
   <RestTimer
     v-if="timerVisible"
     :display="timerDisplay"

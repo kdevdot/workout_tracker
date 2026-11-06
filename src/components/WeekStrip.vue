@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Check, ChevronLeft, ChevronRight } from '@lucide/vue';
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { formatDate, shiftDate, weekFor } from '@/domain/dates';
 import { workoutForDate, workouts } from '@/domain/programme';
 import { Button } from '@/components/ui/button';
@@ -26,12 +26,23 @@ const days = computed(() =>
 <template>
   <section class="screen-enter flex flex-col gap-4">
     <div class="flex items-end justify-between gap-3">
-      <div>
-        <h1 class="page-heading">
+      <!-- The title is the date picker: a transparent native input sits on top of it. -->
+      <div
+        class="has-focus-visible:ring-ring/60 relative -ml-1 rounded-lg px-1 has-focus-visible:ring-2"
+      >
+        <h1 class="page-heading flex items-center">
           {{ formatDate(date, { weekday: 'short' })
           }}<span class="text-muted-foreground mx-2 font-sans text-2xl font-normal">/</span
           >{{ formatDate(date, { day: 'numeric', month: 'short' }) }}
+          <ChevronDown class="text-muted-foreground ml-1 size-5" aria-hidden="true" />
         </h1>
+        <input
+          type="date"
+          aria-label="Choose date"
+          :value="date"
+          class="absolute inset-0 size-full cursor-pointer opacity-0"
+          @change="emit('date', ($event.target as HTMLInputElement).value)"
+        />
       </div>
       <div class="flex items-center gap-1">
         <Button
@@ -92,17 +103,5 @@ const days = computed(() =>
         />
       </button>
     </div>
-
-    <label
-      class="text-muted-foreground flex items-center justify-between gap-3 text-xs font-medium"
-    >
-      Choose date
-      <input
-        type="date"
-        :value="date"
-        class="border-input bg-background text-foreground focus-visible:ring-ring/50 min-h-11 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
-        @change="emit('date', ($event.target as HTMLInputElement).value)"
-      />
-    </label>
   </section>
 </template>

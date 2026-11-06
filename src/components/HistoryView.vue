@@ -35,9 +35,6 @@ const entries = computed(() =>
 <template>
   <header class="page-header screen-enter">
     <h1 class="page-heading">Training history</h1>
-    <p class="text-muted-foreground text-sm">
-      Your real sessions. Partial workouts stay partial; drafts can be resumed.
-    </p>
   </header>
 
   <div

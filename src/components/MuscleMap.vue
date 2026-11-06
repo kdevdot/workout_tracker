@@ -27,10 +27,6 @@ defineProps<{ primary: string[]; supporting: string[] }>();
         <p v-else class="text-xs leading-6">
           Rest from lifting. Daily supplement tracking is still available.
         </p>
-        <p class="text-muted-foreground text-[10px] leading-4">
-          Target regions, not measured activation or recovery. Shoulder heads are drawn as one
-          region.
-        </p>
       </div>
     </div>
   </section>

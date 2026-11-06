@@ -44,15 +44,14 @@ const products = [
   {
     kind: 'whey',
     title: 'Optimum Nutrition whey',
-    description: 'Servings as defined on your exact product label.',
+    description: 'Servings, as on your label.',
     label: 'Servings consumed',
     action: 'Log whey',
   },
   {
     kind: 'creatine',
     title: 'Optimum Nutrition creatine',
-    description:
-      "Grams of product, not an assumed scoop size. Confirm the label's serving information.",
+    description: 'Grams, as on your label.',
     label: 'Grams consumed',
     action: 'Log creatine',
   },
@@ -118,10 +117,7 @@ function remove(id: string) {
       Some entries had no configured label. Their nutrition is unknown, not zero. Updating your
       label does not rewrite historical entries.
     </p>
-    <p class="text-xs leading-5 opacity-70">
-      Whey-only totals, not total daily calories or protein. Creatine is tracked in grams; its
-      product nutrition is not included.
-    </p>
+    <p class="text-xs leading-5 opacity-70">Whey only, not your whole day.</p>
     <Button
       v-if="!hasLabel"
       variant="secondary"

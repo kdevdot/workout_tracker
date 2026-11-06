@@ -3,7 +3,6 @@ import { computed } from 'vue';
 import {
   CalendarDays,
   CircleAlert,
-  CloudOff,
   Flame,
   History,
   Pill,
@@ -150,12 +149,6 @@ const saveStatus = computed(() => {
           >
         </AlertDescription>
       </Alert>
-
-      <footer class="text-muted-foreground mt-auto flex items-start gap-2 pt-6 text-xs leading-5">
-        <CloudOff class="mt-0.5 size-3.5 shrink-0" />
-        Personal training companion. Records stay in this browser; no cloud service is connected.
-        Export regularly.
-      </footer>
     </main>
 
     <AppToast :message="app.message.value" @dismiss="app.dismissMessage" />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { shallowRef, watch } from 'vue';
-import { Cloud, ShieldCheck } from '@lucide/vue';
+import { ShieldCheck } from '@lucide/vue';
 import type { AppState } from '@/domain/state';
 import type { Phase } from '@/domain/programme-types';
 import { Button } from '@/components/ui/button';
@@ -158,30 +158,19 @@ function save() {
 
   <Card class="gap-3 py-5">
     <CardHeader class="px-5">
-      <CardTitle class="flex items-center gap-2"><Cloud class="size-4" />Google Drive</CardTitle>
-    </CardHeader>
-    <CardContent class="text-muted-foreground px-5 text-sm leading-6">
-      Not connected. Drive backup is a later milestone; no Google authorisation or cloud backup has
-      happened.
-    </CardContent>
-  </Card>
-
-  <Card class="gap-3 py-5">
-    <CardHeader class="px-5">
       <CardTitle class="flex items-center gap-2"
         ><ShieldCheck class="size-4" />Storage & privacy</CardTitle
       >
     </CardHeader>
     <CardContent class="text-muted-foreground flex flex-col gap-2 px-5 text-xs leading-5">
-      <p>
-        Records live in this browser on this origin. Browser cleanup, private browsing, device loss,
-        or changing the app's address can make them unavailable. Export regularly, especially before
-        moving to the hosted app. The app works offline once installed; demo videos need internet.
-      </p>
-      <p>
-        The app has no analytics, account service, or server-side logging. No personal training data
-        is sent to GitHub.
-      </p>
+      <ul class="flex flex-col gap-1">
+        <li>
+          Records stay on this device only. Clearing site data deletes them, so export a backup now
+          and then.
+        </li>
+        <li>No account, analytics or tracking. Nothing is uploaded.</li>
+        <li>Works offline once installed. Demo videos need internet.</li>
+      </ul>
       <details>
         <summary class="text-foreground py-2 font-semibold">Exercise media credits</summary>
         <p>

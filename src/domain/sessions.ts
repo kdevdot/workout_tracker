@@ -79,6 +79,16 @@ export function previousPerformance(
   );
 }
 
+/** Top set: heaviest load, then most reps. Bodyweight sets compare on reps alone. */
+export function bestSet(logs: SetLog[]): SetLog | null {
+  return logs.reduce<SetLog | null>((best, log) => {
+    if (!best) return log;
+    const load = log.load ?? 0;
+    const bestLoad = best.load ?? 0;
+    return load > bestLoad || (load === bestLoad && log.reps > best.reps) ? log : best;
+  }, null);
+}
+
 export function formatLoad(log: SetLog): string {
   return log.load === null ? 'BW' : `${log.load} kg`;
 }

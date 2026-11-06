@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { ChevronDown, Dumbbell } from '@lucide/vue';
 import type { Session } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
-import { formatSet, sessionProgress } from '@/domain/sessions';
+import { bestSet, formatLoad, formatSet, sessionProgress } from '@/domain/sessions';
 import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,11 @@ const entries = computed(() =>
           : progress.done < progress.total
             ? 'Completed · partial'
             : 'Completed';
-      return { session, progress, status };
+      const tops = session.exercises.flatMap((item) => {
+        const top = bestSet(item.logs);
+        return top ? [{ name: item.exercise.name, set: `${formatLoad(top)} × ${top.reps}` }] : [];
+      });
+      return { session, progress, status, tops };
     }),
 );
 </script>
@@ -49,7 +53,7 @@ const entries = computed(() =>
   </div>
 
   <details
-    v-for="{ session, progress, status } in entries"
+    v-for="{ session, progress, status, tops } in entries"
     :key="session.id"
     class="group bg-card rounded-2xl border"
   >
@@ -79,6 +83,16 @@ const entries = computed(() =>
           >{{ progress.done }}/{{ progress.total }} sets</span
         >
       </div>
+      <ul
+        v-if="tops.length"
+        class="flex flex-col gap-1 text-xs group-open:hidden"
+        aria-label="Top set per exercise"
+      >
+        <li v-for="top in tops" :key="top.name" class="flex justify-between gap-3">
+          <span class="text-muted-foreground truncate">{{ top.name }}</span>
+          <strong class="shrink-0 font-semibold tabular-nums">{{ top.set }}</strong>
+        </li>
+      </ul>
     </summary>
     <div class="flex flex-col gap-3 border-t p-4">
       <p class="text-muted-foreground text-xs">

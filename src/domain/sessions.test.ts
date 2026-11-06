@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MAX_BACKUP_BYTES, emptyState, encodeBackup, parseBackup, sessionSchema } from './state';
 import {
+  bestSet,
   finishSession,
   previousPerformance,
   recordSet,
@@ -128,5 +129,21 @@ describe('backup validation', () => {
     const contents = encodeBackup({ ...emptyState(), sessions });
     expect(new TextEncoder().encode(contents).length).toBeGreaterThan(5_000_000);
     expect(parseBackup(contents).data.sessions).toHaveLength(500);
+  });
+
+  it('picks the top set by load, then reps', () => {
+    const logs = [
+      { ...set(1), load: 40, reps: 8 },
+      { ...set(2), load: 42.5, reps: 6 },
+      { ...set(3), load: 42.5, reps: 7 },
+    ];
+    expect(bestSet(logs)).toMatchObject({ index: 3 });
+    expect(
+      bestSet([
+        { ...set(1), load: null, reps: 5 },
+        { ...set(2), load: null, reps: 9 },
+      ]),
+    ).toMatchObject({ index: 2 });
+    expect(bestSet([])).toBeNull();
   });
 });

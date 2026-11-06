@@ -153,7 +153,7 @@ describe('working app integration', () => {
     await vi.waitFor(() => expect(wrapper.text()).toContain('Backup restored on this device.'));
   });
 
-  it('tracks daily push-ups: start, log, undo', async () => {
+  it('tracks daily push-ups: start, log, undo, start over', async () => {
     const wrapper = await app();
     await button(wrapper, 'Push-ups').trigger('click');
     await wrapper.get('#pushup-target').setValue('50');
@@ -172,6 +172,12 @@ describe('working app integration', () => {
     await wrapper.get('[aria-label="Undo last entry"]').trigger('click');
     await vi.waitFor(async () => expect((await savedData()).pushups.entries).toHaveLength(1));
     expect(wrapper.text()).toContain('25 to go');
+
+    await button(wrapper, 'Start over from today').trigger('click');
+    await button(wrapper, 'Delete and restart').trigger('click');
+    await vi.waitFor(async () => expect((await savedData()).pushups.entries).toHaveLength(0));
+    expect((await savedData()).pushups.startDate).not.toBeNull();
+    expect(wrapper.text()).toContain('50 to go');
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {

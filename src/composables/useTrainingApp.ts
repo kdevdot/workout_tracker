@@ -197,8 +197,8 @@ export function useTrainingApp() {
       notify(`Daily target set to ${dailyTarget}.`);
   }
   async function resetPushups() {
-    if (await savePushups((pushups) => ({ ...pushups, startDate: null, entries: [] })))
-      notify('Push-up history cleared.');
+    if (await savePushups((pushups) => ({ ...pushups, startDate: today.value, entries: [] })))
+      notify('Push-up history cleared. Day 1 is today.');
   }
   async function saveSettings(settings: AppState['settings']) {
     if (await update((current) => ({ ...current, settings })))

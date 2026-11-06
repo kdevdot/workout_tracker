@@ -4,7 +4,7 @@ import { localDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
 import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
-import { CREATINE, intakeSchema, type AppState, type SetLog } from '../domain/state';
+import { CREATINE, intakeSchema, type AppState, type Session, type SetLog } from '../domain/state';
 import { usePushups } from './usePushups';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
@@ -23,9 +23,13 @@ export function useTrainingApp() {
   const sessionId = shallowRef<string | null>(null);
   const message = shallowRef('');
 
-  const workoutId = computed(() =>
-    override.value === undefined ? workoutForDate(date.value) : override.value,
-  );
+  // A workout logged on this day wins over the weekly template, so a switch sticks.
+  const workoutId = computed(() => {
+    if (override.value !== undefined) return override.value;
+    const logged = state.value.sessions.filter((session) => session.date === date.value);
+    const chosen = logged.find((session) => session.status === 'active') ?? logged.at(-1);
+    return chosen?.workoutId ?? workoutForDate(date.value);
+  });
   const sessionsHere = computed(() =>
     state.value.sessions.filter(
       (session) => session.date === date.value && session.workoutId === workoutId.value,
@@ -97,7 +101,17 @@ export function useTrainingApp() {
     if (!workoutId.value || date.value > localDate()) return;
     if (draft.value) return open(draft.value.id);
     const session = startSession(workoutId.value, date.value, state.value.settings.phase);
-    if (await update((current) => ({ ...current, sessions: [...current.sessions, session] })))
+    // Switching workouts drops an untouched draft for this day instead of leaving it behind.
+    const untouched = (item: Session) =>
+      item.date === session.date &&
+      item.status === 'active' &&
+      item.exercises.every((entry) => entry.logs.length === 0);
+    if (
+      await update((current) => ({
+        ...current,
+        sessions: [...current.sessions.filter((item) => !untouched(item)), session],
+      }))
+    )
       open(session.id);
   }
   async function saveSet(exerciseId: string, log: SetLog) {

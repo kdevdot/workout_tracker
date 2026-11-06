@@ -133,37 +133,28 @@ function chooseWorkout(event: Event) {
       >
         Log supplements<ArrowRight class="size-5" />
       </Button>
+      <label class="flex items-center justify-between gap-3 text-sm font-medium">
+        <span class="flex items-center gap-2"
+          ><Repeat class="text-muted-foreground size-4" />Switch workout</span
+        >
+        <select
+          :value="workoutId ?? ''"
+          :disabled="busy"
+          class="border-input bg-card focus-visible:ring-ring/50 h-10 rounded-lg border px-3 outline-none focus-visible:ring-3"
+          @change="chooseWorkout"
+        >
+          <option value="">Rest day</option>
+          <option v-for="option in workouts" :key="option.id" :value="option.id">
+            {{ option.name }}
+          </option>
+        </select>
+      </label>
     </div>
   </section>
 
   <div class="workout-layout">
     <aside class="workout-sidebar flex min-w-0 flex-col gap-5">
       <MuscleMap :primary="workout?.primary ?? []" :supporting="workout?.supporting ?? []" />
-      <details class="group border-b">
-        <summary class="flex min-h-12 items-center gap-2 text-xs font-semibold">
-          <Repeat class="text-muted-foreground size-4" />Change this day's session
-          <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
-        </summary>
-        <div class="flex flex-col gap-2 pb-4">
-          <label class="flex flex-col gap-1.5 text-sm font-medium">
-            Workout
-            <select
-              :value="workoutId ?? ''"
-              :disabled="busy"
-              class="border-input bg-card focus-visible:ring-ring/50 h-11 rounded-lg border px-3 outline-none focus-visible:ring-3"
-              @change="chooseWorkout"
-            >
-              <option value="">Rest day</option>
-              <option v-for="option in workouts" :key="option.id" :value="option.id">
-                {{ option.name }}
-              </option>
-            </select>
-          </label>
-          <p class="text-muted-foreground text-xs leading-5">
-            Choose what you actually train; this does not change the weekly template.
-          </p>
-        </div>
-      </details>
     </aside>
 
     <div v-if="workout" class="workout-content flex min-w-0 flex-col gap-6">

@@ -240,6 +240,24 @@ describe('working app integration', () => {
     expect(rdl.logs[0]).toMatchObject({ load: 16, reps: 9, sides: { left: 10, right: 9 } });
   });
 
+  it('remembers a switched workout and drops the untouched draft it replaces', async () => {
+    const first = await app();
+    await first.get('input[type="date"]').setValue('2026-11-02');
+    await first.get('select').setValue('lowerB');
+    await button(first, 'Start workout').trigger('click');
+    await vi.waitFor(() => expect(first.find('form.set-form').exists()).toBe(true));
+    // Reopen the app: the switch must come back from storage, not memory.
+    const wrapper = mount(TrainingApp);
+    wrappers.push(wrapper);
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Saved on this device'));
+    await wrapper.get('input[type="date"]').setValue('2026-11-02');
+    expect(wrapper.get('.workout-title').text()).toBe('Lower B');
+    await wrapper.get('select').setValue('upperA');
+    await button(wrapper, 'Start workout').trigger('click');
+    await vi.waitFor(() => expect(wrapper.find('form.set-form').exists()).toBe(true));
+    expect((await savedData()).sessions.map((session) => session.workoutId)).toEqual(['upperA']);
+  });
+
   it('hides the save confirmation by itself', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');

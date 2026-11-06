@@ -15,6 +15,8 @@ interface Comparison {
 }
 
 export interface Guide {
+  /** Drawing file in public/exercises, without the .svg extension. */
+  illustration: string;
   video?: Video;
   checks: string[];
   stop: string[];
@@ -30,6 +32,7 @@ const smithStop = 'Smith: test hooks and stops with a light load first.';
 
 export const guides: Record<string, Guide> = {
   'smith-flat-bench-press': {
+    illustration: 'bench-press',
     video: {
       id: 'O5viuEPDXKY',
       title: 'Smith Machine Bench Press',
@@ -43,6 +46,7 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Stop for shoulder pain or losing bar control.'],
   },
   'fixed-handle-pull-up': {
+    illustration: 'pull-up',
     video: {
       id: 'iWpoegdfgtc',
       title: 'Normal Grip Pullup',
@@ -66,6 +70,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'bench-supported-one-arm-db-row': {
+    illustration: 'one-arm-dumbbell-row',
     video: {
       id: 'DMo3HJoawrU',
       title: 'Single Arm Supported Dumbbell Row',
@@ -88,6 +93,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'seated-db-shoulder-press': {
+    illustration: 'seated-dumbbell-press',
     video: {
       id: 'HzIiNhHhhtA',
       title: 'Seated Dumbbell Shoulder Press',
@@ -110,6 +116,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'db-lateral-raise': {
+    illustration: 'lateral-raise',
     video: {
       id: 'OuG1smZTsQQ',
       title: 'Lateral Raise',
@@ -132,6 +139,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'standing-db-curl': {
+    illustration: 'bicep-curl',
     video: {
       id: 'iixND1P2lik',
       title: 'Alternating Dumbbell Curl',
@@ -142,6 +150,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop when swinging replaces clean elbow bending.'],
   },
   'one-arm-cable-pushdown': {
+    illustration: 'tricep-pushdown',
     video: {
       id: 'Cp_bShvMY4c',
       title: 'Cable Single Arm Pushdown',
@@ -151,6 +160,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop when the upper arm or body starts moving.'],
   },
   'smith-squat': {
+    illustration: 'smith-machine-squat',
     video: {
       id: '-eO_VydErV0',
       title: 'Feet Forward Smith Squat',
@@ -165,6 +175,7 @@ export const guides: Record<string, Guide> = {
     stop: [smithStop, 'Set stops just below your bottom position.'],
   },
   'db-romanian-deadlift': {
+    illustration: 'dumbbell-romanian-deadlift',
     video: {
       id: 'cYKYGwcg0U8',
       title: 'Dumbbell Stiff Legged Deadlift',
@@ -187,6 +198,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'unica-leg-extension': {
+    illustration: 'leg-extension',
     video: {
       id: 'm0FOpMEgero',
       title: 'Leg Extension',
@@ -197,6 +209,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Use only after staff confirm the setup; otherwise do split squats.'],
   },
   'supine-heel-walkout': {
+    illustration: 'glute-bridge',
     video: {
       id: '6yeyt5mUo94',
       title: 'Glute Bridge into Hamstring Walkout',
@@ -206,6 +219,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop if hips sag or hamstrings cramp.'],
   },
   'supported-single-leg-standing-db-calf-raise': {
+    illustration: 'single-leg-calf-raise',
     video: {
       id: '_gEx2ijsmNM',
       title: 'Single Leg Stair Calves',
@@ -220,6 +234,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop before bouncing or bending the knee to lift.'],
   },
   'dead-bug': {
+    illustration: 'dead-bug',
     video: {
       id: 'GbSC02oU3To',
       title: 'How to Do a Dead Bug',
@@ -233,6 +248,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop before your low back arches.'],
   },
   'low-incline-db-bench-press': {
+    illustration: 'incline-dumbbell-press',
     video: {
       id: 'B09ZkYsnKko',
       title: 'Low Incline Dumbbell Press',
@@ -242,6 +258,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Avoid a steep, shoulder-press angle. No dropping DBs.'],
   },
   'machine-pec-fly': {
+    illustration: 'pec-deck',
     video: {
       id: 'FDay9wFe5uE',
       title: 'Machine Flye',
@@ -255,6 +272,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop for shoulder discomfort or torso rocking.'],
   },
   'machine-reverse-fly': {
+    illustration: 'reverse-pec-deck',
     video: {
       id: '5YK4bgzXDp0',
       title: 'Machine Reverse Flye',
@@ -273,6 +291,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'one-db-two-hand-overhead-triceps-extension': {
+    illustration: 'dumbbell-overhead-tricep-extension',
     video: {
       id: 'MPmeelJOmN8',
       title: 'Dumbbell Two Hand Overhead Tricep Extension',
@@ -286,6 +305,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Switch to pushdowns if your back arches or elbows hurt.'],
   },
   'smith-romanian-deadlift': {
+    illustration: 'smith-machine-romanian-deadlift',
     video: {
       id: 'CN_7cz3P-1U',
       title: 'Stiff Legged Deadlift',
@@ -308,6 +328,7 @@ export const guides: Record<string, Guide> = {
     },
   },
   'db-stationary-split-squat': {
+    illustration: 'split-squat',
     video: {
       id: 'jNihW0WDIL4',
       title: 'Split Squat',
@@ -321,6 +342,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop if balance goes or the back leg does the work.'],
   },
   'seated-db-calf-raise': {
+    illustration: 'seated-calf-raise',
     video: {
       id: 'UnBXxegoaCI',
       title: 'Dumbbell Seated Calf Raise',
@@ -334,6 +356,7 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop if the load slides or you start bouncing.'],
   },
   'side-plank': {
+    illustration: 'side-plank',
     video: {
       id: 'iNbH7_edNI8',
       title: 'Side Plank Tutorial',

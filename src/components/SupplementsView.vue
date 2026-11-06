@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef } from 'vue';
 import { Check, Info, Trash2 } from '@lucide/vue';
-import type { Intake } from '@/domain/state';
+import { CREATINE, type Intake } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -57,7 +57,7 @@ const products = [
   },
   {
     kind: 'creatine',
-    title: 'Optimum Nutrition creatine',
+    title: CREATINE,
     description: 'Grams, as on your label.',
     label: 'Grams consumed',
     action: 'Log creatine',

@@ -88,6 +88,8 @@ export const sessionSchema = z
     }
   });
 
+export const CREATINE = 'Optimum Nutrition creatine';
+
 export const intakeSchema = z.strictObject({
   id: z.uuid(),
   date,

@@ -4,7 +4,7 @@ import { localDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
 import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
-import { intakeSchema, type AppState, type SetLog } from '../domain/state';
+import { CREATINE, intakeSchema, type AppState, type SetLog } from '../domain/state';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
 
@@ -144,7 +144,7 @@ export function useTrainingApp() {
       date: date.value,
       kind,
       amount,
-      product: kind === 'whey' ? whey.name : 'Optimum Nutrition creatine',
+      product: kind === 'whey' ? whey.name : CREATINE,
       calories: kind === 'whey' && whey.calories !== null ? whey.calories * amount : null,
       protein: kind === 'whey' && whey.protein !== null ? whey.protein * amount : null,
       recordedAt: new Date().toISOString(),

@@ -276,6 +276,8 @@ describe('working app integration', () => {
     expect(entries[0]!.date).toBe('2026-11-01');
     expect(entries[0]!.calories).toBeNull();
     expect(entries[1]!.amount).toBe(3.4);
+    await vi.waitFor(() => expect(wrapper.text()).toContain('3.4 g'));
+    expect(wrapper.text()).toContain('Log more');
   });
 
   it('shows a storage error instead of resetting an unsupported saved schema', async () => {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef } from 'vue';
-import { Info, Trash2 } from '@lucide/vue';
+import { Check, Info, Trash2 } from '@lucide/vue';
 import type { Intake } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,12 @@ const error = shallowRef('');
 const future = computed(() => props.date > props.today);
 const entries = computed(() => props.intakes.filter((entry) => entry.date === props.date));
 const wheyEntries = computed(() => entries.value.filter((entry) => entry.kind === 'whey'));
+// Amount already logged per product on this date, so a done supplement reads as done.
+const taken = computed(() => {
+  const sums: Record<Kind, number> = { whey: 0, creatine: 0 };
+  for (const entry of entries.value) sums[entry.kind] += entry.amount;
+  return sums;
+});
 const labelMissing = computed(() =>
   wheyEntries.value.some((entry) => entry.calories === null || entry.protein === null),
 );
@@ -47,6 +53,7 @@ const products = [
     description: 'Servings, as on your label.',
     label: 'Servings consumed',
     action: 'Log whey',
+    unit: ' serving(s)',
   },
   {
     kind: 'creatine',
@@ -54,6 +61,7 @@ const products = [
     description: 'Grams, as on your label.',
     label: 'Grams consumed',
     action: 'Log creatine',
+    unit: ' g',
   },
 ] as const;
 
@@ -130,7 +138,15 @@ function remove(id: string) {
 
   <Card v-for="product in products" :key="product.kind" class="gap-4 py-5">
     <CardHeader class="px-5">
-      <CardTitle>{{ product.title }}</CardTitle>
+      <CardTitle class="flex items-center justify-between gap-2"
+        >{{ product.title }}
+        <span
+          v-if="taken[product.kind]"
+          class="bg-success-soft text-success flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums"
+          ><Check class="size-3.5 stroke-3" />{{ Math.round(taken[product.kind] * 100) / 100
+          }}{{ product.unit }}</span
+        ></CardTitle
+      >
       <CardDescription>{{ product.description }}</CardDescription>
     </CardHeader>
     <CardContent class="px-5">
@@ -149,9 +165,14 @@ function remove(id: string) {
             class="h-11"
           />
         </div>
-        <Button type="submit" size="lg" class="h-11" :disabled="busy || future">{{
-          product.action
-        }}</Button>
+        <Button
+          type="submit"
+          size="lg"
+          :variant="taken[product.kind] ? 'outline' : 'default'"
+          class="h-11"
+          :disabled="busy || future"
+          >{{ taken[product.kind] ? 'Log more' : product.action }}</Button
+        >
       </form>
     </CardContent>
   </Card>

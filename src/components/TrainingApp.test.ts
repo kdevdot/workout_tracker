@@ -57,7 +57,7 @@ describe('working app integration', () => {
   it('shows exercise-specific icons instead of numbered workout badges', async () => {
     const wrapper = await app();
     await wrapper.get('input[type="date"]').setValue('2026-11-02');
-    const symbols = wrapper.findAll('[data-exercise-icon]');
+    const symbols = wrapper.findAll('summary [data-exercise-icon]');
     expect(symbols).toHaveLength(7);
     expect(symbols[0]!.attributes('data-exercise-icon')).toBe('bench-press');
     expect(symbols[1]!.attributes('data-exercise-icon')).toBe('pull-up');

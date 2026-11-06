@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ArrowRightLeft, ExternalLink, OctagonAlert, Scale } from '@lucide/vue';
+import { ArrowRightLeft, ChevronDown, ExternalLink, OctagonAlert, Scale } from '@lucide/vue';
 import type { Exercise } from '@/domain/programme-types';
 import { guides } from '@/domain/guides';
 import BodyMap from './BodyMap.vue';
@@ -12,7 +12,12 @@ const guide = computed(() => guides[props.exercise.id]);
 
 <template>
   <div class="flex flex-col gap-4 text-sm">
-    <ExerciseVideo v-if="guide?.video" :video="guide.video" :exercise-name="exercise.name" />
+    <ExerciseVideo
+      v-if="guide?.video"
+      :video="guide.video"
+      :exercise-id="exercise.id"
+      :exercise-name="exercise.name"
+    />
     <p v-else class="text-muted-foreground bg-muted rounded-lg px-3 py-2 text-xs">
       No matching demonstration has been selected for this movement yet.
     </p>
@@ -42,28 +47,29 @@ const guide = computed(() => guides[props.exercise.id]);
       </li>
     </ul>
 
-    <section
-      v-if="guide?.comparison"
-      class="bg-secondary/60 flex flex-col gap-2 rounded-xl p-3"
-      :aria-label="`Technique comparison: ${guide.comparison.topic}`"
-    >
-      <h4 class="flex items-center gap-1.5 text-xs font-bold uppercase">
-        <Scale class="size-3.5" />Bad · Okay · Great: {{ guide.comparison.topic }}
-      </h4>
-      <p class="text-xs">
-        <span class="text-muted-foreground">Creator's ranking:</span>
-        {{ guide.comparison.ranking }}
-      </p>
-      <p class="leading-snug"><strong>Evidence:</strong> {{ guide.comparison.verdict }}</p>
-      <p class="leading-snug"><strong>For you:</strong> {{ guide.comparison.forYou }}</p>
-      <a
-        :href="guide.comparison.reel"
-        target="_blank"
-        rel="noopener"
-        class="text-primary flex w-fit items-center gap-1 text-xs font-semibold underline underline-offset-2"
-        >Watch the reel<ExternalLink class="size-3"
-      /></a>
-    </section>
+    <details v-if="guide?.comparison" class="group/compare bg-secondary/60 rounded-xl px-3">
+      <summary class="flex min-h-11 items-center gap-1.5 text-xs font-bold">
+        <Scale class="size-3.5 shrink-0" />Bad · Okay · Great: {{ guide.comparison.topic }}
+        <ChevronDown
+          class="ml-auto size-4 shrink-0 transition-transform group-open/compare:rotate-180"
+        />
+      </summary>
+      <div class="flex flex-col gap-2 pb-3">
+        <p class="text-xs">
+          <span class="text-muted-foreground">Creator's ranking:</span>
+          {{ guide.comparison.ranking }}
+        </p>
+        <p class="leading-snug"><strong>Evidence:</strong> {{ guide.comparison.verdict }}</p>
+        <p class="leading-snug"><strong>For you:</strong> {{ guide.comparison.forYou }}</p>
+        <a
+          :href="guide.comparison.reel"
+          target="_blank"
+          rel="noopener"
+          class="text-primary flex w-fit items-center gap-1 text-xs font-semibold underline underline-offset-2"
+          >Watch the reel<ExternalLink class="size-3"
+        /></a>
+      </div>
+    </details>
 
     <p class="text-muted-foreground flex items-start gap-1.5 text-xs">
       <ArrowRightLeft class="mt-0.5 size-3.5 shrink-0" />

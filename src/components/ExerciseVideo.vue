@@ -4,8 +4,9 @@ import { useEventListener } from '@vueuse/core';
 import { Info, Play, X } from '@lucide/vue';
 import { Button } from '@/components/ui/button';
 import type { Video } from '@/domain/guides';
+import ExerciseIcon from './ExerciseIcon.vue';
 
-const props = defineProps<{ video: Video; exerciseName: string }>();
+const props = defineProps<{ video: Video; exerciseId: string; exerciseName: string }>();
 const root = useTemplateRef<HTMLElement>('root');
 const watching = shallowRef(false);
 const retry = shallowRef(0);
@@ -70,17 +71,26 @@ useEventListener(disclosure, 'toggle', () => {
         </Button>
       </details>
     </template>
-    <template v-else>
-      <Button type="button" data-watch class="min-h-12 w-full" @click="watching = true">
-        <Play class="size-4" />Watch demonstration here
-      </Button>
-      <p class="text-muted-foreground text-xs leading-5">
-        Plays inside this exercise guide. Tapping loads YouTube; internet is required and ads may
-        appear. No video is downloaded.
-      </p>
-    </template>
-    <figcaption class="text-muted-foreground text-[11px]">
-      {{ video.author }} · {{ video.title }} · YouTube embed, not an open-licence download
+    <!-- Poster uses the local drawing, so nothing reaches YouTube until you tap. -->
+    <button
+      v-else
+      type="button"
+      data-watch
+      :aria-label="`Watch demonstration: ${exerciseName}`"
+      class="group/poster focus-visible:ring-ring/60 relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-stone-100 outline-none focus-visible:ring-2"
+      @click="watching = true"
+    >
+      <ExerciseIcon :exercise-id="exerciseId" class="aspect-square h-4/5 opacity-60" />
+      <span
+        class="bg-primary text-primary-foreground absolute flex size-14 items-center justify-center rounded-full shadow-lg transition-transform group-active/poster:scale-95"
+        ><Play class="ml-0.5 size-6 fill-current"
+      /></span>
+      <span class="bg-card/90 absolute bottom-2 left-2 rounded-md px-2 py-1 text-xs font-semibold"
+        >Watch demo</span
+      >
+    </button>
+    <figcaption class="text-muted-foreground text-[11px] leading-4">
+      {{ video.author }} · {{ video.title }} · YouTube, needs internet, may show ads
     </figcaption>
     <p
       v-if="video.variant"

@@ -13,7 +13,7 @@ const video: Video = {
 
 function player() {
   const wrapper = mount(ExerciseVideo, {
-    props: { video, exerciseName: 'Smith flat bench press' },
+    props: { video, exerciseId: 'smith-flat-bench-press', exerciseName: 'Smith flat bench press' },
     attachTo: document.body,
   });
   wrappers.push(wrapper);
@@ -68,7 +68,7 @@ describe('inline exercise demonstration', () => {
         components: { ExerciseVideo },
         setup: () => ({ video }),
         template:
-          '<details open><summary>Exercise</summary><ExerciseVideo :video="video" exercise-name="Smith flat bench press" /></details>',
+          '<details open><summary>Exercise</summary><ExerciseVideo :video="video" exercise-id="smith-flat-bench-press" exercise-name="Smith flat bench press" /></details>',
       }),
     );
     wrappers.push(wrapper);
@@ -96,7 +96,11 @@ describe('inline exercise demonstration', () => {
 
   it('shows the variation warning when the clip differs from your setup', () => {
     const wrapper = mount(ExerciseVideo, {
-      props: { video: { ...video, variant: 'Grip may differ.' }, exerciseName: 'Pull-up' },
+      props: {
+        video: { ...video, variant: 'Grip may differ.' },
+        exerciseId: 'fixed-handle-pull-up',
+        exerciseName: 'Pull-up',
+      },
     });
     wrappers.push(wrapper);
     expect(wrapper.text()).toContain('Grip may differ.');

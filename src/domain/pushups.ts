@@ -2,7 +2,7 @@ import { shiftDate, weekFor } from './dates';
 import type { AppState } from './state';
 
 type Challenge = AppState['pushups'];
-export type DayState = 'done' | 'partial' | 'missed' | 'today' | 'upcoming' | 'before';
+type DayState = 'done' | 'partial' | 'missed' | 'today' | 'upcoming' | 'before';
 
 export interface ChallengeDay {
   date: string;

@@ -211,6 +211,29 @@ describe('working app integration', () => {
     expect(next.map((input) => input.element.value)).toEqual(['20', '7', '3']);
   });
 
+  it('skips the load for bodyweight moves and logs each side of one-sided moves', async () => {
+    const wrapper = await app();
+    await wrapper.get('input[type="date"]').setValue('2026-11-03');
+    await button(wrapper, 'Start workout').trigger('click');
+    await vi.waitFor(() => expect(wrapper.find('form.set-form').exists()).toBe(true));
+    const chip = (name: string) =>
+      wrapper.get(`nav[aria-label="Exercises"] button[aria-label*="${name}"]`);
+    await chip('Supine heel walkout').trigger('click');
+    expect(wrapper.find('[id^="load-"]').exists()).toBe(false);
+    await chip('Dead bug').trigger('click');
+    expect(wrapper.find('[id^="load-"]').exists()).toBe(false);
+    expect(wrapper.text()).toContain('both sides');
+    await wrapper.get('#left-1').setValue('10');
+    await wrapper.get('#right-1').setValue('9');
+    await wrapper.get('#effort-1').setValue('2');
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('L 10 / R 9'));
+    const deadBug = (await savedData()).sessions[0]!.exercises.find(
+      (item) => item.exercise.id === 'dead-bug',
+    )!;
+    expect(deadBug.logs[0]).toMatchObject({ load: null, reps: 9, sides: { left: 10, right: 9 } });
+  });
+
   it('hides the save confirmation by itself', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');

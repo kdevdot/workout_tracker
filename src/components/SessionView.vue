@@ -78,7 +78,7 @@ const loadHint = computed(
       dumbbell: 'Kilograms per dumbbell. If one DB is used, record that one DB.',
       cable: 'Record the selected stack setting in kg; pulley ratios vary.',
       machine: 'Record the selected machine setting in kg; confirm setup first.',
-      bodyweight: 'Bodyweight movement: no external load required.',
+      bodyweight: 'Bodyweight: no load to log.',
     })[exercise.value.loadKind],
 );
 const stats = computed(() => [
@@ -161,7 +161,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <h1 class="page-heading">{{ exercise.name }}</h1>
     <p class="text-muted-foreground text-sm leading-6">
       {{ loadHint
-      }}{{ exercise.perSide ? ' Complete both sides for one set; match clean reps.' : '' }}
+      }}{{ exercise.perSide ? ' One set = left and right. Log each side; aim to match them.' : '' }}
     </p>
   </section>
 

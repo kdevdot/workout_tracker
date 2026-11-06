@@ -70,19 +70,24 @@ describe('session lifecycle', () => {
     const current = startSession('upperB', '2026-11-05', 'intro');
     expect(previousPerformance([completed], current, current.exercises[0]!.exercise.id)).toBeNull();
   });
-  it('preserves distinct timed holds, full cycles, and per-side prescriptions', () => {
+  it('still records timed holds kept in older saved sessions', () => {
     const lower = startSession('lowerB', '2026-11-06', 'intro');
-    const plank = lower.exercises.find((entry) => entry.exercise.unit === 'seconds')!;
-    const recorded = recordSet(lower, plank.exercise.id, {
+    const last = lower.exercises.at(-1)!;
+    const older = {
+      ...lower,
+      exercises: [
+        ...lower.exercises.slice(0, -1),
+        { ...last, exercise: { ...last.exercise, unit: 'seconds' as const } },
+      ],
+    };
+    const recorded = recordSet(older, last.exercise.id, {
       ...set(),
-      load: null,
+      load: 0,
       reps: 30,
       effort: 7,
+      sides: { left: 30, right: 31 },
     });
-    expect(
-      recorded.exercises.find((entry) => entry.exercise.unit === 'seconds')!.logs[0]!.reps,
-    ).toBe(30);
-    expect(lower.exercises.find((entry) => entry.exercise.unit === 'cycles')).toBeDefined();
+    expect(recorded.exercises.at(-1)!.logs[0]!.reps).toBe(30);
   });
 });
 

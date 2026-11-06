@@ -71,3 +71,5 @@ Following feedback on the hand-drawn list icons, the 11 static candidates were i
 ## Full thumbnail coverage (3 November 2026)
 
 At the user's request, every list row now shows a drawing. The 8 related-only candidates are used as identifying thumbnails, without changing their audit verdicts. The two rejected slots use substitutes: `bench-press` (flat barbell bench) for the Smith flat bench press, and `glute-bridge` (hips up, heels planted) for the heel-walkout start position. Thumbnails identify the exercise; they do not teach setup or technique. The video, muscle map and form checks remain the reference.
+
+**Update, 7 November 2026:** the floor moves (heel walkout, dead bug, side plank) were replaced with gym-equipment moves. Their drawings (`glute-bridge`, `dead-bug`, `side-plank`) are no longer bundled; `single-leg-romanian-deadlift`, `hanging-knee-raise` and `pallof-press` were added from the same source revision.

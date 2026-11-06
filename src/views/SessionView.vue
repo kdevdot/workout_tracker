@@ -240,7 +240,6 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
 
   <p class="text-muted-foreground text-xs leading-5">
     RIR = clean repetitions you could still perform. Record actual results, not just the target.
-    Walkout reps are complete out-and-back cycles.
   </p>
 
   <div class="grid grid-cols-2 gap-2">

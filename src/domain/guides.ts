@@ -208,16 +208,22 @@ export const guides: Record<string, Guide> = {
     checks: ['Knee lined up with the lever pivot', 'Pad on lower shin', 'Extend without kicking'],
     stop: ['Use only after staff confirm the setup; otherwise do split squats.'],
   },
-  'supine-heel-walkout': {
-    illustration: 'glute-bridge',
+  'supported-single-leg-db-rdl': {
+    illustration: 'single-leg-romanian-deadlift',
     video: {
-      id: '6yeyt5mUo94',
-      title: 'Glute Bridge into Hamstring Walkout',
-      author: 'Runna',
+      id: 'pJewPISyHjw',
+      title: 'Dumbbell Single Leg Romanian Deadlift',
+      author: 'OPEX Fitness',
+      variant: 'Shown freestanding; hold the Smith upright for balance.',
     },
-    checks: ['Hips up, heels planted', '2–3 small steps out, 2–3 back = 1 rep', 'Keep hips high'],
-    stop: ['Stop if hips sag or hamstrings cramp.'],
+    checks: [
+      'Light hand on a fixed upright',
+      'Hips square, free leg trails',
+      'Stand by driving the hip',
+    ],
+    stop: ['Stop before the back rounds or hips twist open.'],
   },
+
   'supported-single-leg-standing-db-calf-raise': {
     illustration: 'single-leg-calf-raise',
     video: {
@@ -233,20 +239,18 @@ export const guides: Record<string, Guide> = {
     ],
     stop: ['Stop before bouncing or bending the knee to lift.'],
   },
-  'dead-bug': {
-    illustration: 'dead-bug',
+  'hanging-knee-raise': {
+    illustration: 'hanging-knee-raise',
     video: {
-      id: 'GbSC02oU3To',
-      title: 'How to Do a Dead Bug',
-      author: 'Hinge Health',
+      id: 'O7iDA3ory-w',
+      title: 'How To Do Hanging Knee Raises',
+      author: 'PureGym',
+      variant: 'Bar shown; your fixed handles work the same way.',
     },
-    checks: [
-      'Exhale, ribs and low back down',
-      'Reach opposite arm and leg slowly',
-      'Only as far as your back stays flat',
-    ],
-    stop: ['Stop before your low back arches.'],
+    checks: ['Shoulders set, no swing', 'Curl pelvis up, knees to chest', 'Lower slowly'],
+    stop: ['Stop when swinging or grip takes over.'],
   },
+
   'low-incline-db-bench-press': {
     illustration: 'incline-dumbbell-press',
     video: {
@@ -355,15 +359,15 @@ export const guides: Record<string, Guide> = {
     ],
     stop: ['Stop if the load slides or you start bouncing.'],
   },
-  'side-plank': {
-    illustration: 'side-plank',
+  'cable-anti-rotation-press': {
+    illustration: 'pallof-press',
     video: {
-      id: 'iNbH7_edNI8',
-      title: 'Side Plank Tutorial',
-      author: 'Runna',
+      id: 'xeFp4MXad98',
+      title: 'Cable Pallof Press',
+      author: 'FIT.nl',
     },
-    checks: ['Elbow under shoulder', 'Knees or feet, straight side line', 'Breathe steadily'],
-    stop: ['End with 5–10 s of good form left, before hips sag.'],
+    checks: ['Side-on, handle at sternum', 'Press out, torso stays square', 'Both sides = one set'],
+    stop: ['Stop if the cable turns your torso.'],
   },
 };
 

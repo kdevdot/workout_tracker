@@ -224,20 +224,20 @@ describe('working app integration', () => {
     await vi.waitFor(() => expect(wrapper.find('form.set-form').exists()).toBe(true));
     const chip = (name: string) =>
       wrapper.get(`nav[aria-label="Exercises"] button[aria-label*="${name}"]`);
-    await chip('Supine heel walkout').trigger('click');
+    await chip('Hanging knee raise').trigger('click');
     expect(wrapper.find('[id^="load-"]').exists()).toBe(false);
-    await chip('Dead bug').trigger('click');
-    expect(wrapper.find('[id^="load-"]').exists()).toBe(false);
+    await chip('Supported single-leg DB RDL').trigger('click');
     expect(wrapper.text()).toContain('both sides');
+    await wrapper.get('#load-1').setValue('16');
     await wrapper.get('#left-1').setValue('10');
     await wrapper.get('#right-1').setValue('9');
     await wrapper.get('#effort-1').setValue('2');
     await wrapper.get('form.set-form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('L 10 / R 9'));
-    const deadBug = (await savedData()).sessions[0]!.exercises.find(
-      (item) => item.exercise.id === 'dead-bug',
+    const rdl = (await savedData()).sessions[0]!.exercises.find(
+      (item) => item.exercise.id === 'supported-single-leg-db-rdl',
     )!;
-    expect(deadBug.logs[0]).toMatchObject({ load: null, reps: 9, sides: { left: 10, right: 9 } });
+    expect(rdl.logs[0]).toMatchObject({ load: 16, reps: 9, sides: { left: 10, right: 9 } });
   });
 
   it('hides the save confirmation by itself', async () => {

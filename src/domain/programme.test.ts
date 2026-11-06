@@ -18,9 +18,9 @@ const expectedTables = {
     ['smith-squat', 3, 5, 8, 'reps', false, 180, '2', 'smith'],
     ['db-romanian-deadlift', 3, 8, 12, 'reps', false, 180, '2', 'dumbbell'],
     ['unica-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
-    ['supine-heel-walkout', 2, 4, 8, 'cycles', false, 120, '~2 clean cycles', 'bodyweight'],
+    ['supported-single-leg-db-rdl', 2, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
     ['supported-single-leg-standing-db-calf-raise', 3, 8, 15, 'reps', true, 90, '1–2', 'dumbbell'],
-    ['dead-bug', 2, 6, 10, 'reps', true, 75, '~2 technically clean reps', 'bodyweight'],
+    ['hanging-knee-raise', 2, 8, 15, 'reps', false, 75, '2', 'bodyweight'],
   ],
   upperB: [
     ['low-incline-db-bench-press', 4, 8, 12, 'reps', false, 180, '2', 'dumbbell'],
@@ -36,9 +36,9 @@ const expectedTables = {
     ['smith-romanian-deadlift', 3, 6, 8, 'reps', false, 180, '2', 'smith'],
     ['db-stationary-split-squat', 3, 8, 12, 'reps', true, 180, '2', 'dumbbell'],
     ['unica-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
-    ['supine-heel-walkout', 2, 4, 8, 'cycles', false, 120, '~2 clean cycles', 'bodyweight'],
+    ['supported-single-leg-db-rdl', 2, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
     ['seated-db-calf-raise', 3, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['side-plank', 2, 20, 45, 'seconds', true, 75, '5–10 s form reserve', 'bodyweight'],
+    ['cable-anti-rotation-press', 2, 10, 15, 'reps', true, 75, '2', 'cable'],
   ],
 };
 
@@ -82,13 +82,7 @@ describe('programme tables', () => {
       const intro = getExercises(workoutId, 'intro');
       intro.forEach((exercise, index) => {
         expect(exercise.sets).toBe(2);
-        expect(exercise.targetRir).toBe(
-          exercise.unit === 'seconds'
-            ? '5–10 s form reserve'
-            : exercise.unit === 'cycles'
-              ? '~3 clean cycles'
-              : '3',
-        );
+        expect(exercise.targetRir).toBe('3');
         expect(exercise).toMatchObject({
           id: baseline[index].id,
           min: baseline[index].min,
@@ -99,7 +93,6 @@ describe('programme tables', () => {
           loadKind: baseline[index].loadKind,
         });
         expect(exercise.alternative.prescription).toMatch(/^2 × /);
-        expect(exercise.alternative.note).not.toMatch(/2 (?:technical )?RIR at baseline/);
       });
     },
   );
@@ -169,34 +162,11 @@ describe('programme tables', () => {
     }
   });
 
-  it('preserves bodyweight, timed and out-and-back cycle conventions', () => {
-    const walkout = workouts.lowerA.exercises.find(
-      (exercise) => exercise.id === 'supine-heel-walkout',
-    )!;
-    expect(walkout).toMatchObject({
-      loadKind: 'bodyweight',
-      unit: 'cycles',
-      min: 4,
-      max: 8,
-      perSide: false,
-    });
-    expect(walkout.cues.join(' ')).toContain('one cycle, not each footstep');
-    const plank = workouts.lowerB.exercises.find((exercise) => exercise.id === 'side-plank')!;
-    expect(plank).toMatchObject({
-      loadKind: 'bodyweight',
-      unit: 'seconds',
-      min: 20,
-      max: 45,
-      perSide: true,
-    });
-    expect(
-      getExercises('lowerB', 'intro').find((exercise) => exercise.id === plank.id)?.targetRir,
-    ).toBe('5–10 s form reserve');
-    expect(workouts.lowerA.exercises.find((exercise) => exercise.id === 'dead-bug')).toMatchObject({
-      loadKind: 'bodyweight',
-      unit: 'reps',
-      perSide: true,
-    });
+  it('only uses gym equipment, never floor work', () => {
+    for (const exercise of Object.values(workouts).flatMap((workout) => workout.exercises)) {
+      expect(exercise.equipment).not.toMatch(/^Body weight|mat/i);
+      expect(exercise.unit).toBe('reps');
+    }
     expect(
       workouts.upperA.exercises.find((exercise) => exercise.id === 'fixed-handle-pull-up'),
     ).toMatchObject({ loadKind: 'bodyweight', unit: 'reps', perSide: false });

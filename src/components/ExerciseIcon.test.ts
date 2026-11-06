@@ -37,8 +37,8 @@ describe('exercise thumbnails', () => {
   it('updates reactively and safely handles an unknown historical movement', async () => {
     const wrapper = mount(ExerciseIcon, { props: { exerciseId: 'smith-squat' } });
     expect(wrapper.get('img').attributes('src')).toBe('/exercises/smith-machine-squat.svg');
-    await wrapper.setProps({ exerciseId: 'side-plank' });
-    expect(wrapper.get('img').attributes('src')).toBe('/exercises/side-plank.svg');
+    await wrapper.setProps({ exerciseId: 'cable-anti-rotation-press' });
+    expect(wrapper.get('img').attributes('src')).toBe('/exercises/pallof-press.svg');
     await wrapper.setProps({ exerciseId: 'unknown-movement' });
     expect(wrapper.find('img').exists()).toBe(false);
     expect(wrapper.find('svg').exists()).toBe(true);

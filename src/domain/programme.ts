@@ -51,9 +51,9 @@ const pullUp: Movement = {
     'Stop before kipping, craning the neck or losing controlled lowering. No weight belt or uncontrolled jumping negatives.',
   ],
   alternative: {
-    name: 'Half-kneeling one-arm high-cable pulldown',
+    name: 'Standing one-arm high-cable pulldown',
     prescription: '8–12 reps/side',
-    note: 'Use if five clean pull-ups are unavailable; same sets, RIR and rest. High pulley and D-handle; brace and pull elbow toward ribs without twisting. Use a load that cannot drag you; stand staggered if kneeling is uncomfortable.',
+    note: 'Use if five clean pull-ups are unavailable; same sets, RIR and rest. High pulley and D-handle; brace and pull elbow toward ribs without twisting. Stand staggered and use a load that cannot drag you.',
   },
 };
 
@@ -254,28 +254,28 @@ const legExtension: Movement = {
   },
 };
 
-const heelWalkout: Movement = {
-  id: 'supine-heel-walkout',
-  name: 'Supine heel walkout',
-  unit: 'cycles',
-  perSide: false,
+const singleLegRdl: Movement = {
+  id: 'supported-single-leg-db-rdl',
+  name: 'Supported single-leg DB RDL',
+  unit: 'reps',
+  perSide: true,
   restSeconds: 120,
   restLabel: '90–120 s',
-  targetRir: '~2 clean cycles',
-  loadKind: 'bodyweight',
-  equipment: 'Body weight, clear non-slip floor',
+  targetRir: '2',
+  loadKind: 'dumbbell',
+  equipment: 'One DB, fixed Smith upright for balance',
   primary: ['Hamstrings'],
   supporting: ['Glutes'],
   cues: [
-    'Start supine with bent knees and planted heels; lift hips on a clean, non-slip floor.',
-    'Take 2–3 small alternating heel steps outward, then 2–3 back: the complete out-and-back is one cycle, not each footstep.',
-    'Keep hips elevated and pelvis controlled; start with shorter steps. Stop if hips sag, hamstrings cramp or you cannot return without dropping.',
-    'Use tolerable floor contact; a clean towel may provide comfort, not a sliding device. No mat is assumed.',
+    'Hold the Smith upright lightly with one hand and a DB in the other; stand on the leg opposite the DB.',
+    'Soft standing knee, hips square; hinge back while the free leg trails behind, then stand by driving the hip forward.',
+    'Stop when hamstrings limit the hinge, before the back rounds or hips rotate open.',
+    unilateralCue,
   ],
   alternative: {
-    name: 'Long-lever heel-dig bridge',
-    prescription: '10–20 reps',
-    note: 'Same sets and rest; about 2 RIR at baseline. Less dynamic knee-flexion demand, not equivalent to a leg curl. Heels farther from hips, knees slightly bent: dig heels down, raise hips without back overextension, pause and lower. Shorten lever if hamstrings cramp.',
+    name: 'Kickstand DB RDL',
+    prescription: '10–15 reps/side',
+    note: 'Same sets, RIR and rest. Rear toes on the floor for balance, front leg does most of the work; hips square and lighter than a two-leg RDL.',
   },
 };
 
@@ -303,28 +303,27 @@ const standingCalf: Movement = {
   },
 };
 
-const deadBug: Movement = {
-  id: 'dead-bug',
-  name: 'Dead bug',
+const kneeRaise: Movement = {
+  id: 'hanging-knee-raise',
+  name: 'Hanging knee raise',
   unit: 'reps',
-  perSide: true,
+  perSide: false,
   restSeconds: 75,
   restLabel: '60–75 s',
-  targetRir: '~2 technically clean reps',
+  targetRir: '2',
   loadKind: 'bodyweight',
-  equipment: 'Body weight, floor',
+  equipment: "Smith station's fixed overhead handles",
   primary: ['Abdominal bracing/control'],
   supporting: [],
   cues: [
-    'Lie supine with hips/knees bent and arms up. Exhale and control ribs/pelvis.',
-    'Slowly extend opposite arm and leg only as far as you can prevent low-back arching; return and switch.',
-    'Stop before the next repetition would lose trunk position. Use tolerable floor contact; a clean towel is optional for comfort.',
-    unilateralCue,
+    'Hang from the fixed handles with shoulders set, not loose.',
+    'Curl the pelvis up as the knees rise toward the chest; lower slowly without swinging.',
+    'Stop when swinging takes over or grip fails before the abs do.',
   ],
   alternative: {
-    name: 'Front plank',
-    prescription: '20–45 s',
-    note: 'Same sets and rest; keep 5–10 s of good form remaining, including during intro. Elbows below shoulders, glutes lightly engaged, ribs controlled; breathe without sagging or elevating hips. Stop before body position must change.',
+    name: 'Standing high-cable crunch',
+    prescription: '10–15 reps',
+    note: 'Same sets, RIR and rest. High pulley, both hands on the D-handle beside your head; stand facing away and crunch ribs toward hips without pulling with the arms.',
   },
 };
 
@@ -497,28 +496,28 @@ const seatedCalf: Movement = {
   },
 };
 
-const sidePlank: Movement = {
-  id: 'side-plank',
-  name: 'Side plank',
-  unit: 'seconds',
+const antiRotationPress: Movement = {
+  id: 'cable-anti-rotation-press',
+  name: 'One-arm cable anti-rotation press',
+  unit: 'reps',
   perSide: true,
   restSeconds: 75,
   restLabel: '60–75 s',
-  targetRir: '5–10 s form reserve',
-  loadKind: 'bodyweight',
-  equipment: 'Body weight, floor',
+  targetRir: '2',
+  loadKind: 'cable',
+  equipment: 'Cable at chest height, D-handle',
   primary: ['Lateral trunk', 'Obliques'],
   supporting: [],
   cues: [
-    'Place elbow below shoulder; support on knees initially or feet when ready.',
-    'Lift hips, maintain a straight side-body line and breathe. Stop with 5–10 seconds of good form remaining, before hips sag/rotate or shoulder discomfort.',
-    'Use tolerable floor contact; a clean towel is optional for comfort, not a required mat.',
+    'Stand side-on to the pulley, D-handle at the sternum, feet a little wider than hips.',
+    'Press straight out and back without letting the cable turn your torso.',
+    'Stop when the torso turns or the shoulder is pulled uncomfortably.',
     unilateralCue,
   ],
   alternative: {
-    name: 'One-arm cable anti-rotation press',
-    prescription: '10–15 reps/side',
-    note: 'Same sets and rest, 2 technical RIR at baseline. Chest-height D-handle, standing side-on with light load and stable stance; press from sternum without rotating, then return. Train both orientations; stop for torso turning or uncomfortable shoulder pull.',
+    name: 'DB suitcase hold',
+    prescription: '20–40 s/side',
+    note: 'Same sets and rest. Stand tall holding one heavy DB at your side without leaning toward it.',
   },
 };
 
@@ -567,9 +566,9 @@ export const workouts: Record<WorkoutId, Workout> = {
       prescribe(smithSquat, 3, 5, 8),
       prescribe(dbRdl, 3, 8, 12),
       prescribe(legExtension, 2, 10, 15),
-      prescribe(heelWalkout, 2, 4, 8),
+      prescribe(singleLegRdl, 2, 8, 12),
       prescribe(standingCalf, 3, 8, 15),
-      prescribe(deadBug, 2, 6, 10),
+      prescribe(kneeRaise, 2, 8, 15),
     ],
   },
   upperB: {
@@ -613,9 +612,9 @@ export const workouts: Record<WorkoutId, Workout> = {
         10,
         15,
       ),
-      prescribe(heelWalkout, 2, 4, 8),
+      prescribe(singleLegRdl, 2, 8, 12),
       prescribe(seatedCalf, 3, 12, 20),
-      prescribe(sidePlank, 2, 20, 45),
+      prescribe(antiRotationPress, 2, 10, 15),
     ],
   },
 };
@@ -624,12 +623,7 @@ export function getExercises(workoutId: WorkoutId, phase: Phase): Exercise[] {
   return workouts[workoutId].exercises.map((exercise) => ({
     ...exercise,
     sets: phase === 'intro' ? 2 : exercise.sets,
-    targetRir:
-      phase === 'baseline' || exercise.unit === 'seconds'
-        ? exercise.targetRir
-        : exercise.unit === 'cycles'
-          ? '~3 clean cycles'
-          : '3',
+    targetRir: phase === 'baseline' ? exercise.targetRir : '3',
     primary: [...exercise.primary],
     supporting: [...exercise.supporting],
     cues: [...exercise.cues],
@@ -639,13 +633,6 @@ export function getExercises(workoutId: WorkoutId, phase: Phase): Exercise[] {
         phase === 'intro'
           ? exercise.alternative.prescription.replace(/^\d+ × /, '2 × ')
           : exercise.alternative.prescription,
-      note:
-        phase === 'intro'
-          ? exercise.alternative.note.replace(
-              /(?:about )?2 (?:technical )?RIR at baseline/g,
-              '3 technical RIR during intro',
-            )
-          : exercise.alternative.note,
     },
   }));
 }

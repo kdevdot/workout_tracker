@@ -8,7 +8,7 @@ import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import ExerciseIcon from './ExerciseIcon.vue';
+import ExerciseIcon from '@/components/ExerciseIcon.vue';
 
 const props = defineProps<{ sessions: Session[] }>();
 const emit = defineEmits<{ resume: [id: string] }>();

@@ -15,12 +15,12 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import AppToast from './AppToast.vue';
 import UpdatePrompt from './UpdatePrompt.vue';
-import HistoryView from './HistoryView.vue';
-import PushupsView from './PushupsView.vue';
-import SessionView from './SessionView.vue';
-import SettingsView from './SettingsView.vue';
-import SupplementsView from './SupplementsView.vue';
-import WorkoutPlan from './WorkoutPlan.vue';
+import HistoryView from '@/views/HistoryView.vue';
+import PushupsView from '@/views/PushupsView.vue';
+import SessionView from '@/views/SessionView.vue';
+import SettingsView from '@/views/SettingsView.vue';
+import SupplementsView from '@/views/SupplementsView.vue';
+import WorkoutPlan from '@/views/WorkoutPlan.vue';
 
 const app = useTrainingApp();
 const { state, ready, busy, error, view, date, today, timer } = app;

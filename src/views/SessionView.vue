@@ -22,9 +22,9 @@ import type { Session, SetLog } from '@/domain/state';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import ExerciseGuide from './ExerciseGuide.vue';
-import RestTimer from './RestTimer.vue';
-import SetForm from './SetForm.vue';
+import ExerciseGuide from '@/components/ExerciseGuide.vue';
+import RestTimer from '@/components/RestTimer.vue';
+import SetForm from '@/components/SetForm.vue';
 
 const props = defineProps<{
   session: Session;

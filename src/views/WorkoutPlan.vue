@@ -7,11 +7,11 @@ import type { Session } from '@/domain/state';
 import { restFor, sessionProgress } from '@/domain/sessions';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import ExerciseGuide from './ExerciseGuide.vue';
-import ExerciseIcon from './ExerciseIcon.vue';
-import MuscleMap from './MuscleMap.vue';
-import WeekStrip from './WeekStrip.vue';
-import WorkoutArt from './WorkoutArt.vue';
+import ExerciseGuide from '@/components/ExerciseGuide.vue';
+import ExerciseIcon from '@/components/ExerciseIcon.vue';
+import MuscleMap from '@/components/MuscleMap.vue';
+import WeekStrip from '@/components/WeekStrip.vue';
+import WorkoutArt from '@/components/WorkoutArt.vue';
 
 const props = defineProps<{
   date: string;

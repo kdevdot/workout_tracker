@@ -38,7 +38,8 @@ Stack: Vue 3 + TypeScript, Vite, Tailwind CSS v4, shadcn-vue, zod, idb, vite-plu
 | `src/domain/`      | Programme, dates, session rules, state schema, guides |
 | `src/storage/`     | IndexedDB access and revision checks                  |
 | `src/composables/` | App state and rest timer                              |
-| `src/components/`  | Vue views and UI components                           |
+| `src/views/`       | The six screens, one file each                        |
+| `src/components/`  | App shell and the parts screens are built from        |
 | `public/`          | Muscle maps, exercise illustrations, app icons        |
 
 Every push to `main` runs `.github/workflows/check.yml`. The `deploy.yml` workflow builds the app and publishes `dist` to GitHub Pages.

@@ -25,25 +25,16 @@ export function useTrainingApp() {
   const workoutId = computed(() =>
     override.value === undefined ? workoutForDate(date.value) : override.value,
   );
+  const sessionsHere = computed(() =>
+    state.value.sessions.filter(
+      (session) => session.date === date.value && session.workoutId === workoutId.value,
+    ),
+  );
   const draft = computed(
-    () =>
-      state.value.sessions.find(
-        (session) =>
-          session.date === date.value &&
-          session.workoutId === workoutId.value &&
-          session.status === 'active',
-      ) ?? null,
+    () => sessionsHere.value.find((session) => session.status === 'active') ?? null,
   );
   const completed = computed(
-    () =>
-      state.value.sessions
-        .filter(
-          (session) =>
-            session.date === date.value &&
-            session.workoutId === workoutId.value &&
-            session.status === 'completed',
-        )
-        .at(-1) ?? null,
+    () => sessionsHere.value.findLast((session) => session.status === 'completed') ?? null,
   );
   const doneDates = computed(
     () =>

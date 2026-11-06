@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef } from 'vue';
+import { computed, reactive, shallowRef } from 'vue';
 import { Check } from '@lucide/vue';
 import type { Exercise } from '@/domain/programme-types';
 import type { SetLog } from '@/domain/state';
@@ -20,25 +20,64 @@ const props = defineProps<{
 const emit = defineEmits<{ submit: [log: SetLog]; cancel: [] }>();
 
 const start = props.initial ?? props.defaults;
-const load = shallowRef<string | number>(start?.load ?? '');
-const reps = shallowRef<string | number>(start?.reps ?? '');
-const left = shallowRef<string | number>(start?.sides?.left ?? start?.reps ?? '');
-const right = shallowRef<string | number>(start?.sides?.right ?? start?.reps ?? '');
-const effort = shallowRef<string | number>(start?.effort ?? '');
+type Key = 'load' | 'reps' | 'left' | 'right' | 'effort';
+const values = reactive<Record<Key, string | number>>({
+  load: start?.load ?? '',
+  reps: start?.reps ?? '',
+  left: start?.sides?.left ?? start?.reps ?? '',
+  right: start?.sides?.right ?? start?.reps ?? '',
+  effort: start?.effort ?? '',
+});
 const error = shallowRef('');
 // Bodyweight movements have no load to type; one-sided movements log each side.
 const weighted = computed(() => props.exercise.loadKind !== 'bodyweight');
 const sided = computed(() => props.exercise.perSide);
 const timed = computed(() => props.exercise.unit === 'seconds');
 const maxEffort = computed(() => (timed.value ? 120 : 10));
-const unitShort = computed(() => (timed.value ? 's' : props.exercise.unit));
+const fields = computed(() => {
+  const unit = props.exercise.unit;
+  const unitShort = timed.value ? 's' : unit;
+  const count = { inputmode: 'numeric', min: 1, max: 3600, step: 1 } as const;
+  const list: {
+    key: Key;
+    label: string;
+    inputmode: string;
+    min: number;
+    max: number;
+    step: number | 'any';
+  }[] = [
+    ...(weighted.value
+      ? [
+          {
+            key: 'load' as const,
+            label: 'Load · kg',
+            inputmode: 'decimal',
+            min: 0,
+            max: 1000,
+            step: 'any' as const,
+          },
+        ]
+      : []),
+    ...(sided.value
+      ? [
+          { key: 'left' as const, label: `Left · ${unitShort}`, ...count },
+          { key: 'right' as const, label: `Right · ${unitShort}`, ...count },
+        ]
+      : [{ key: 'reps' as const, label: unit[0]!.toUpperCase() + unit.slice(1), ...count }]),
+    {
+      key: 'effort',
+      label: timed.value ? 'Reserve · s' : 'RIR',
+      inputmode: 'decimal',
+      min: 0,
+      max: maxEffort.value,
+      step: 0.5,
+    },
+  ];
+  return list;
+});
 const columns = computed(
-  () =>
-    ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-4' })[
-      (weighted.value ? 1 : 0) + (sided.value ? 2 : 1) + 1
-    ],
+  () => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-4' })[fields.value.length],
 );
-const field = 'h-12 px-1 text-center text-lg font-bold tabular-nums';
 
 const count = (value: string | number) => {
   const number = Number(value);
@@ -48,13 +87,13 @@ const count = (value: string | number) => {
 function submit() {
   error.value = '';
   const numericLoad = weighted.value
-    ? String(load.value).trim() === ''
+    ? String(values.load).trim() === ''
       ? NaN
-      : Number(load.value)
+      : Number(values.load)
     : (props.initial?.load ?? null);
-  const sides = sided.value ? { left: count(left.value), right: count(right.value) } : null;
-  const numericReps = sides ? Math.min(sides.left ?? 0, sides.right ?? 0) : count(reps.value);
-  const numericEffort = Number(effort.value);
+  const sides = sided.value ? { left: count(values.left), right: count(values.right) } : null;
+  const numericReps = sides ? Math.min(sides.left ?? 0, sides.right ?? 0) : count(values.reps);
+  const numericEffort = Number(values.effort);
   if (numericLoad !== null && !(numericLoad >= 0 && numericLoad <= 1000)) {
     error.value = 'Enter the load in kg.';
   } else if (!numericReps) {
@@ -62,7 +101,7 @@ function submit() {
       ? `Enter whole ${props.exercise.unit} for both sides.`
       : `Enter whole ${props.exercise.unit}.`;
   } else if (
-    String(effort.value).trim() === '' ||
+    String(values.effort).trim() === '' ||
     !(numericEffort >= 0 && numericEffort <= maxEffort.value)
   ) {
     error.value = timed.value
@@ -95,89 +134,21 @@ function submit() {
       <span class="text-muted-foreground text-xs font-medium">of {{ exercise.sets }}</span>
     </div>
     <div :class="cn('set-fields grid gap-2.5', columns)">
-      <div v-if="weighted" class="flex flex-col gap-1.5">
-        <Label :for="`load-${index}`" class="text-muted-foreground text-xs">Load · kg</Label>
-        <Input
-          :id="`load-${index}`"
-          v-model="load"
-          type="number"
-          inputmode="decimal"
-          min="0"
-          max="1000"
-          step="any"
-          required
-          placeholder="—"
-          :class="field"
-        />
-      </div>
-      <template v-if="sided">
-        <div class="flex flex-col gap-1.5">
-          <Label :for="`left-${index}`" class="text-muted-foreground text-xs"
-            >Left · {{ unitShort }}</Label
-          >
-          <Input
-            :id="`left-${index}`"
-            v-model="left"
-            type="number"
-            inputmode="numeric"
-            min="1"
-            max="3600"
-            step="1"
-            required
-            placeholder="—"
-            :class="field"
-          />
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label :for="`right-${index}`" class="text-muted-foreground text-xs"
-            >Right · {{ unitShort }}</Label
-          >
-          <Input
-            :id="`right-${index}`"
-            v-model="right"
-            type="number"
-            inputmode="numeric"
-            min="1"
-            max="3600"
-            step="1"
-            required
-            placeholder="—"
-            :class="field"
-          />
-        </div>
-      </template>
-      <div v-else class="flex flex-col gap-1.5">
-        <Label :for="`reps-${index}`" class="text-muted-foreground text-xs capitalize">{{
-          exercise.unit
+      <div v-for="item in fields" :key="item.key" class="flex flex-col gap-1.5">
+        <Label :for="`${item.key}-${index}`" class="text-muted-foreground text-xs">{{
+          item.label
         }}</Label>
         <Input
-          :id="`reps-${index}`"
-          v-model="reps"
+          :id="`${item.key}-${index}`"
+          v-model="values[item.key]"
           type="number"
-          inputmode="numeric"
-          min="1"
-          max="3600"
-          step="1"
+          :inputmode="item.inputmode"
+          :min="item.min"
+          :max="item.max"
+          :step="item.step"
           required
           placeholder="—"
-          :class="field"
-        />
-      </div>
-      <div class="flex flex-col gap-1.5">
-        <Label :for="`effort-${index}`" class="text-muted-foreground text-xs">{{
-          timed ? 'Reserve · s' : 'RIR'
-        }}</Label>
-        <Input
-          :id="`effort-${index}`"
-          v-model="effort"
-          type="number"
-          inputmode="decimal"
-          min="0"
-          :max="maxEffort"
-          step="0.5"
-          required
-          placeholder="—"
-          :class="field"
+          class="h-12 px-1 text-center text-lg font-bold tabular-nums"
         />
       </div>
     </div>

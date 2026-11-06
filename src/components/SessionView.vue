@@ -129,7 +129,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     </div>
   </div>
 
-  <nav aria-label="Exercises" class="-mx-5 flex snap-x gap-2 overflow-x-auto px-[50%] pb-1">
+  <nav aria-label="Exercises" class="-mx-5 flex snap-x scroll-px-5 gap-2 overflow-x-auto px-5 pb-1">
     <button
       v-for="({ item, finished }, index) in chips"
       ref="chipButtons"

@@ -51,6 +51,13 @@ const progress = computed(() => sessionProgress(props.session));
 const previous = computed(() =>
   previousPerformance(props.history, props.session, exercise.value.id),
 );
+// Start a new set from this session's last set, or the same set last time.
+const defaults = computed(
+  () =>
+    entry.value.logs.at(-1) ??
+    previous.value?.logs.find((log) => log.index === nextIndex.value) ??
+    null,
+);
 const previousSummary = computed(() =>
   previous.value?.logs.map((log) => `${formatLoad(log)} × ${log.reps}`).join(' · '),
 );
@@ -213,6 +220,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     :exercise="exercise"
     :index="nextIndex"
     :initial="editing"
+    :defaults="defaults"
     :busy="busy"
     @submit="emit('record', exercise.id, $event)"
     @cancel="editing = null"

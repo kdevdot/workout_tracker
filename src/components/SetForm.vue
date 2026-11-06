@@ -12,13 +12,16 @@ const props = defineProps<{
   exercise: Exercise;
   index: number;
   initial: SetLog | null;
+  /** Values to start a new set with: the last set logged, so a repeat set is one tap. */
+  defaults: SetLog | null;
   busy: boolean;
 }>();
 const emit = defineEmits<{ submit: [log: SetLog]; cancel: [] }>();
 
-const load = shallowRef<string | number>(props.initial?.load ?? '');
-const reps = shallowRef<string | number>(props.initial?.reps ?? '');
-const effort = shallowRef<string | number>(props.initial?.effort ?? '');
+const start = props.initial ?? props.defaults;
+const load = shallowRef<string | number>(start?.load ?? '');
+const reps = shallowRef<string | number>(start?.reps ?? '');
+const effort = shallowRef<string | number>(start?.effort ?? '');
 const error = shallowRef('');
 const bodyweight = computed(() => props.exercise.loadKind === 'bodyweight');
 const timed = computed(() => props.exercise.unit === 'seconds');

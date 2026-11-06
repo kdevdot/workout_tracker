@@ -198,6 +198,19 @@ describe('working app integration', () => {
     expect(restMs).toBeLessThan(125_000);
   });
 
+  it('starts the next set with the values of the last one', async () => {
+    const wrapper = await app();
+    await begin(wrapper);
+    const inputs = wrapper.findAll('.set-fields input');
+    await inputs[0]!.setValue('20');
+    await inputs[1]!.setValue('7');
+    await inputs[2]!.setValue('3');
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Record set 2'));
+    const next = wrapper.findAll<HTMLInputElement>('.set-fields input');
+    expect(next.map((input) => input.element.value)).toEqual(['20', '7', '3']);
+  });
+
   it('hides the save confirmation by itself', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');

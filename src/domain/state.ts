@@ -30,10 +30,13 @@ export const exerciseSchema = z
   })
   .refine((exercise) => exercise.min <= exercise.max, 'Invalid repetition range');
 
+const sideReps = z.number().int().min(1).max(3600);
 export const setSchema = z.strictObject({
   index: z.number().int().min(1).max(20),
   load: z.number().finite().min(0).max(1000).nullable(),
+  /** For one-sided movements this is the weaker side, which sets the pace for progression. */
   reps: z.number().int().min(1).max(3600),
+  sides: z.strictObject({ left: sideReps, right: sideReps }).optional(),
   effort: z.number().finite().min(0).max(120),
   loggedAt: timestamp,
 });
@@ -50,6 +53,12 @@ const sessionExerciseSchema = z
     for (const log of logs) {
       if (log.index > exercise.sets || (exercise.unit !== 'seconds' && log.effort > 10)) {
         context.addIssue({ code: 'custom', message: 'Set does not match its prescription' });
+      }
+      if (
+        log.sides &&
+        (!exercise.perSide || log.reps !== Math.min(log.sides.left, log.sides.right))
+      ) {
+        context.addIssue({ code: 'custom', message: 'Side reps do not match the set' });
       }
       if (exercise.loadKind !== 'bodyweight' && log.load === null) {
         context.addIssue({ code: 'custom', message: 'Loaded movements need a recorded load' });

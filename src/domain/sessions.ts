@@ -89,13 +89,18 @@ export function bestSet(logs: SetLog[]): SetLog | null {
   }, null);
 }
 
-export function formatLoad(log: SetLog): string {
-  return log.load === null ? 'BW' : `${log.load} kg`;
+function formatReps(log: SetLog): string {
+  return log.sides ? `L ${log.sides.left} / R ${log.sides.right}` : String(log.reps);
+}
+
+/** Compact set, e.g. "40 kg × 8", "L 10 / R 9" for a bodyweight one-sided set. */
+export function shortSet(log: SetLog): string {
+  return log.load === null ? formatReps(log) : `${log.load} kg × ${formatReps(log)}`;
 }
 
 export function formatSet(log: SetLog, exercise: Exercise): string {
   const reserve = exercise.unit === 'seconds' ? 's reserve' : 'RIR';
-  return `${formatLoad(log)} × ${log.reps} ${exercise.unit} · ${log.effort} ${reserve}`;
+  return `${shortSet(log)} ${exercise.unit} · ${log.effort} ${reserve}`;
 }
 
 /** Rest between sets: the user's chosen minutes, or the exercise's programme rest. */

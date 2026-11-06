@@ -12,11 +12,11 @@ import {
 import { formatDate } from '@/domain/dates';
 import { workouts } from '@/domain/programme';
 import {
-  formatLoad,
   formatSet,
   previousPerformance,
   restFor,
   sessionProgress,
+  shortSet,
 } from '@/domain/sessions';
 import type { Session, SetLog } from '@/domain/state';
 import { Button } from '@/components/ui/button';
@@ -58,9 +58,7 @@ const defaults = computed(
     previous.value?.logs.find((log) => log.index === nextIndex.value) ??
     null,
 );
-const previousSummary = computed(() =>
-  previous.value?.logs.map((log) => `${formatLoad(log)} × ${log.reps}`).join(' · '),
-);
+const previousSummary = computed(() => previous.value?.logs.map(shortSet).join(' · '));
 const chips = computed(() =>
   props.session.exercises.map((item) => ({
     item,

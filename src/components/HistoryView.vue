@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { ChevronDown, Dumbbell } from '@lucide/vue';
 import type { Session } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
-import { bestSet, formatLoad, formatSet, sessionProgress } from '@/domain/sessions';
+import { bestSet, formatSet, sessionProgress, shortSet } from '@/domain/sessions';
 import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,7 @@ const entries = computed(() =>
             : 'Completed';
       const tops = session.exercises.flatMap((item) => {
         const top = bestSet(item.logs);
-        return top ? [{ name: item.exercise.name, set: `${formatLoad(top)} × ${top.reps}` }] : [];
+        return top ? [{ name: item.exercise.name, set: shortSet(top) }] : [];
       });
       return { session, progress, status, tops };
     }),

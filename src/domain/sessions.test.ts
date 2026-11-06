@@ -7,6 +7,7 @@ import {
   recordSet,
   restFor,
   sessionProgress,
+  shortSet,
   startSession,
 } from './sessions';
 
@@ -145,5 +146,18 @@ describe('backup validation', () => {
       ]),
     ).toMatchObject({ index: 2 });
     expect(bestSet([])).toBeNull();
+  });
+
+  it('stores both sides of a one-sided set and paces it by the weaker side', () => {
+    const session = startSession('lowerA', '2026-11-03', 'intro');
+    const sided = session.exercises.find((item) => item.exercise.perSide)!;
+    const bilateral = session.exercises.find((item) => !item.exercise.perSide)!;
+    const log = { ...set(1), reps: 9, sides: { left: 10, right: 9 } };
+    const saved = recordSet(session, sided.exercise.id, log);
+    expect(sessionSchema.safeParse(saved).success).toBe(true);
+    expect(shortSet(log)).toBe('20 kg × L 10 / R 9');
+    expect(shortSet({ ...log, load: null })).toBe('L 10 / R 9');
+    expect(() => recordSet(session, sided.exercise.id, { ...log, reps: 10 })).toThrow();
+    expect(() => recordSet(session, bilateral.exercise.id, log)).toThrow();
   });
 });

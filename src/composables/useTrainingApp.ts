@@ -5,6 +5,7 @@ import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
 import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
 import { CREATINE, intakeSchema, type AppState, type SetLog } from '../domain/state';
+import { usePushups } from './usePushups';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
 
@@ -62,6 +63,8 @@ export function useTrainingApp() {
     clearTimeout(hideMessage);
     message.value = '';
   }
+
+  const pushups = usePushups({ state, today, update, notify });
 
   // Phones resume the app from memory, so re-check the calendar day whenever it comes back.
   useEventListener(document, 'visibilitychange', () => {
@@ -163,43 +166,6 @@ export function useTrainingApp() {
       intakes: current.intakes.filter((entry) => entry.id !== id),
     }));
   }
-  function savePushups(change: (pushups: AppState['pushups']) => AppState['pushups']) {
-    return update((current) => ({ ...current, pushups: change(current.pushups) }));
-  }
-  async function startPushups(dailyTarget: number) {
-    if (await savePushups(() => ({ startDate: today.value, dailyTarget, entries: [] })))
-      notify('Tracking started. Day 1 is today.');
-  }
-  async function addPushups(day: string, reps: number) {
-    if (day > localDate()) return;
-    const entry = {
-      id: crypto.randomUUID(),
-      date: day,
-      reps,
-      recordedAt: new Date().toISOString(),
-    };
-    if (await savePushups((pushups) => ({ ...pushups, entries: [...pushups.entries, entry] })))
-      notify(`+${reps} push-ups saved.`);
-  }
-  async function undoPushups(day: string) {
-    const last = state.value.pushups.entries.findLastIndex((entry) => entry.date === day);
-    if (last === -1) return;
-    if (
-      await savePushups((pushups) => ({
-        ...pushups,
-        entries: pushups.entries.filter((_, index) => index !== last),
-      }))
-    )
-      notify('Last push-up entry removed.');
-  }
-  async function setPushupTarget(dailyTarget: number) {
-    if (await savePushups((pushups) => ({ ...pushups, dailyTarget })))
-      notify(`Daily target set to ${dailyTarget}.`);
-  }
-  async function resetPushups() {
-    if (await savePushups((pushups) => ({ ...pushups, startDate: today.value, entries: [] })))
-      notify('Push-up history cleared. Day 1 is today.');
-  }
   async function saveSettings(settings: AppState['settings']) {
     if (await update((current) => ({ ...current, settings })))
       notify('Settings saved. Existing records are unchanged.');
@@ -238,11 +204,7 @@ export function useTrainingApp() {
     addIntake,
     removeIntake,
     saveSettings,
-    startPushups,
-    addPushups,
-    undoPushups,
-    setPushupTarget,
-    resetPushups,
     restore,
+    ...pushups,
   };
 }

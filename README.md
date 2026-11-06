@@ -37,7 +37,7 @@ Stack: Vue 3 + TypeScript, Vite, Tailwind CSS v4, shadcn-vue, zod, idb, vite-plu
 | ------------------ | ----------------------------------------------------- |
 | `src/domain/`      | Programme, dates, session rules, state schema, guides |
 | `src/storage/`     | IndexedDB access and revision checks                  |
-| `src/composables/` | App state and rest timer                              |
+| `src/composables/` | App state, actions, push-ups and rest timer           |
 | `src/views/`       | The six screens, one file each                        |
 | `src/components/`  | App shell and the parts screens are built from        |
 | `public/`          | Muscle maps, exercise illustrations, app icons        |

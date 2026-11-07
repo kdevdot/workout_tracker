@@ -1,6 +1,6 @@
 import { computed, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue';
 import { useEventListener } from '@vueuse/core';
-import { localDate, validDate } from '../domain/dates';
+import { localDate, shiftDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
 import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
@@ -56,6 +56,15 @@ export function useTrainingApp() {
   const currentSession = computed(
     () => state.value.sessions.find((session) => session.id === sessionId.value) ?? null,
   );
+  // The research plan runs the introduction for about two weeks before full volume.
+  const readyForBaseline = computed(() => {
+    if (state.value.settings.phase !== 'intro') return false;
+    const first = state.value.sessions
+      .filter((session) => session.phase === 'intro')
+      .map((session) => session.date)
+      .sort()[0];
+    return first !== undefined && today.value >= shiftDate(first, 14);
+  });
   const hasLabel = computed(
     () => state.value.settings.whey.calories !== null && state.value.settings.whey.protein !== null,
   );
@@ -217,6 +226,7 @@ export function useTrainingApp() {
     doneDates,
     currentSession,
     hasLabel,
+    readyForBaseline,
     message,
     dismissMessage,
     changeDate,

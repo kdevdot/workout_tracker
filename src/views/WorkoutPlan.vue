@@ -18,6 +18,7 @@ const props = defineProps<{
   today: string;
   workoutId: WorkoutId | null;
   phase: Phase;
+  readyForBaseline: boolean;
   restMinutes: number | null;
   session: Session | null;
   completed: Session | null;
@@ -30,6 +31,7 @@ const emit = defineEmits<{
   start: [];
   supplements: [];
   history: [];
+  settings: [];
 }>();
 
 const workout = computed(() => (props.workoutId ? workouts[props.workoutId] : null));
@@ -81,9 +83,18 @@ function chooseWorkout(event: Event) {
         <span class="bg-primary mt-1.5 size-1.5 shrink-0 rounded-full" />
         {{
           activePhase === 'intro'
-            ? 'Introduction · 3 RIR for rep-based sets'
+            ? 'Introduction · 2 sets, 3 RIR'
             : 'Full baseline · exercise-specific RIR'
         }}
+      </p>
+      <p
+        v-if="workout && readyForBaseline && !shown"
+        class="bg-secondary flex flex-wrap items-center gap-x-1 rounded-lg px-3 py-2 text-xs leading-5"
+      >
+        Two weeks of introduction done. Recovering well?
+        <Button variant="link" size="sm" class="h-auto p-0 text-xs" @click="emit('settings')"
+          >Switch to Full baseline</Button
+        >
       </p>
       <div v-if="progress" class="flex flex-col gap-2">
         <div class="flex justify-between text-xs font-medium">

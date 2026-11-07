@@ -3,6 +3,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { deleteDB, openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TrainingApp from './TrainingApp.vue';
+import { finishSession, recordSet, startSession } from '../domain/sessions';
 import { emptyState, encodeBackup, type AppState } from '../domain/state';
 
 const wrappers: VueWrapper[] = [];
@@ -371,6 +372,34 @@ describe('working app integration', () => {
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Resume workout').trigger('click');
     expect(wrapper.get('main h1').text()).toBe('Fixed-handle pull-up or chin-up');
+  });
+
+  it('suggests full baseline after two weeks of introduction', async () => {
+    const database = await openDB(databaseName, 1, {
+      upgrade: (entry) => entry.createObjectStore('records'),
+    });
+    const first = startSession('upperA', '2026-11-02', 'intro');
+    const done = finishSession(
+      recordSet(first, first.exercises[0]!.exercise.id, {
+        index: 1,
+        load: 20,
+        reps: 6,
+        effort: 3,
+        loggedAt: new Date().toISOString(),
+      }),
+    );
+    await database.put('records', { ...emptyState(), sessions: [done] }, 'state');
+    database.close();
+    vi.setSystemTime(new Date(2026, 10, 12, 9));
+    const wrapper = mount(TrainingApp);
+    wrappers.push(wrapper);
+    await vi.waitFor(() => expect(wrapper.text()).toContain('On-device storage ready'));
+    expect(wrapper.text()).not.toContain('Two weeks of introduction done');
+    vi.setSystemTime(new Date(2026, 10, 16, 9));
+    document.dispatchEvent(new Event('visibilitychange'));
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Two weeks of introduction done'));
+    await button(wrapper, 'Switch to Full baseline').trigger('click');
+    expect(wrapper.text()).toContain('Settings & data');
   });
 
   it('shows a storage error instead of resetting an unsupported saved schema', async () => {

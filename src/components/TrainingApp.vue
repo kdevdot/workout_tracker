@@ -80,6 +80,7 @@ const saveStatus = computed(() => {
           :today="today"
           :workout-id="app.workoutId.value"
           :phase="state.settings.phase"
+          :ready-for-baseline="app.readyForBaseline.value"
           :rest-minutes="state.settings.restMinutes"
           :session="app.draft.value"
           :completed="app.completed.value"
@@ -90,6 +91,7 @@ const saveStatus = computed(() => {
           @start="app.begin"
           @supplements="view = 'supplements'"
           @history="view = 'history'"
+          @settings="view = 'settings'"
         />
         <SessionView
           v-else-if="view === 'session' && app.currentSession.value"

@@ -91,7 +91,6 @@ function save() {
             <option value="intro">Introduction · 2 sets, 3 RIR</option>
             <option value="baseline">Full baseline · when ready</option>
           </select>
-          <p class="text-muted-foreground text-xs">Timed holds keep technical form reserve.</p>
         </div>
         <div class="flex flex-col gap-1.5">
           <Label for="rest">Rest between sets · minutes</Label>
@@ -108,7 +107,7 @@ function save() {
           />
           <p class="text-muted-foreground text-xs">
             Any time from 0.5 to 10 minutes, e.g. 1.5 = 90 s. Leave blank to use each exercise's
-            programme rest (60 s–3 min). Applies to the next set you save.
+            programme rest (60 s–4 min). Applies to the next set you save.
           </p>
         </div>
         <div class="flex flex-col gap-1.5">

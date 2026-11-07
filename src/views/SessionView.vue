@@ -74,10 +74,11 @@ const nextIndex = computed(() => {
 const loadHint = computed(
   () =>
     ({
+      barbell: 'Total weight: bar plus plates on both sides.',
       smith: 'Total added plates, both sides; excludes the Smith bar.',
       dumbbell: 'Kilograms per dumbbell. If one DB is used, record that one DB.',
       cable: 'Record the selected stack setting in kg; pulley ratios vary.',
-      machine: 'Record the selected machine setting in kg; confirm setup first.',
+      machine: 'Record the selected stack setting in kg.',
       bodyweight: 'Bodyweight: no load to log.',
     })[exercise.value.loadKind],
 );

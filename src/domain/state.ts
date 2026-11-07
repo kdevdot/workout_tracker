@@ -21,7 +21,7 @@ export const exerciseSchema = z
     restSeconds: z.number().int().min(1).max(3600),
     restLabel: text,
     targetRir: text,
-    loadKind: z.enum(['smith', 'dumbbell', 'cable', 'machine', 'bodyweight']),
+    loadKind: z.enum(['barbell', 'smith', 'dumbbell', 'cable', 'machine', 'bodyweight']),
     equipment: text,
     primary: z.array(text).max(30),
     supporting: z.array(text).max(30),

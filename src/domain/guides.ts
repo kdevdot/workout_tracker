@@ -28,23 +28,160 @@ const reels = {
   back: 'https://www.instagram.com/joshuaktl_/reel/DfO9uySyKFF/',
 };
 
-const smithStop = 'Smith: test hooks and stops with a light load first.';
+const rackStop = 'Safety arms just below your lowest point, every set.';
 
 export const guides: Record<string, Guide> = {
-  'smith-flat-bench-press': {
+  'barbell-bench-press': {
     illustration: 'bench-press',
     video: {
-      id: 'O5viuEPDXKY',
-      title: 'Smith Machine Bench Press',
+      id: 'A0NBCkpYatQ',
+      title: 'Bench Press for Maximum Muscle Growth',
       author: 'Renaissance Periodization',
     },
     checks: [
       'Bar to mid/lower chest, forearms vertical',
       'Feet planted, shoulder blades set',
-      'Lower under control, no bounce',
+      'Touch, then press; no bounce',
     ],
-    stop: [smithStop, 'Stop for shoulder pain or losing bar control.'],
+    stop: [rackStop, 'Stop for shoulder pain or losing bar control.'],
   },
+  'paused-barbell-bench-press': {
+    illustration: 'bench-press',
+    video: {
+      id: 'K4BIkKGKy9k',
+      title: 'Paused Bench Press: Gym Shorts (How To)',
+      author: 'Barbell Logic',
+    },
+    checks: ['Lighter than heavy day', 'Bar still on chest 1–2 s', 'Stay tight, then press'],
+    stop: [rackStop],
+  },
+  'landmine-t-bar-row': {
+    illustration: 't-bar-row',
+    video: {
+      id: 'EyA_ym9Ksaw',
+      title: 'Landmine T-Bar Row (How To & Coaching Points)',
+      author: 'Horton Barbell',
+    },
+    checks: ['Bar end anchored, cannot slide', 'Flat back, chest up', 'Row to lower chest'],
+    stop: ['Stop when the torso jerks up to move the weight.'],
+    comparison: {
+      topic: 'Mid-back',
+      reel: reels.back,
+      ranking: 'Chest-supported Smith row > barbell row > two-DB bent-over row',
+      verdict:
+        'Support reduces how much the trunk limits the set; no study shows the Smith row grows more back.',
+      forYou:
+        'The landmine row keeps the bar path fixed; the UNICA seated row on Upper B gives you full chest support.',
+    },
+  },
+  'unica-lat-pulldown': {
+    illustration: 'lat-pulldown',
+    video: {
+      id: 'EUIri47Epcg',
+      title: 'Normal Grip Pulldown',
+      author: 'Renaissance Periodization',
+      variant: 'Dedicated machine shown; the UNICA lat bar works the same way.',
+    },
+    checks: ['Thighs locked under pads', 'Pull to upper chest', 'Arms fully straight at top'],
+    stop: ['Stop when you lean back or yank the bar.'],
+  },
+  'unica-seated-row': {
+    illustration: 'machine-row',
+    video: {
+      id: '_FrrYQxA6kc',
+      title: 'Machine Chest Supported Row',
+      author: 'Renaissance Periodization',
+      variant: 'Another machine shown; use the UNICA long bars.',
+    },
+    checks: ['Chest on pad', 'Row to stomach, squeeze', 'Release slowly, shoulders reach'],
+    stop: ['Stop when the torso rocks back.'],
+  },
+  dips: {
+    illustration: 'chest-dip',
+    video: {
+      id: '4LA1kF7yCGo',
+      title: 'Dip',
+      author: 'Renaissance Periodization',
+    },
+    checks: ['Lean forward for chest', 'Shoulders just below elbows', 'Press up under control'],
+    stop: ['Stop for shoulder pain at the bottom.'],
+  },
+  'unica-arm-curl': {
+    illustration: 'preacher-curl',
+    video: {
+      id: 'Ja6ZlIDONac',
+      title: 'Machine Preacher Curl',
+      author: 'Renaissance Periodization',
+      variant: 'Another machine shown; use the UNICA arm-curl pad.',
+    },
+    checks: ['Elbows stay on the pad', 'Arms fully straight at bottom', 'Superset with triceps'],
+    stop: ['Stop when the elbows lift off the pad.'],
+  },
+  'one-arm-cable-overhead-triceps-extension': {
+    illustration: 'overhead-tricep-extension',
+    video: {
+      id: 'w3iAESGWK6M',
+      title: 'Single Arm Cable Overhead Tricep Extension',
+      author: 'Travis Tarrant',
+    },
+    checks: ['Face away, elbow points up', 'Full stretch behind the head', 'Upper arm stays still'],
+    stop: ['Stop for elbow or shoulder pain.'],
+  },
+  'barbell-back-squat': {
+    illustration: 'squat',
+    video: {
+      id: 'i7J5h7BJ07g',
+      title: 'High Bar Squat',
+      author: 'Renaissance Periodization',
+    },
+    checks: [
+      'Bar on upper back, not neck',
+      'Whole foot planted, knees over toes',
+      'Same depth every rep',
+    ],
+    stop: [rackStop, 'Stop if heels lift or the bottom feels unstable.'],
+  },
+  'paused-barbell-squat': {
+    illustration: 'squat',
+    video: {
+      id: 'nknf16JJTZo',
+      title: 'The Paused Squat: Gym Shorts (How To)',
+      author: 'Barbell Logic',
+    },
+    checks: ['Lighter than heavy day', 'Hold the bottom 2 s, braced', 'Drive up, no bounce'],
+    stop: [rackStop],
+  },
+  'selection-leg-extension': {
+    illustration: 'leg-extension',
+    video: {
+      id: 'm0FOpMEgero',
+      title: 'Leg Extension',
+      author: 'Renaissance Periodization',
+    },
+    checks: ['Knee lined up with the pivot', 'Pad on lower shin', 'Extend without kicking'],
+    stop: ['Stop for knee pain or hips lifting.'],
+  },
+  'seated-leg-curl': {
+    illustration: 'seated-leg-curl',
+    video: {
+      id: 'Orxowest56U',
+      title: 'Seated Leg Curl',
+      author: 'Renaissance Periodization',
+    },
+    checks: ['Thigh pad snug, lean forward', 'Curl fully', 'Slow back to straight legs'],
+    stop: ['Stop for cramping or hips lifting.'],
+  },
+  'barbell-deadlift': {
+    illustration: 'deadlift',
+    video: {
+      id: 'GxsLrTzyGUU',
+      title: 'How to Do A Conventional Deadlift Correctly',
+      author: 'PureGym',
+    },
+    checks: ['Bar over mid-foot', 'Brace, slack out, push the floor', 'Bar drags up the legs'],
+    stop: ['Stop if the lower back rounds or the bar drifts forward.'],
+  },
+
   'fixed-handle-pull-up': {
     illustration: 'pull-up',
     video: {
@@ -69,29 +206,7 @@ export const guides: Record<string, Guide> = {
         'Keep pull-ups while you hit the reps at target RIR; otherwise use the one-arm cable pulldown.',
     },
   },
-  'bench-supported-one-arm-db-row': {
-    illustration: 'one-arm-dumbbell-row',
-    video: {
-      id: 'DMo3HJoawrU',
-      title: 'Single Arm Supported Dumbbell Row',
-      author: 'Renaissance Periodization',
-    },
-    checks: [
-      'Hand (and knee) on bench, hips square',
-      'Row toward hip / lower ribs',
-      'Controlled reach at the bottom',
-    ],
-    stop: ['Stop when torso twists or the rep turns into a jerk.'],
-    comparison: {
-      topic: 'Mid-back',
-      reel: reels.back,
-      ranking: 'Chest-supported Smith row > barbell row > two-DB bent-over row',
-      verdict:
-        'Support reduces how much the trunk limits the set; no study shows the Smith row grows more back.',
-      forYou:
-        'Your bench-supported row already gives that support. It is not the unsupported row the reel rates worst.',
-    },
-  },
+
   'seated-db-shoulder-press': {
     illustration: 'seated-dumbbell-press',
     video: {
@@ -149,31 +264,7 @@ export const guides: Record<string, Guide> = {
     checks: ['Upper arms stay still', 'No hip drive', 'Lower to a comfortable straight elbow'],
     stop: ['Stop when swinging replaces clean elbow bending.'],
   },
-  'one-arm-cable-pushdown': {
-    illustration: 'tricep-pushdown',
-    video: {
-      id: 'Cp_bShvMY4c',
-      title: 'Cable Single Arm Pushdown',
-      author: 'Renaissance Periodization',
-    },
-    checks: ['Upper arm pinned beside torso', 'Extend fully, return under control', 'No rocking'],
-    stop: ['Stop when the upper arm or body starts moving.'],
-  },
-  'smith-squat': {
-    illustration: 'smith-machine-squat',
-    video: {
-      id: '-eO_VydErV0',
-      title: 'Feet Forward Smith Squat',
-      author: 'Renaissance Periodization',
-      variant: 'Feet-forward stance shown; use the stance you set up.',
-    },
-    checks: [
-      'Bar on upper back, not neck',
-      'Whole foot planted, knees track over toes',
-      'Same depth every rep',
-    ],
-    stop: [smithStop, 'Set stops just below your bottom position.'],
-  },
+
   'db-romanian-deadlift': {
     illustration: 'dumbbell-romanian-deadlift',
     video: {
@@ -196,32 +287,6 @@ export const guides: Record<string, Guide> = {
         'Rejected: pulldowns and rows train the lats, not the lower-back extensors. The three are different jobs.',
       forYou: 'Keep braced RDLs for the posterior chain. Do not swap hinges for pulldowns.',
     },
-  },
-  'unica-leg-extension': {
-    illustration: 'leg-extension',
-    video: {
-      id: 'm0FOpMEgero',
-      title: 'Leg Extension',
-      author: 'Renaissance Periodization',
-      variant: 'Dedicated machine shown; use the staff-confirmed UNICA setup.',
-    },
-    checks: ['Knee lined up with the lever pivot', 'Pad on lower shin', 'Extend without kicking'],
-    stop: ['Use only after staff confirm the setup; otherwise do split squats.'],
-  },
-  'supported-single-leg-db-rdl': {
-    illustration: 'single-leg-romanian-deadlift',
-    video: {
-      id: 'pJewPISyHjw',
-      title: 'Dumbbell Single Leg Romanian Deadlift',
-      author: 'OPEX Fitness',
-      variant: 'Shown freestanding; hold the Smith upright for balance.',
-    },
-    checks: [
-      'Light hand on a fixed upright',
-      'Hips square, free leg trails',
-      'Stand by driving the hip',
-    ],
-    stop: ['Stop before the back rounds or hips twist open.'],
   },
 
   'supported-single-leg-standing-db-calf-raise': {
@@ -251,16 +316,6 @@ export const guides: Record<string, Guide> = {
     stop: ['Stop when swinging or grip takes over.'],
   },
 
-  'low-incline-db-bench-press': {
-    illustration: 'incline-dumbbell-press',
-    video: {
-      id: 'B09ZkYsnKko',
-      title: 'Low Incline Dumbbell Press',
-      author: 'Renaissance Periodization',
-    },
-    checks: ['Bench about 15–30°, locked', 'Wrists over elbows', 'Same chest depth every rep'],
-    stop: ['Avoid a steep, shoulder-press angle. No dropping DBs.'],
-  },
   'machine-pec-fly': {
     illustration: 'pec-deck',
     video: {
@@ -308,29 +363,7 @@ export const guides: Record<string, Guide> = {
     ],
     stop: ['Switch to pushdowns if your back arches or elbows hurt.'],
   },
-  'smith-romanian-deadlift': {
-    illustration: 'smith-machine-romanian-deadlift',
-    video: {
-      id: 'CN_7cz3P-1U',
-      title: 'Stiff Legged Deadlift',
-      author: 'Renaissance Periodization',
-      variant: 'Free barbell shown; the hinge is the same on the Smith.',
-    },
-    checks: [
-      'Bar close to thighs, knees soft',
-      'Push hips back, spine neutral',
-      'Stand by driving hips forward',
-    ],
-    stop: [smithStop, 'Stop the descent before your back rounds.'],
-    comparison: {
-      topic: 'Lower back',
-      reel: reels.back,
-      ranking: 'Underhand pulldown > underhand row > back extension',
-      verdict:
-        'Rejected: pulldowns and rows train the lats, not the lower-back extensors. The three are different jobs.',
-      forYou: 'Keep braced RDLs for the posterior chain. Do not swap hinges for pulldowns.',
-    },
-  },
+
   'db-stationary-split-squat': {
     illustration: 'split-squat',
     video: {

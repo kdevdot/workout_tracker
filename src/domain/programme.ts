@@ -2,34 +2,36 @@ import type { Exercise, Phase, Workout, WorkoutId } from './programme-types';
 
 type Movement = Omit<Exercise, 'sets' | 'min' | 'max'>;
 
+const rackSafety =
+  'Set the half-rack safety arms just below your lowest point and test them with the empty bar. Training alone: safeties every set, and end the set before a grinding rep.';
 const smithSafety =
-  'Learn the hooks and test the stops with a light load. Use the DB substitute if safe travel is unavailable. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.';
+  'Learn the hooks and test the stops with a light load. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.';
+const lastSetCue = 'After the intro phase, take the last set to 0–1 RIR.';
 const unilateralCue =
   'Complete both sides for one set. Start with the weaker side and match clean reps; allow 20–30 seconds to switch sides, then take the listed rest.';
 
-const smithBench: Movement = {
-  id: 'smith-flat-bench-press',
-  name: 'Smith flat bench press',
+const barbellBench: Movement = {
+  id: 'barbell-bench-press',
+  name: 'Barbell bench press',
   unit: 'reps',
   perSide: false,
-  restSeconds: 180,
-  restLabel: '3 min',
-  targetRir: '2',
-  loadKind: 'smith',
-  equipment: 'Smith, plates, locked flat bench, safeties',
+  restSeconds: 240,
+  restLabel: '3–4 min',
+  targetRir: '1–2',
+  loadKind: 'barbell',
+  equipment: 'Olympic half rack, Olympic bar, plates, flat bench, safety arms',
   primary: ['Chest'],
   supporting: ['Triceps', 'Front delts'],
   cues: [
-    'Centre and lock the bench; lower toward mid/lower chest with forearms near vertical, not toward the neck.',
-    'Plant feet, support shoulder blades and lower under control without bouncing.',
-    'Set stops to permit your normal range while preventing torso entrapment if control or your arch is lost.',
-    smithSafety,
-    'Stop for shoulder pain, loss of bar control or needing a spotter to finish.',
+    'Eyes under the bar, shoulder blades set, feet planted; unrack with straight arms.',
+    'Lower to mid/lower chest with forearms near vertical; touch, then press without bouncing.',
+    rackSafety,
+    'Stop for shoulder pain or losing bar control.',
   ],
   alternative: {
-    name: 'Flat DB press',
-    prescription: '6–10 reps',
-    note: 'Use the same sets, RIR and rest. Lock the bench and bring manageable DBs into position from thighs; no uncontrolled dropping or Smith-bar-resistance conversion.',
+    name: 'Smith flat bench press',
+    prescription: '5–8 reps',
+    note: `Same sets, RIR and rest. ${smithSafety}`,
   },
 };
 
@@ -51,34 +53,9 @@ const pullUp: Movement = {
     'Stop before kipping, craning the neck or losing controlled lowering. No weight belt or uncontrolled jumping negatives.',
   ],
   alternative: {
-    name: 'Standing one-arm high-cable pulldown',
-    prescription: '8–12 reps/side',
-    note: 'Use if five clean pull-ups are unavailable; same sets, RIR and rest. High pulley and D-handle; brace and pull elbow toward ribs without twisting. Stand staggered and use a load that cannot drag you.',
-  },
-};
-
-const dbRow: Movement = {
-  id: 'bench-supported-one-arm-db-row',
-  name: 'Bench-supported one-arm DB row',
-  unit: 'reps',
-  perSide: true,
-  restSeconds: 120,
-  restLabel: '2 min',
-  targetRir: '2',
-  loadKind: 'dumbbell',
-  equipment: 'DB, bench',
-  primary: ['Lats', 'Mid-back'],
-  supporting: [],
-  cues: [
-    'Support one hand and, if comfortable, one knee on the bench; otherwise keep both feet down.',
-    'Keep hips square; row toward hip/lower ribs and lower into a controlled shoulder reach.',
-    'Stop when torso rotation, jerking or lower-back fatigue takes over.',
-    unilateralCue,
-  ],
-  alternative: {
-    name: 'Split-stance one-arm cable row',
-    prescription: '8–12 reps/side',
-    note: 'Same sets, RIR and rest. D-handle at lower-chest/waist height; brace, pull elbow back and allow natural shoulder-blade reach without low-back rounding or rocking backward.',
+    name: 'UNICA lat pulldown',
+    prescription: '8–12 reps',
+    note: 'Use if five clean pull-ups are unavailable; same sets, RIR and rest. Lat bar on the high hook, thighs braced under the pads; pull to the upper chest without leaning back.',
   },
 };
 
@@ -121,6 +98,7 @@ const lateralRaise: Movement = {
   cues: [
     'Stand tall with soft elbows; raise slightly forward of your sides toward shoulder height, then lower slowly.',
     'Allow comfortable individual shoulder motion; stop before shrugging, swinging or heaving takes over.',
+    lastSetCue,
   ],
   alternative: {
     name: 'One-arm low-cable lateral raise',
@@ -145,6 +123,7 @@ const dbCurl: Movement = {
     'Keep upper arms relatively still; curl without hip drive and lower to comfortable elbow extension.',
     'Both arms together or alternating is fine; log consistently.',
     'Stop when swinging, shoulder movement or wrist pain replaces clean elbow flexion.',
+    lastSetCue,
   ],
   alternative: {
     name: 'One-arm low-cable curl',
@@ -153,53 +132,103 @@ const dbCurl: Movement = {
   },
 };
 
-const pushdown: Movement = {
-  id: 'one-arm-cable-pushdown',
-  name: 'One-arm cable pushdown',
+const cableOverheadExtension: Movement = {
+  id: 'one-arm-cable-overhead-triceps-extension',
+  name: 'One-arm cable overhead triceps extension',
   unit: 'reps',
   perSide: true,
   restSeconds: 90,
-  restLabel: '75–90 s',
+  restLabel: '60–90 s',
   targetRir: '1–2',
   loadKind: 'cable',
-  equipment: 'High cable, D-handle',
+  equipment: 'Cable column, D-handle, low or middle pulley',
   primary: ['Triceps'],
   supporting: [],
   cues: [
-    'Use a comfortable D-handle grip; keep upper arm beside torso and extend elbow without forcing the shoulder down or rocking.',
-    'Return under control; stop when upper-arm/body movement takes over.',
+    'Face away from the pulley in a staggered stance, D-handle behind your head, elbow pointing up.',
+    'Let the elbow bend fully for the stretch, then extend without the upper arm drifting.',
+    'Superset with the arm curl: one set of each, then rest.',
     unilateralCue,
+    lastSetCue,
   ],
   alternative: {
     name: 'One-DB two-hand overhead extension',
     prescription: '10–15 reps',
-    note: 'Same sets, RIR and rest. Secure one manageable DB in both hands, brace and extend from a comfortable elbow bend; do not force elbows tightly together. Avoid unsafe grip, joint pain or marked back arch.',
+    note: 'Same sets, RIR and rest. Hold one DB securely in both hands overhead and extend from a deep, comfortable elbow bend.',
   },
 };
 
-const smithSquat: Movement = {
-  id: 'smith-squat',
-  name: 'Smith squat',
+const armCurl: Movement = {
+  id: 'unica-arm-curl',
+  name: 'UNICA arm curl',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 90,
+  restLabel: '60–90 s',
+  targetRir: '1–2',
+  loadKind: 'machine',
+  equipment: 'UNICA arm-curl bar and pad',
+  primary: ['Biceps'],
+  supporting: ['Brachialis'],
+  cues: [
+    'Set the handles, sit close with legs wrapped under the frame and elbows on the pad.',
+    'Lower until the arms are fully straight, then curl without lifting the elbows.',
+    'Superset with the triceps extension: one set of each, then rest.',
+    lastSetCue,
+  ],
+  alternative: {
+    name: 'Standing DB curl',
+    prescription: '10–15 reps',
+    note: 'Same sets, RIR and rest. Upper arms still, no hip drive.',
+  },
+};
+
+const backSquat: Movement = {
+  id: 'barbell-back-squat',
+  name: 'Barbell back squat',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 240,
+  restLabel: '3–4 min',
+  targetRir: '1–2',
+  loadKind: 'barbell',
+  equipment: 'Olympic half rack, Olympic bar, plates, safety arms',
+  primary: ['Quads', 'Glutes'],
+  supporting: ['Trunk and spinal bracing'],
+  cues: [
+    'Bar on the upper back, not the neck; walk out two or three steps and brace.',
+    'Whole feet planted, knees track over toes; descend to a depth you control, then drive up.',
+    rackSafety,
+    'Stop for pain, heels lifting or losing the bottom position.',
+  ],
+  alternative: {
+    name: 'Smith squat',
+    prescription: '5–8 reps',
+    note: `Same sets, RIR and rest. Adjust feet to the fixed path. ${smithSafety}`,
+  },
+};
+
+const pausedSquat: Movement = {
+  id: 'paused-barbell-squat',
+  name: 'Paused barbell squat (2 s)',
   unit: 'reps',
   perSide: false,
   restSeconds: 180,
   restLabel: '3 min',
   targetRir: '2',
-  loadKind: 'smith',
-  equipment: 'Smith, plates, safeties',
+  loadKind: 'barbell',
+  equipment: 'Olympic half rack, Olympic bar, plates, safety arms',
   primary: ['Quads', 'Glutes'],
-  supporting: [],
+  supporting: ['Trunk and spinal bracing'],
   cues: [
-    'Place bar on upper-back musculature, not neck; adjust feet to the fixed path.',
-    'Keep whole feet planted, brace and let knees track comfortably over toes. Descend to repeatable depth with trunk control.',
-    'Set stops just below your controlled bottom position.',
-    smithSafety,
-    'Stop for pain, substantial heel lifting or losing bottom-position control.',
+    'Lighter than your heavy squat day. Descend under control and hold the bottom for 2 seconds, still braced.',
+    'Drive up from a dead stop; no bounce.',
+    rackSafety,
   ],
   alternative: {
-    name: 'DB stationary split squat',
-    prescription: '8–12 reps/leg',
-    note: 'Same sets, RIR and rest. Keep both feet on the floor in a stable staggered stance; lower straight down and drive through the front foot. Avoid a tightrope stance or rear-leg pushing.',
+    name: 'Paused Smith squat',
+    prescription: '5–6 reps',
+    note: `Same sets, RIR, rest and 2 s pause. ${smithSafety}`,
   },
 };
 
@@ -223,59 +252,59 @@ const dbRdl: Movement = {
   supporting: [],
   cues: hingeCues,
   alternative: {
-    name: 'Smith RDL',
-    prescription: '8–12 reps',
-    note: 'Same sets, RIR and rest. Keep the same controlled hinge; learn hooks and test stops below your intended bottom position. Use only if safe travel/setup is available; do not convert DB and Smith loads.',
+    name: 'Barbell RDL',
+    prescription: '6–10 reps',
+    note: 'Same sets, RIR and rest. Same controlled hinge with the Olympic bar from the rack; keep the bar against the thighs. Do not convert DB and barbell loads.',
   },
 };
 
 const legExtension: Movement = {
-  id: 'unica-leg-extension',
-  name: 'UNICA leg extension, confirmed setup only',
+  id: 'selection-leg-extension',
+  name: 'Leg extension',
   unit: 'reps',
   perSide: false,
-  restSeconds: 120,
-  restLabel: '90–120 s',
+  restSeconds: 90,
+  restLabel: '60–90 s',
   targetRir: '1–2',
   loadKind: 'machine',
-  equipment: 'Staff-confirmed UNICA knee-extension lever and intended cable/lever connection',
+  equipment: 'Technogym Selection 700 Dual Leg Curl/Extension, extension mode',
   primary: ['Quads'],
   supporting: [],
   cues: [
-    'Staff-confirmed setup required. If unconfirmed, substitute immediately rather than improvising attachments.',
-    'Align knee with lever pivot; place roller on lower shin above ankle and use the intended connection.',
-    'Extend without kicking or slamming the stack; return under control. Never move a pin/adjustment while the stack is suspended.',
-    'Stop for unclear setup, joint pain or hips lifting.',
+    'Line the knee up with the machine pivot; pad on the lower shin above the ankle.',
+    'Extend without kicking or slamming the stack; lower slowly to the full bend.',
+    'Stop for knee pain or hips lifting off the seat.',
+    lastSetCue,
   ],
   alternative: {
-    name: 'DB stationary split squat',
-    prescription: '10–15 reps/leg',
-    note: 'Same sets, RIR and rest. If already using split squats for exercise 1, replace this with DB goblet squat, 12–20 reps, same sets: hold DB at chest, feet planted and trunk controlled; stop if arms/setup fail or squat range shortens.',
+    name: 'UNICA leg extension',
+    prescription: '12–15 reps',
+    note: 'Same sets, RIR and rest. Same setup on the UNICA leg lever; loads are not comparable between machines.',
   },
 };
 
-const singleLegRdl: Movement = {
-  id: 'supported-single-leg-db-rdl',
-  name: 'Supported single-leg DB RDL',
+const seatedLegCurl: Movement = {
+  id: 'seated-leg-curl',
+  name: 'Seated leg curl',
   unit: 'reps',
-  perSide: true,
-  restSeconds: 120,
-  restLabel: '90–120 s',
-  targetRir: '2',
-  loadKind: 'dumbbell',
-  equipment: 'One DB, fixed Smith upright for balance',
+  perSide: false,
+  restSeconds: 90,
+  restLabel: '60–90 s',
+  targetRir: '1–2',
+  loadKind: 'machine',
+  equipment: 'Technogym Selection 700 Dual Leg Curl/Extension, curl mode',
   primary: ['Hamstrings'],
-  supporting: ['Glutes'],
+  supporting: [],
   cues: [
-    'Hold the Smith upright lightly with one hand and a DB in the other; stand on the leg opposite the DB.',
-    'Soft standing knee, hips square; hinge back while the free leg trails behind, then stand by driving the hip forward.',
-    'Stop when hamstrings limit the hinge, before the back rounds or hips rotate open.',
-    unilateralCue,
+    'Knee lined up with the pivot, thigh pad snug, lean slightly forward to stretch the hamstrings.',
+    'Curl as far as you can, then return slowly to straight legs.',
+    'Stop for cramping or hips lifting.',
+    lastSetCue,
   ],
   alternative: {
-    name: 'Kickstand DB RDL',
+    name: 'Standing one-leg cable curl',
     prescription: '10–15 reps/side',
-    note: 'Same sets, RIR and rest. Rear toes on the floor for balance, front leg does most of the work; hips square and lighter than a two-leg RDL.',
+    note: 'Same sets, RIR and rest. Ankle strap on the low pulley, face the column holding the frame; curl the heel up without the hip moving.',
   },
 };
 
@@ -295,6 +324,7 @@ const standingCalf: Movement = {
     'Hold a fixed upright lightly and a DB in the other hand. Keep knee mostly straight; rise through forefoot, pause and lower heel to floor.',
     'Stop before bouncing or bending the knee to lift. Do not invent a platform from loose plates.',
     unilateralCue,
+    lastSetCue,
   ],
   alternative: {
     name: 'Supported bodyweight single-leg calf raise',
@@ -327,27 +357,124 @@ const kneeRaise: Movement = {
   },
 };
 
-const inclinePress: Movement = {
-  id: 'low-incline-db-bench-press',
-  name: 'Low-incline DB bench press',
+const pausedBench: Movement = {
+  id: 'paused-barbell-bench-press',
+  name: 'Paused barbell bench press (1–2 s)',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 180,
+  restLabel: '3 min',
+  targetRir: '2',
+  loadKind: 'barbell',
+  equipment: 'Olympic half rack, Olympic bar, plates, flat bench, safety arms',
+  primary: ['Chest'],
+  supporting: ['Triceps', 'Front delts'],
+  cues: [
+    'Lighter than your heavy bench day. Lower under control and hold the bar still on the chest for 1–2 seconds.',
+    'Stay tight during the pause, then press; no sinking or bouncing.',
+    rackSafety,
+  ],
+  alternative: {
+    name: 'Low-incline DB bench press',
+    prescription: '8–12 reps',
+    note: 'Same sets, RIR and rest. 15–30° locked incline; bring DBs up from the thighs.',
+  },
+};
+
+const tBarRow: Movement = {
+  id: 'landmine-t-bar-row',
+  name: 'T-bar row (landmine)',
   unit: 'reps',
   perSide: false,
   restSeconds: 180,
   restLabel: '2–3 min',
-  targetRir: '2',
-  loadKind: 'dumbbell',
-  equipment: 'DB pair, securely locked adjustable bench',
-  primary: ['Chest'],
-  supporting: ['Front delts', 'Triceps'],
+  targetRir: '1–2',
+  loadKind: 'barbell',
+  equipment:
+    'Olympic bar with one end anchored, plates on the free end, V-grip or hands on the bar',
+  primary: ['Mid-back', 'Lats'],
+  supporting: ['Rear delts', 'Biceps'],
   cues: [
-    'Use approximately 15–30° incline if supported and securely locked; otherwise use flat DB pressing.',
-    'Bring manageable DBs into position from thighs. Keep wrists over elbows, use a comfortable elbow angle and repeatable chest range.',
-    'Avoid a steep shoulder-press angle. Stop if setup or finishing is unsafe; no uncontrolled dropping in the small gym.',
+    'Anchor the bar end so it cannot slide; straddle the bar and hold it close to the plates.',
+    'Hinge to a flat back, chest up; row to the lower chest and lower under control.',
+    'Stop when the torso starts jerking up to move the weight.',
   ],
   alternative: {
-    name: 'Low-incline Smith press',
+    name: 'UNICA seated row',
     prescription: '8–12 reps',
-    note: 'Same sets, RIR and rest, with safeties. Test the fixed bar path lightly and use DBs if it forces shoulder discomfort. Use flat DB press if incline cannot lock; never assume a Smith-bar resistance conversion.',
+    note: 'Same sets, RIR and rest. Chest against the pad, row the long bars to the stomach.',
+  },
+};
+
+const latPulldown: Movement = {
+  id: 'unica-lat-pulldown',
+  name: 'UNICA lat pulldown',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 120,
+  restLabel: '2 min',
+  targetRir: '1–2',
+  loadKind: 'machine',
+  equipment: 'UNICA, lat bar on the high hook',
+  primary: ['Lats'],
+  supporting: ['Biceps', 'Upper back'],
+  cues: [
+    'Seat set so the bar is at full reach; thighs locked under the pads.',
+    'Pull to the upper chest, elbows down and back; let the arms straighten fully at the top.',
+    'Stop when you lean back or yank to move the weight.',
+  ],
+  alternative: {
+    name: 'Fixed-handle pull-up',
+    prescription: '5–8 reps',
+    note: 'Same sets and rest. Use if the UNICA is busy; controlled lowering, no kipping.',
+  },
+};
+
+const seatedRow: Movement = {
+  id: 'unica-seated-row',
+  name: 'UNICA seated row',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 120,
+  restLabel: '2 min',
+  targetRir: '1–2',
+  loadKind: 'machine',
+  equipment: 'UNICA seated-row long bars',
+  primary: ['Mid-back', 'Lats'],
+  supporting: ['Rear delts', 'Biceps'],
+  cues: [
+    'Chest against the pad, arms straight and shoulders reaching forward.',
+    'Row toward the stomach, squeeze, then release slowly.',
+    'Stop when the torso rocks back to finish a rep.',
+  ],
+  alternative: {
+    name: 'Bench-supported one-arm DB row',
+    prescription: '8–12 reps/side',
+    note: 'Same sets, RIR and rest. One hand and knee on the bench; row toward the hip.',
+  },
+};
+
+const dips: Movement = {
+  id: 'dips',
+  name: 'Dips',
+  unit: 'reps',
+  perSide: false,
+  restSeconds: 180,
+  restLabel: '2–3 min',
+  targetRir: '1–2',
+  loadKind: 'bodyweight',
+  equipment: 'Dip handles on the Olympic half rack',
+  primary: ['Chest', 'Triceps'],
+  supporting: ['Front delts'],
+  cues: [
+    'Lean slightly forward for chest; stay upright for triceps.',
+    'Lower until the shoulders are just below the elbows, as far as is comfortable, then press up.',
+    'Stop for shoulder pain at the bottom.',
+  ],
+  alternative: {
+    name: 'UNICA chest press',
+    prescription: '8–12 reps',
+    note: 'Same sets, RIR and rest. Handles in line with mid-chest; press without locking out hard.',
   },
 };
 
@@ -367,6 +494,7 @@ const pecFly: Movement = {
     'Set seat for chest-level handles, support your back and keep elbows soft.',
     'Bring arms together and return only as far as shoulders tolerate; adjust start position rather than forcing a stretch.',
     'Stop for shoulder discomfort or torso rocking.',
+    lastSetCue,
   ],
   alternative: {
     name: 'One-arm standing cable fly',
@@ -391,6 +519,7 @@ const reverseFly: Movement = {
     'Select marked reverse-fly configuration and face the pad as instructed; set handles near shoulder height.',
     'Keep chest supported and move arms outward with soft elbows.',
     'Stop when shrugging, arching or jerking replaces rear-shoulder movement.',
+    lastSetCue,
   ],
   alternative: {
     name: 'Bent-over DB reverse fly',
@@ -415,6 +544,7 @@ const overheadExtension: Movement = {
     'Hold one manageable DB securely in both hands overhead; brace and bend elbows to a comfortable depth, then extend.',
     'Keep elbows comfortable rather than forcing them tightly together.',
     'Substitute pushdowns for unsafe grip/setup, shoulder/elbow pain or marked back arch.',
+    lastSetCue,
   ],
   alternative: {
     name: 'One-arm high-cable pushdown',
@@ -423,27 +553,27 @@ const overheadExtension: Movement = {
   },
 };
 
-const smithRdl: Movement = {
-  id: 'smith-romanian-deadlift',
-  name: 'Smith Romanian deadlift',
+const deadlift: Movement = {
+  id: 'barbell-deadlift',
+  name: 'Barbell deadlift',
   unit: 'reps',
   perSide: false,
-  restSeconds: 180,
-  restLabel: '3 min',
-  targetRir: '2',
-  loadKind: 'smith',
-  equipment: 'Smith, plates, stops',
+  restSeconds: 240,
+  restLabel: '3–4 min',
+  targetRir: '1–2',
+  loadKind: 'barbell',
+  equipment: 'Olympic bar, urethane plates, floor or rack pins',
   primary: ['Hamstrings', 'Glutes'],
-  supporting: [],
+  supporting: ['Upper back', 'Trunk and spinal bracing'],
   cues: [
-    ...hingeCues,
-    'Set stops below your intended hinge bottom while preserving a safe way to stop.',
-    smithSafety,
+    'Bar over mid-foot, shins near the bar; grip just outside the legs.',
+    'Brace, pull the slack out, then push the floor away with the bar dragging up the legs.',
+    'Reset each rep; stop if the lower back rounds or the bar drifts forward.',
   ],
   alternative: {
-    name: 'DB RDL',
-    prescription: '8–12 reps',
-    note: 'Same sets, RIR and rest. If bilateral DB loading is exhausted, use kickstand DB RDL, 10–15 reps/side, same sets: rear toes support balance, front leg does most work, hips square and less load than bilateral. Stop if rotation/balance limits rather than front hamstring.',
+    name: 'Smith Romanian deadlift',
+    prescription: '6–8 reps',
+    note: `Same sets, RIR and rest. Controlled hinge, stops below the bottom position. ${smithSafety}`,
   },
 };
 
@@ -488,6 +618,7 @@ const seatedCalf: Movement = {
     'Sit on locked bench with knees about 90°. Place manageable DBs securely on distal thighs above knees, never on kneecaps.',
     'Raise heels through forefeet, pause and lower to floor; remove DBs safely after the set.',
     'Stop if load slides, setup hurts or bouncing replaces control.',
+    lastSetCue,
   ],
   alternative: {
     name: 'Supported single-leg standing DB calf raise',
@@ -544,15 +675,15 @@ export const workouts: Record<WorkoutId, Workout> = {
     primary: ['Chest', 'Lats', 'Mid-back', 'Delts', 'Biceps', 'Triceps'],
     supporting: ['Rear delts', 'Upper back'],
     warmup:
-      '5 minutes on the cycle or easy rower, then 2–4 progressively heavier press warm-up sets and 1–2 easy pull warm-ups. Stay well away from failure.',
+      'Heavy day. 5 minutes on the bike or rower, then empty-bar bench and 3–4 heavier ramp-up sets, plus 1–2 easy pull-up sets. Stay well away from failure.',
     exercises: [
-      prescribe(smithBench, 4, 5, 8),
+      prescribe(barbellBench, 4, 4, 6),
       prescribe(pullUp, 3, 5, 8),
-      prescribe(dbRow, 2, 8, 12),
+      prescribe(tBarRow, 3, 6, 10),
       prescribe(shoulderPress, 2, 6, 10),
-      prescribe(lateralRaise, 2, 12, 20),
-      prescribe(dbCurl, 2, 8, 12),
-      prescribe(pushdown, 2, 10, 15),
+      prescribe(lateralRaise, 3, 12, 20),
+      prescribe(armCurl, 2, 10, 15),
+      prescribe(cableOverheadExtension, 2, 10, 15),
     ],
   },
   lowerA: {
@@ -561,13 +692,13 @@ export const workouts: Record<WorkoutId, Workout> = {
     primary: ['Quads', 'Glutes', 'Hamstrings', 'Calves', 'Abdominals'],
     supporting: ['Trunk and spinal bracing'],
     warmup:
-      '5 minutes on the cycle, then comfortable bodyweight squats and hinges. Perform 3–4 Smith squat ramp-up sets and 1–2 lighter RDL sets.',
+      'Heavy day. 5 minutes on the bike, then empty-bar squats and 3–4 heavier ramp-up sets with the safety arms set. 1–2 lighter RDL sets.',
     exercises: [
-      prescribe(smithSquat, 3, 5, 8),
-      prescribe(dbRdl, 3, 8, 12),
-      prescribe(legExtension, 2, 10, 15),
-      prescribe(singleLegRdl, 2, 8, 12),
-      prescribe(standingCalf, 3, 8, 15),
+      prescribe(backSquat, 4, 4, 6),
+      prescribe(dbRdl, 3, 6, 10),
+      prescribe(seatedLegCurl, 3, 10, 15),
+      prescribe(legExtension, 2, 12, 15),
+      prescribe(standingCalf, 3, 10, 15),
       prescribe(kneeRaise, 2, 8, 15),
     ],
   },
@@ -577,12 +708,13 @@ export const workouts: Record<WorkoutId, Workout> = {
     primary: ['Chest', 'Lats', 'Mid-back', 'Rear delts', 'Side delts', 'Biceps', 'Triceps'],
     supporting: ['Front delts'],
     warmup:
-      'Warm up 5 minutes, then 2–3 incline-press ramp-up sets and one easy row set. Use approximately 15–30° bench incline if supported; otherwise use flat DB pressing.',
+      'Moderate and paused day. Warm up 5 minutes, then 2–3 bench ramp-up sets with the pause and one easy pulldown set.',
     exercises: [
-      prescribe(inclinePress, 4, 8, 12),
-      prescribe(dbRow, 3, 8, 12),
-      prescribe(pullUp, 2, 5, 8),
-      prescribe(pecFly, 2, 10, 15),
+      prescribe(pausedBench, 3, 6, 8),
+      prescribe(latPulldown, 3, 8, 12),
+      prescribe(seatedRow, 3, 10, 12),
+      prescribe(dips, 2, 6, 12),
+      prescribe(pecFly, 2, 12, 15),
       prescribe(reverseFly, 2, 12, 20),
       prescribe(lateralRaise, 2, 12, 20),
       prescribe(dbCurl, 2, 10, 15),
@@ -595,24 +727,12 @@ export const workouts: Record<WorkoutId, Workout> = {
     primary: ['Hamstrings', 'Glutes', 'Quads', 'Calves', 'Obliques'],
     supporting: ['Trunk and spinal bracing'],
     warmup:
-      'Warm up 5 minutes, rehearse the hinge, then perform 3–4 Smith RDL ramp-up sets and an easy split-squat set per leg.',
+      'Hinge and paused day. Warm up 5 minutes, then 3–4 deadlift ramp-up sets and 2 light paused squats.',
     exercises: [
-      prescribe(smithRdl, 3, 6, 8),
-      prescribe(splitSquat, 3, 8, 12),
-      prescribe(
-        {
-          ...legExtension,
-          alternative: {
-            name: 'Smith squat',
-            prescription: '10–15 reps',
-            note: 'Same sets, RIR and rest, with safeties. If already using Smith squat for exercise 2, use DB goblet squat, 12–20 reps, same sets instead: hold DB at chest, feet planted, trunk controlled; stop if arms/setup fail or range shortens.',
-          },
-        },
-        2,
-        10,
-        15,
-      ),
-      prescribe(singleLegRdl, 2, 8, 12),
+      prescribe(deadlift, 3, 3, 5),
+      prescribe(pausedSquat, 3, 5, 6),
+      prescribe(seatedLegCurl, 3, 10, 15),
+      prescribe(splitSquat, 2, 8, 12),
       prescribe(seatedCalf, 3, 12, 20),
       prescribe(antiRotationPress, 2, 10, 15),
     ],

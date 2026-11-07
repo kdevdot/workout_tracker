@@ -13,7 +13,7 @@ const video: Video = {
 
 function player() {
   const wrapper = mount(ExerciseVideo, {
-    props: { video, exerciseId: 'smith-flat-bench-press', exerciseName: 'Smith flat bench press' },
+    props: { video, exerciseId: 'barbell-bench-press', exerciseName: 'Barbell bench press' },
     attachTo: document.body,
   });
   wrappers.push(wrapper);
@@ -37,7 +37,7 @@ describe('inline exercise demonstration', () => {
     expect(source.pathname).toBe('/embed/O5viuEPDXKY');
     expect(source.searchParams.get('playsinline')).toBe('1');
     expect(source.searchParams.has('enablejsapi')).toBe(false);
-    expect(frame.attributes('title')).toBe('Demonstration: Smith flat bench press');
+    expect(frame.attributes('title')).toBe('Demonstration: Barbell bench press');
     expect(frame.attributes('referrerpolicy')).toBe('strict-origin-when-cross-origin');
     expect(wrapper.find('a').exists()).toBe(false);
   });
@@ -68,7 +68,7 @@ describe('inline exercise demonstration', () => {
         components: { ExerciseVideo },
         setup: () => ({ video }),
         template:
-          '<details open><summary>Exercise</summary><ExerciseVideo :video="video" exercise-id="smith-flat-bench-press" exercise-name="Smith flat bench press" /></details>',
+          '<details open><summary>Exercise</summary><ExerciseVideo :video="video" exercise-id="barbell-bench-press" exercise-name="Barbell bench press" /></details>',
       }),
     );
     wrappers.push(wrapper);

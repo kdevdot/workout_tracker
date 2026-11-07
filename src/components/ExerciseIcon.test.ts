@@ -30,13 +30,13 @@ describe('exercise thumbnails', () => {
 
   it('retains provenance for every bundled drawing', () => {
     const provenance = JSON.parse(readFileSync('public/exercises/provenance.json', 'utf8'));
-    expect(provenance.exercises).toHaveLength(21);
+    expect(provenance.exercises).toHaveLength(24);
     expect(existsSync('public/exercises/LICENSE-ASSETS')).toBe(true);
   });
 
   it('updates reactively and safely handles an unknown historical movement', async () => {
-    const wrapper = mount(ExerciseIcon, { props: { exerciseId: 'smith-squat' } });
-    expect(wrapper.get('img').attributes('src')).toBe('/exercises/smith-machine-squat.svg');
+    const wrapper = mount(ExerciseIcon, { props: { exerciseId: 'barbell-back-squat' } });
+    expect(wrapper.get('img').attributes('src')).toBe('/exercises/squat.svg');
     await wrapper.setProps({ exerciseId: 'cable-anti-rotation-press' });
     expect(wrapper.get('img').attributes('src')).toBe('/exercises/pallof-press.svg');
     await wrapper.setProps({ exerciseId: 'unknown-movement' });

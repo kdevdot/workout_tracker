@@ -65,8 +65,8 @@ describe('working app integration', () => {
       .findAll('summary')
       .filter((summary) => summary.find('[data-exercise-icon]').exists());
     expect(summaries.every((summary) => !/^\d/.test(summary.text()))).toBe(true);
-    expect(summaries[0]!.text()).toContain('Smith flat bench press');
-    expect(summaries[0]!.text()).toContain('2 × 5–8');
+    expect(summaries[0]!.text()).toContain('Barbell bench press');
+    expect(summaries[0]!.text()).toContain('2 × 4–6');
   });
 
   it('keeps an unfinished workout form in place while opening and closing an inline demo', async () => {
@@ -80,7 +80,7 @@ describe('working app integration', () => {
     (disclosure.element as HTMLDetailsElement).open = true;
     await disclosure.trigger('toggle');
     await wrapper.get('[data-watch]').trigger('click');
-    expect(wrapper.get('iframe').attributes('src')).toContain('/embed/O5viuEPDXKY');
+    expect(wrapper.get('iframe').attributes('src')).toContain('/embed/A0NBCkpYatQ');
     await button(wrapper, 'Close video').trigger('click');
     expect(wrapper.find('iframe').exists()).toBe(false);
     expect((load.element as HTMLInputElement).value).toBe('20');
@@ -226,7 +226,7 @@ describe('working app integration', () => {
       wrapper.get(`nav[aria-label="Exercises"] button[aria-label*="${name}"]`);
     await chip('Hanging knee raise').trigger('click');
     expect(wrapper.find('[id^="load-"]').exists()).toBe(false);
-    await chip('Supported single-leg DB RDL').trigger('click');
+    await chip('Supported single-leg standing DB calf raise').trigger('click');
     expect(wrapper.text()).toContain('both sides');
     await wrapper.get('#load-1').setValue('16');
     await wrapper.get('#left-1').setValue('10');
@@ -235,7 +235,7 @@ describe('working app integration', () => {
     await wrapper.get('form.set-form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('L 10 / R 9'));
     const rdl = (await savedData()).sessions[0]!.exercises.find(
-      (item) => item.exercise.id === 'supported-single-leg-db-rdl',
+      (item) => item.exercise.id === 'supported-single-leg-standing-db-calf-raise',
     )!;
     expect(rdl.logs[0]).toMatchObject({ load: 16, reps: 9, sides: { left: 10, right: 9 } });
   });

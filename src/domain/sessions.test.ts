@@ -94,7 +94,7 @@ describe('session lifecycle', () => {
 describe('rest between sets', () => {
   it('uses the programme rest unless the user picked minutes', () => {
     const exercise = startSession('upperA', '2026-11-02', 'intro').exercises[0]!.exercise;
-    expect(restFor(exercise, null)).toEqual({ seconds: 180, label: '3 min' });
+    expect(restFor(exercise, null)).toEqual({ seconds: 240, label: '3–4 min' });
     expect(restFor(exercise, 1.5)).toEqual({ seconds: 90, label: '1.5 min' });
   });
 });

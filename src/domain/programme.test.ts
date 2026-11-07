@@ -6,37 +6,38 @@ const workoutIds: WorkoutId[] = ['upperA', 'lowerA', 'upperB', 'lowerB'];
 
 const expectedTables = {
   upperA: [
-    ['smith-flat-bench-press', 4, 5, 8, 'reps', false, 180, '2', 'smith'],
+    ['barbell-bench-press', 4, 4, 6, 'reps', false, 240, '1–2', 'barbell'],
     ['fixed-handle-pull-up', 3, 5, 8, 'reps', false, 180, '2', 'bodyweight'],
-    ['bench-supported-one-arm-db-row', 2, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
+    ['landmine-t-bar-row', 3, 6, 10, 'reps', false, 180, '1–2', 'barbell'],
     ['seated-db-shoulder-press', 2, 6, 10, 'reps', false, 120, '2', 'dumbbell'],
-    ['db-lateral-raise', 2, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['standing-db-curl', 2, 8, 12, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['one-arm-cable-pushdown', 2, 10, 15, 'reps', true, 90, '1–2', 'cable'],
+    ['db-lateral-raise', 3, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
+    ['unica-arm-curl', 2, 10, 15, 'reps', false, 90, '1–2', 'machine'],
+    ['one-arm-cable-overhead-triceps-extension', 2, 10, 15, 'reps', true, 90, '1–2', 'cable'],
   ],
   lowerA: [
-    ['smith-squat', 3, 5, 8, 'reps', false, 180, '2', 'smith'],
-    ['db-romanian-deadlift', 3, 8, 12, 'reps', false, 180, '2', 'dumbbell'],
-    ['unica-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
-    ['supported-single-leg-db-rdl', 2, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
-    ['supported-single-leg-standing-db-calf-raise', 3, 8, 15, 'reps', true, 90, '1–2', 'dumbbell'],
+    ['barbell-back-squat', 4, 4, 6, 'reps', false, 240, '1–2', 'barbell'],
+    ['db-romanian-deadlift', 3, 6, 10, 'reps', false, 180, '2', 'dumbbell'],
+    ['seated-leg-curl', 3, 10, 15, 'reps', false, 90, '1–2', 'machine'],
+    ['selection-leg-extension', 2, 12, 15, 'reps', false, 90, '1–2', 'machine'],
+    ['supported-single-leg-standing-db-calf-raise', 3, 10, 15, 'reps', true, 90, '1–2', 'dumbbell'],
     ['hanging-knee-raise', 2, 8, 15, 'reps', false, 75, '2', 'bodyweight'],
   ],
   upperB: [
-    ['low-incline-db-bench-press', 4, 8, 12, 'reps', false, 180, '2', 'dumbbell'],
-    ['bench-supported-one-arm-db-row', 3, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
-    ['fixed-handle-pull-up', 2, 5, 8, 'reps', false, 180, '2', 'bodyweight'],
-    ['machine-pec-fly', 2, 10, 15, 'reps', false, 90, '1–2', 'machine'],
+    ['paused-barbell-bench-press', 3, 6, 8, 'reps', false, 180, '2', 'barbell'],
+    ['unica-lat-pulldown', 3, 8, 12, 'reps', false, 120, '1–2', 'machine'],
+    ['unica-seated-row', 3, 10, 12, 'reps', false, 120, '1–2', 'machine'],
+    ['dips', 2, 6, 12, 'reps', false, 180, '1–2', 'bodyweight'],
+    ['machine-pec-fly', 2, 12, 15, 'reps', false, 90, '1–2', 'machine'],
     ['machine-reverse-fly', 2, 12, 20, 'reps', false, 90, '1–2', 'machine'],
     ['db-lateral-raise', 2, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
     ['standing-db-curl', 2, 10, 15, 'reps', false, 90, '1–2', 'dumbbell'],
     ['one-db-two-hand-overhead-triceps-extension', 2, 10, 15, 'reps', false, 90, '1–2', 'dumbbell'],
   ],
   lowerB: [
-    ['smith-romanian-deadlift', 3, 6, 8, 'reps', false, 180, '2', 'smith'],
-    ['db-stationary-split-squat', 3, 8, 12, 'reps', true, 180, '2', 'dumbbell'],
-    ['unica-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
-    ['supported-single-leg-db-rdl', 2, 8, 12, 'reps', true, 120, '2', 'dumbbell'],
+    ['barbell-deadlift', 3, 3, 5, 'reps', false, 240, '1–2', 'barbell'],
+    ['paused-barbell-squat', 3, 5, 6, 'reps', false, 180, '2', 'barbell'],
+    ['seated-leg-curl', 3, 10, 15, 'reps', false, 90, '1–2', 'machine'],
+    ['db-stationary-split-squat', 2, 8, 12, 'reps', true, 180, '2', 'dumbbell'],
     ['seated-db-calf-raise', 3, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
     ['cable-anti-rotation-press', 2, 10, 15, 'reps', true, 75, '2', 'cable'],
   ],
@@ -67,12 +68,12 @@ describe('programme tables', () => {
       workoutIds.map((workoutId) =>
         getExercises(workoutId, 'baseline').reduce((total, exercise) => total + exercise.sets, 0),
       ),
-    ).toEqual([17, 15, 19, 15]);
+    ).toEqual([19, 17, 21, 16]);
     expect(
       workoutIds.map((workoutId) =>
         getExercises(workoutId, 'intro').reduce((total, exercise) => total + exercise.sets, 0),
       ),
-    ).toEqual([14, 12, 16, 12]);
+    ).toEqual([14, 12, 18, 12]);
   });
 
   it.each(workoutIds)(
@@ -128,7 +129,7 @@ describe('programme tables', () => {
           expect(exercise.max).toBeGreaterThanOrEqual(exercise.min);
           expect(exercise.sets).toBeLessThanOrEqual(4);
           expect(['reps', 'cycles', 'seconds']).toContain(exercise.unit);
-          expect(['smith', 'dumbbell', 'cable', 'machine', 'bodyweight']).toContain(
+          expect(['barbell', 'smith', 'dumbbell', 'cable', 'machine', 'bodyweight']).toContain(
             exercise.loadKind,
           );
           expect(typeof exercise.perSide).toBe('boolean');
@@ -203,16 +204,14 @@ describe('programme tables', () => {
     expect(workouts.lowerA.exercises[4].id).not.toBe(workouts.lowerB.exercises[4].id);
   });
 
-  it('keeps UNICA confirmation warnings and day-specific conditional substitutions', () => {
+  it('uses the real leg curl on both lower days instead of a workaround', () => {
     for (const workoutId of ['lowerA', 'lowerB'] as const) {
-      const extension = workouts[workoutId].exercises[2];
-      expect(extension.name).toContain('confirmed setup only');
-      expect(extension.cues.join(' ')).toContain('Staff-confirmed setup required');
-      expect(extension.cues.join(' ')).toContain('substitute immediately');
-      expect(extension.alternative.note).toContain('DB goblet squat, 12–20 reps');
+      const curl = workouts[workoutId].exercises.find(
+        (exercise) => exercise.id === 'seated-leg-curl',
+      );
+      expect(curl?.equipment).toContain('Selection 700');
     }
-    expect(workouts.lowerA.exercises[2].alternative.name).toBe('DB stationary split squat');
-    expect(workouts.lowerB.exercises[2].alternative.name).toBe('Smith squat');
+    expect(workouts.lowerA.exercises.some((exercise) => exercise.loadKind === 'smith')).toBe(false);
   });
 });
 

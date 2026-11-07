@@ -203,7 +203,7 @@ export const guides: Record<string, Guide> = {
       verdict:
         'Studies show these pulls differ in movement and muscle activity, not that pull-ups grow less.',
       forYou:
-        'Keep pull-ups while you hit the reps at target RIR; otherwise use the one-arm cable pulldown.',
+        'Keep pull-ups while you hit the reps at target RIR; otherwise use the UNICA lat pulldown.',
     },
   },
 
@@ -250,7 +250,7 @@ export const guides: Record<string, Guide> = {
       verdict:
         'An 8-week trial found similar side-delt growth with cable and dumbbell raises over a matched range.',
       forYou:
-        'DBs or the one-arm cable alternative both work. Pick whichever you can progress smoothly; keep 4 weekly sets.',
+        'DBs or the one-arm cable alternative both work. Pick whichever you can progress smoothly; keep the weekly sets as planned.',
     },
   },
   'standing-db-curl': {

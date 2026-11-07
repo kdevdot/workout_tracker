@@ -9,6 +9,10 @@ import { usePushups } from './usePushups';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
 
+/** A started workout with no sets logged yet, safe to drop or replace. */
+const untouched = (session: Session) =>
+  session.status === 'active' && session.exercises.every((entry) => entry.logs.length === 0);
+
 export type View = 'plan' | 'session' | 'history' | 'pushups' | 'supplements' | 'settings';
 
 /** App-level orchestration: navigation state plus every persisted user action. */
@@ -102,14 +106,13 @@ export function useTrainingApp() {
     if (draft.value) return open(draft.value.id);
     const session = startSession(workoutId.value, date.value, state.value.settings.phase);
     // Switching workouts drops an untouched draft for this day instead of leaving it behind.
-    const untouched = (item: Session) =>
-      item.date === session.date &&
-      item.status === 'active' &&
-      item.exercises.every((entry) => entry.logs.length === 0);
     if (
       await update((current) => ({
         ...current,
-        sessions: [...current.sessions.filter((item) => !untouched(item)), session],
+        sessions: [
+          ...current.sessions.filter((item) => item.date !== session.date || !untouched(item)),
+          session,
+        ],
       }))
     )
       open(session.id);
@@ -181,8 +184,16 @@ export function useTrainingApp() {
     }));
   }
   async function saveSettings(settings: AppState['settings']) {
-    if (await update((current) => ({ ...current, settings })))
-      notify('Settings saved. Existing records are unchanged.');
+    // An untouched draft follows a phase change; drafts with logged sets keep their targets.
+    const stale = (session: Session) => untouched(session) && session.phase !== settings.phase;
+    if (
+      await update((current) => ({
+        ...current,
+        settings,
+        sessions: current.sessions.filter((session) => !stale(session)),
+      }))
+    )
+      notify('Settings saved. Logged sets are unchanged.');
   }
   async function restore(imported: AppState) {
     if (await update(() => ({ ...imported, timer: null }))) {

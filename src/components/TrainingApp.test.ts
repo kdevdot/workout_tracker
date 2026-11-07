@@ -327,6 +327,38 @@ describe('working app integration', () => {
     expect(wrapper.text()).toContain('Log more');
   });
 
+  it('applies a phase change to the plan and to a started workout with nothing logged', async () => {
+    const wrapper = await app();
+    await begin(wrapper);
+    expect(wrapper.text()).toContain('0/14 sets saved');
+    await button(wrapper, 'Back to plan').trigger('click');
+    await button(wrapper, 'Settings').trigger('click');
+    await wrapper.get('#phase').setValue('baseline');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
+    await button(wrapper, 'Plan').trigger('click');
+    expect(wrapper.text()).toContain('19 working sets');
+    await button(wrapper, 'Start workout').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('0/19 sets saved'));
+    expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['baseline']);
+  });
+
+  it('keeps the targets of a workout that already has logged sets', async () => {
+    const wrapper = await app();
+    await begin(wrapper);
+    const inputs = wrapper.findAll('.set-fields input');
+    for (const [index, value] of ['20', '7', '3'].entries()) await inputs[index]!.setValue(value);
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Set saved on this device.'));
+    await button(wrapper, 'Back to plan').trigger('click');
+    await button(wrapper, 'Settings').trigger('click');
+    await wrapper.get('#phase').setValue('baseline');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
+    await button(wrapper, 'Plan').trigger('click');
+    expect(wrapper.text()).toContain('1 / 14 sets saved');
+  });
+
   it('shows a storage error instead of resetting an unsupported saved schema', async () => {
     const database = await openDB(databaseName, 1, {
       upgrade: (entry) => entry.createObjectStore('records'),

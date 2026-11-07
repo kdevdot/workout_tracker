@@ -359,6 +359,20 @@ describe('working app integration', () => {
     expect(wrapper.text()).toContain('1 / 14 sets saved');
   });
 
+  it('resumes at the first exercise with sets left', async () => {
+    const wrapper = await app();
+    await begin(wrapper);
+    for (const index of [1, 2]) {
+      const inputs = wrapper.findAll('.set-fields input');
+      for (const [field, value] of ['20', '7', '3'].entries()) await inputs[field]!.setValue(value);
+      await wrapper.get('form.set-form').trigger('submit');
+      await vi.waitFor(() => expect(wrapper.text()).toContain(`${index}/14 sets saved`));
+    }
+    await button(wrapper, 'Back to plan').trigger('click');
+    await button(wrapper, 'Resume workout').trigger('click');
+    expect(wrapper.get('main h1').text()).toBe('Fixed-handle pull-up or chin-up');
+  });
+
   it('shows a storage error instead of resetting an unsupported saved schema', async () => {
     const database = await openDB(databaseName, 1, {
       upgrade: (entry) => entry.createObjectStore('records'),

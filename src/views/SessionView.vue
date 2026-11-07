@@ -42,7 +42,11 @@ const emit = defineEmits<{
   stopTimer: [];
 }>();
 
-const selected = shallowRef(0);
+// Resume at the first exercise with sets left, or the last one when all are done.
+const firstOpen = props.session.exercises.findIndex(
+  (item) => item.logs.length < item.exercise.sets,
+);
+const selected = shallowRef(firstOpen === -1 ? props.session.exercises.length - 1 : firstOpen);
 const editing = shallowRef<SetLog | null>(null);
 const confirmingFinish = shallowRef(false);
 const entry = computed(() => props.session.exercises[selected.value]!);

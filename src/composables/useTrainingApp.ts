@@ -186,6 +186,20 @@ export function useTrainingApp() {
     )
       notify('Intake saved on this device.');
   }
+  async function saveWeight(kg: number) {
+    if (date.value > localDate()) return;
+    const entry = { date: date.value, kg, recordedAt: new Date().toISOString() };
+    if (
+      await update((current) => ({
+        ...current,
+        bodyWeights: [
+          ...current.bodyWeights.filter((item) => item.date !== entry.date),
+          entry,
+        ].sort((first, second) => first.date.localeCompare(second.date)),
+      }))
+    )
+      notify('Body weight saved on this device.');
+  }
   function removeIntake(id: string) {
     return update((current) => ({
       ...current,
@@ -238,6 +252,7 @@ export function useTrainingApp() {
     stopTimer,
     addIntake,
     removeIntake,
+    saveWeight,
     saveSettings,
     restore,
     ...pushups,

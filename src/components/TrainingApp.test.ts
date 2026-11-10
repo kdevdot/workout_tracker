@@ -315,10 +315,9 @@ describe('working app integration', () => {
     const wrapper = await app();
     await button(wrapper, 'Supplements').trigger('click');
     await wrapper.get('input[type="date"]').setValue('2026-11-01');
-    const forms = wrapper.findAll('form');
-    await forms[0]!.trigger('submit');
+    await wrapper.get('form:has(#amount-whey)').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('partial totals'));
-    await forms[1]!.trigger('submit');
+    await wrapper.get('form:has(#amount-creatine)').trigger('submit');
     await vi.waitFor(async () => expect((await savedData()).intakes).toHaveLength(2));
     const entries = (await savedData()).intakes;
     expect(entries[0]!.date).toBe('2026-11-01');
@@ -326,6 +325,19 @@ describe('working app integration', () => {
     expect(entries[1]!.amount).toBe(3.4);
     await vi.waitFor(() => expect(wrapper.text()).toContain('3.4 g'));
     expect(wrapper.text()).toContain('Log more');
+  });
+
+  it('saves one morning body weight per date and updates it', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Supplements').trigger('click');
+    for (const kg of ['63.4', '63.6']) {
+      await wrapper.get('#body-weight').setValue(kg);
+      await wrapper.get('form:has(#body-weight)').trigger('submit');
+      await vi.waitFor(async () =>
+        expect((await savedData()).bodyWeights.map((entry) => entry.kg)).toEqual([Number(kg)]),
+      );
+    }
+    expect(wrapper.text()).toContain('Update');
   });
 
   it('applies a phase change to the plan and to a started workout with nothing logged', async () => {

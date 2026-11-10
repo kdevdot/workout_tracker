@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 import { Check, Info, Trash2 } from '@lucide/vue';
-import { CREATINE, type Intake } from '@/domain/state';
+import { CREATINE, type BodyWeight, type Intake } from '@/domain/state';
+import { weightTrend } from '@/domain/bodyweight';
 import { formatDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +14,7 @@ const props = defineProps<{
   date: string;
   today: string;
   intakes: Intake[];
+  bodyWeights: BodyWeight[];
   busy: boolean;
   hasLabel: boolean;
 }>();
@@ -20,8 +22,24 @@ const emit = defineEmits<{
   date: [date: string];
   add: [kind: Kind, amount: number];
   remove: [id: string];
+  weight: [kg: number];
   settings: [];
 }>();
+
+const weighed = computed(() => props.bodyWeights.find((entry) => entry.date === props.date));
+const kg = ref<string | number>('');
+watch(weighed, (entry) => (kg.value = entry?.kg ?? ''), { immediate: true });
+const trend = computed(() => weightTrend(props.bodyWeights, props.today));
+const round = (value: number) => Math.round(value * 10) / 10;
+function saveWeight() {
+  const value = Number(kg.value);
+  if (!Number.isFinite(value) || value < 20 || value > 400) {
+    error.value = 'Enter a body weight between 20 and 400 kg.';
+    return;
+  }
+  error.value = '';
+  emit('weight', value);
+}
 
 const amounts = ref<Record<Kind, string | number>>({ whey: '1', creatine: '3.4' });
 const error = shallowRef('');
@@ -83,7 +101,7 @@ function remove(id: string) {
   <header class="page-header screen-enter">
     <h1 class="page-heading">Daily supplements</h1>
     <p class="text-muted-foreground text-sm">
-      Whey and creatine, on training and rest days. No food diary.
+      Body weight, whey and creatine, on training and rest days. No food diary.
     </p>
   </header>
 
@@ -102,6 +120,55 @@ function remove(id: string) {
       @change="emit('date', ($event.target as HTMLInputElement).value)"
     />
   </label>
+
+  <Card class="gap-4 py-5">
+    <CardHeader class="px-5">
+      <CardTitle>Morning body weight</CardTitle>
+      <CardDescription> After the bathroom, before food. Most mornings is enough. </CardDescription>
+    </CardHeader>
+    <CardContent class="flex flex-col gap-3 px-5">
+      <form class="flex items-end gap-2" @submit.prevent="saveWeight">
+        <div class="flex flex-1 flex-col gap-1.5">
+          <Label for="body-weight">Body weight (kg)</Label>
+          <Input
+            id="body-weight"
+            v-model="kg"
+            type="number"
+            min="20"
+            max="400"
+            step="0.1"
+            inputmode="decimal"
+            required
+            class="h-11"
+          />
+        </div>
+        <Button
+          type="submit"
+          size="lg"
+          :variant="weighed ? 'outline' : 'default'"
+          class="h-11"
+          :disabled="busy || future"
+          >{{ weighed ? 'Update' : 'Log weight' }}</Button
+        >
+      </form>
+      <p class="text-sm">
+        <template v-if="trend.average !== null"
+          >7-day average <strong class="tabular-nums">{{ round(trend.average) }} kg</strong>
+          <span v-if="trend.weekly !== null" class="text-muted-foreground tabular-nums">
+            · {{ trend.weekly >= 0 ? '+' : '' }}{{ Math.round(trend.weekly * 100) / 100 }} kg a
+            week</span
+          ></template
+        >
+        <span v-else class="text-muted-foreground"
+          >Log at least 3 mornings this week to see your average.</span
+        >
+      </p>
+      <p v-if="trend.advice" class="text-sm font-medium">{{ trend.advice }}</p>
+      <p v-else-if="trend.average !== null" class="text-muted-foreground text-xs">
+        The gain check starts after 3 weeks of weigh-ins.
+      </p>
+    </CardContent>
+  </Card>
 
   <section class="muscle-panel bg-card text-foreground flex flex-col gap-3 rounded-xl p-5">
     <h2 class="text-sm font-semibold opacity-80">Recorded whey nutrition</h2>

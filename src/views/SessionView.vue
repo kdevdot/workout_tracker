@@ -8,11 +8,13 @@ import {
   ChevronRight,
   History,
   Pencil,
+  TrendingUp,
 } from '@lucide/vue';
 import { formatDate } from '@/domain/dates';
 import { workouts } from '@/domain/programme';
 import {
   formatSet,
+  nextTarget,
   previousPerformance,
   restFor,
   sessionProgress,
@@ -55,13 +57,13 @@ const progress = computed(() => sessionProgress(props.session));
 const previous = computed(() =>
   previousPerformance(props.history, props.session, exercise.value.id),
 );
-// Start a new set from this session's last set, or the same set last time.
-const defaults = computed(
-  () =>
-    entry.value.logs.at(-1) ??
-    previous.value?.logs.find((log) => log.index === nextIndex.value) ??
-    null,
-);
+const target = computed(() => nextTarget(props.history, props.session, exercise.value));
+// Start a new set from this session's last set, or the same set last time (at the new load).
+const defaults = computed(() => {
+  if (entry.value.logs.length) return entry.value.logs.at(-1)!;
+  const last = previous.value?.logs.find((log) => log.index === nextIndex.value);
+  return last && target.value?.load ? { ...last, load: target.value.load } : (last ?? null);
+});
 const previousSummary = computed(() => previous.value?.logs.map(shortSet).join(' · '));
 const chips = computed(() =>
   props.session.exercises.map((item) => ({
@@ -192,6 +194,26 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
         {{ previousSummary }}
       </p>
       <p v-else class="text-muted-foreground">No previous completed entries for this movement.</p>
+    </div>
+  </section>
+
+  <section
+    v-if="target"
+    :class="
+      cn(
+        'flex gap-3 rounded-xl p-4',
+        target.stalled ? 'bg-amber-500/10' : target.ready ? 'bg-success-soft' : 'bg-secondary/60',
+      )
+    "
+  >
+    <TrendingUp class="text-primary mt-0.5 size-4 shrink-0" />
+    <div class="flex flex-col gap-0.5 text-sm">
+      <h3 class="font-semibold">Today's target</h3>
+      <p class="text-secondary-foreground">{{ target.text }}</p>
+      <p v-if="target.stalled" class="text-secondary-foreground">
+        No progress in 3 sessions. Check sleep, food and rest times first. Still stuck: drop 5–10%
+        and build back up.
+      </p>
     </div>
   </section>
 

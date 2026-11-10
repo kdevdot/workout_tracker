@@ -3,6 +3,7 @@ import { MAX_BACKUP_BYTES, emptyState, encodeBackup, parseBackup, sessionSchema 
 import {
   bestSet,
   finishSession,
+  nextTarget,
   previousPerformance,
   recordSet,
   restFor,
@@ -90,6 +91,89 @@ describe('session lifecycle', () => {
       sides: { left: 30, right: 31 },
     });
     expect(recorded.exercises.at(-1)!.logs[0]!.reps).toBe(30);
+  });
+});
+
+describe('next-session target', () => {
+  // Bench press in the intro phase: 2 sets of 4–6 at 3 RIR.
+  function done(date: string, logs: Array<[load: number, reps: number, rir?: number]>) {
+    let session = startSession('upperA', date, 'intro');
+    const id = session.exercises[0]!.exercise.id;
+    for (const [index, [load, reps, rir = 3]] of logs.entries()) {
+      session = recordSet(session, id, { ...set(index + 1), load, reps, effort: rir });
+    }
+    return finishSession(session);
+  }
+  const target = (history: ReturnType<typeof done>[]) => {
+    const current = startSession('upperA', '2026-12-01', 'intro');
+    return nextTarget(history, current, current.exercises[0]!.exercise);
+  };
+
+  it('adds 2.5 kg once every set reaches the top of the range at about target RIR', () => {
+    expect(
+      target([
+        done('2026-11-02', [
+          [40, 6],
+          [40, 6],
+        ]),
+      ]),
+    ).toMatchObject({
+      ready: true,
+      load: 42.5,
+      stalled: false,
+    });
+  });
+  it('keeps the load when a set is short, grinding or missing', () => {
+    for (const logs of [
+      [
+        [40, 6],
+        [40, 5],
+      ],
+      [
+        [40, 6, 3],
+        [40, 6, 0],
+      ],
+      [[40, 6]],
+    ] as Array<Array<[number, number, number?]>>) {
+      const result = target([done('2026-11-02', logs)]);
+      expect(result).toMatchObject({ ready: false, load: null });
+      expect(result!.text).toContain('Same 40 kg');
+    }
+  });
+  it('flags a stall when two sessions fail to beat the one before', () => {
+    const flat = [
+      done('2026-11-02', [
+        [40, 5],
+        [40, 5],
+      ]),
+      done('2026-11-09', [
+        [40, 5],
+        [40, 4],
+      ]),
+      done('2026-11-16', [
+        [40, 5],
+        [40, 5],
+      ]),
+    ];
+    expect(target(flat)!.stalled).toBe(true);
+    const rising = [
+      done('2026-11-02', [
+        [40, 5],
+        [40, 4],
+      ]),
+      done('2026-11-09', [
+        [40, 5],
+        [40, 4],
+      ]),
+      done('2026-11-16', [
+        [40, 5],
+        [40, 5],
+      ]),
+    ];
+    expect(target(rising)!.stalled).toBe(false);
+  });
+  it('has no target without a previous session', () => {
+    expect(target([])).toBeNull();
   });
 });
 

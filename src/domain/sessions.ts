@@ -56,28 +56,87 @@ export function sessionProgress(session: Session): { done: number; total: number
   };
 }
 
+/** Completed earlier sessions with sets for this exercise, newest first. */
+function exposures(sessions: readonly Session[], session: Session, exerciseId: string) {
+  return sessions
+    .filter(
+      (candidate) =>
+        candidate.id !== session.id &&
+        candidate.status === 'completed' &&
+        candidate.date <= session.date,
+    )
+    .sort(
+      (first, second) =>
+        second.date.localeCompare(first.date) || second.startedAt.localeCompare(first.startedAt),
+    )
+    .flatMap((candidate) => {
+      const entry = candidate.exercises.find((item) => item.exercise.id === exerciseId);
+      return entry?.logs.length
+        ? [{ date: candidate.date, sets: entry.exercise.sets, logs: entry.logs }]
+        : [];
+    });
+}
+
 export function previousPerformance(
   sessions: readonly Session[],
   session: Session,
   exerciseId: string,
 ) {
-  return (
-    sessions
-      .filter(
-        (candidate) =>
-          candidate.id !== session.id &&
-          candidate.status === 'completed' &&
-          candidate.date <= session.date,
-      )
-      .sort(
-        (first, second) =>
-          second.date.localeCompare(first.date) || second.startedAt.localeCompare(first.startedAt),
-      )
-      .flatMap((candidate) => {
-        const entry = candidate.exercises.find((exercise) => exercise.exercise.id === exerciseId);
-        return entry?.logs.length ? [{ date: candidate.date, logs: entry.logs }] : [];
-      })[0] ?? null
-  );
+  return exposures(sessions, session, exerciseId)[0] ?? null;
+}
+
+const nextStep: Record<Exercise['loadKind'], string> = {
+  barbell: 'Add 2.5 kg',
+  smith: 'Add 2.5 kg',
+  dumbbell: 'Move to the next dumbbell',
+  cable: 'Move one pin heavier',
+  machine: 'Move one pin heavier',
+  bodyweight: 'Keep adding reps or slow the lowering',
+};
+
+/** Top load, then total reps at that load: higher means better. */
+function score(logs: SetLog[]): [number, number] {
+  const top = bestSet(logs)?.load ?? 0;
+  return [
+    top,
+    logs.filter((log) => (log.load ?? 0) >= top).reduce((sum, log) => sum + log.reps, 0),
+  ];
+}
+const beats = (a: [number, number], b: [number, number]) =>
+  a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]);
+
+/**
+ * Double progression from the research plan: keep the load until every set reaches the top of
+ * the range at about the target RIR, then add the smallest jump. Flags a stall when the last two
+ * exposures did not beat the one before them.
+ */
+export function nextTarget(sessions: readonly Session[], session: Session, exercise: Exercise) {
+  const [last, middle, oldest] = exposures(sessions, session, exercise.id);
+  if (!last) return null;
+  const top = bestSet(last.logs)!;
+  // One RIR below target still counts: the plan takes isolation last sets to 0–1 RIR.
+  const reserve = Number.parseFloat(exercise.targetRir) - 1;
+  const ready =
+    last.logs.length >= last.sets &&
+    last.logs.every(
+      (log) => log.reps >= exercise.max && (exercise.unit === 'seconds' || log.effort >= reserve),
+    );
+  const reps = last.logs.map((log) => log.reps).join(' / ');
+  const stalled =
+    !ready &&
+    !!oldest &&
+    !beats(score(last.logs), score(oldest.logs)) &&
+    !beats(score(middle!.logs), score(oldest.logs));
+  const fixedJump = exercise.loadKind === 'barbell' || exercise.loadKind === 'smith';
+  return {
+    ready,
+    stalled,
+    // Pre-fill the heavier load where the jump is known; other kinds depend on the gym's steps.
+    load: ready && fixedJump && top.load !== null ? top.load + 2.5 : null,
+    text: ready
+      ? `${nextStep[exercise.loadKind]}${fixedJump && top.load !== null ? ` (${top.load + 2.5} kg)` : ''}. Every set reached ${exercise.max} ${exercise.unit} last time, so expect about ${exercise.min} now.`
+      : `${top.load === null ? 'Beat' : `Same ${top.load} kg, beat`} ${reps} by one rep on any set.`,
+  };
 }
 
 /** Top set: heaviest load, then most reps. Bodyweight sets compare on reps alone. */

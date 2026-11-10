@@ -90,6 +90,7 @@ const saveStatus = computed(() => {
           @date="app.changeDate"
           @workout="app.chooseWorkout"
           @start="app.begin"
+          @swap="app.swapFromPlan"
           @supplements="view = 'supplements'"
           @history="view = 'history'"
           @settings="view = 'settings'"

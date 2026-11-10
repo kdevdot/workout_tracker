@@ -162,6 +162,12 @@ export function useTrainingApp() {
     )
       notify('Exercise swapped for this workout.');
   }
+  /** From the plan: start (or resume) today's workout, then swap the exercise in it. */
+  async function swapFromPlan(exerciseId: string) {
+    await begin();
+    if (currentSession.value?.exercises.some((entry) => entry.exercise.id === exerciseId))
+      await swap(exerciseId);
+  }
   async function finish() {
     const active = currentSession.value;
     if (!active) return;
@@ -274,6 +280,7 @@ export function useTrainingApp() {
     finish,
     stopTimer,
     swap,
+    swapFromPlan,
     adjustTimer,
     timerFraction,
     addIntake,

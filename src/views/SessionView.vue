@@ -315,7 +315,13 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       How to do it · video & form check
       <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
     </summary>
-    <div class="pb-4"><ExerciseGuide :exercise="exercise" /></div>
+    <div class="pb-4">
+      <ExerciseGuide
+        :exercise="exercise"
+        :swappable="!entry.logs.length && !busy"
+        @swap="emit('swap', exercise.id)"
+      />
+    </div>
   </details>
 
   <p class="text-muted-foreground text-xs leading-5">

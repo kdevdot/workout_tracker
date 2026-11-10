@@ -6,7 +6,8 @@ import { guides } from '@/domain/guides';
 import BodyMap from './BodyMap.vue';
 import ExerciseVideo from './ExerciseVideo.vue';
 
-const props = defineProps<{ exercise: Exercise }>();
+const props = defineProps<{ exercise: Exercise; swappable?: boolean }>();
+const emit = defineEmits<{ swap: [] }>();
 const guide = computed(() => guides[props.exercise.id]);
 </script>
 
@@ -71,7 +72,21 @@ const guide = computed(() => guides[props.exercise.id]);
       </div>
     </details>
 
-    <p class="text-muted-foreground flex items-start gap-1.5 text-xs">
+    <button
+      v-if="swappable"
+      type="button"
+      class="bg-secondary hover:bg-accent focus-visible:ring-ring/60 flex min-h-12 items-center gap-3 rounded-2xl px-4 py-2.5 text-left outline-none focus-visible:ring-2"
+      @click="emit('swap')"
+    >
+      <ArrowRightLeft class="text-primary size-4 shrink-0" />
+      <span class="flex flex-col">
+        <span class="text-muted-foreground text-xs">Can't do it today? Swap for this workout</span>
+        <span class="font-semibold"
+          >{{ exercise.alternative.name }} · {{ exercise.alternative.prescription }}</span
+        >
+      </span>
+    </button>
+    <p v-else class="text-muted-foreground flex items-start gap-1.5 text-xs">
       <ArrowRightLeft class="mt-0.5 size-3.5 shrink-0" />
       <span
         ><strong class="text-foreground font-semibold">Swap:</strong>

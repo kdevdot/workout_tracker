@@ -28,6 +28,7 @@ const emit = defineEmits<{
   date: [value: string];
   workout: [value: WorkoutId | null];
   start: [];
+  swap: [exerciseId: string];
   supplements: [];
   history: [];
   settings: [];
@@ -46,6 +47,11 @@ const activePhase = computed(() => shown.value?.phase ?? props.phase);
 const progress = computed(() => (shown.value ? sessionProgress(shown.value) : null));
 const done = computed(() => !props.session && props.completed !== null);
 const future = computed(() => props.date > props.today);
+// Swaps live on today's workout, so only before its sets are logged and never on a preview.
+function canSwap(exerciseId: string) {
+  if (!workout.value || done.value || future.value || props.busy) return false;
+  return !props.session?.exercises.find((entry) => entry.exercise.id === exerciseId)?.logs.length;
+}
 // Rough session length: each set plus its rest, and about 40 s to do the set itself.
 const minutes = computed(
   () =>
@@ -263,7 +269,11 @@ function chooseWorkout(event: Event) {
               </span>
             </summary>
             <div class="bg-background/60 rounded-2xl border p-4">
-              <ExerciseGuide :exercise="exercise" />
+              <ExerciseGuide
+                :exercise="exercise"
+                :swappable="canSwap(exercise.id)"
+                @swap="emit('swap', exercise.id)"
+              />
             </div>
           </details>
         </div>

@@ -361,6 +361,20 @@ describe('working app integration', () => {
     expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['intro']);
   });
 
+  it('swaps from the plan: starts the workout with the alternative in place', async () => {
+    const wrapper = await app();
+    await wrapper.get('input[type="date"]').setValue('2026-11-02');
+    await wrapper
+      .findAll('button')
+      .find((item) => item.text().includes('Swap for this workout'))!
+      .trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Exercise swapped for this workout.'));
+    expect(wrapper.get('main h1').text()).toBe('Smith flat bench press');
+    expect((await savedData()).sessions[0]!.exercises[0]!.exercise.name).toBe(
+      'Smith flat bench press',
+    );
+  });
+
   it('swaps an exercise for its alternative and logs it', async () => {
     const wrapper = await app();
     await begin(wrapper);

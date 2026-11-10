@@ -10,9 +10,9 @@ const emit = defineEmits<{ dismiss: [] }>();
     <div
       v-if="message"
       role="status"
-      class="bg-foreground text-background fixed inset-x-5 top-[calc(env(safe-area-inset-top)+0.75rem)] z-40 mx-auto flex max-w-md items-center gap-2.5 rounded-xl py-2 pr-1 pl-3.5 text-sm font-medium shadow-lg"
+      class="bg-secondary/90 text-foreground fixed backdrop-blur-xl ring-1 ring-white/10 inset-x-5 top-[calc(env(safe-area-inset-top)+0.75rem)] z-40 mx-auto flex max-w-md items-center gap-2.5 rounded-xl py-2 pr-1 pl-3.5 text-sm font-medium shadow-lg"
     >
-      <CircleCheck class="text-success-soft size-4 shrink-0" />
+      <CircleCheck class="text-primary size-4 shrink-0" />
       <span class="flex-1">{{ message }}</span>
       <button
         type="button"

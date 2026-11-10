@@ -7,7 +7,6 @@ import { bestSet, formatSet, sessionProgress, shortSet } from '@/domain/sessions
 import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import ExerciseIcon from '@/components/ExerciseIcon.vue';
 
 const props = defineProps<{ sessions: Session[] }>();
@@ -53,14 +52,17 @@ const entries = computed(() =>
   </div>
 
   <details
-    v-for="{ session, progress, status, tops } in entries"
+    v-for="({ session, progress, status, tops }, index) in entries"
     :key="session.id"
-    class="group bg-card rounded-2xl border"
+    class="group bg-card screen-enter rounded-[20px] shadow-(--panel-shadow)"
+    :style="{ animationDelay: `${Math.min(index, 8) * 45 + 60}ms` }"
   >
     <summary class="flex flex-col gap-3 p-4">
       <div class="flex items-start justify-between gap-3">
         <div class="flex flex-col">
-          <strong class="text-lg font-bold">{{ workouts[session.workoutId].name }}</strong>
+          <strong class="font-display condensed text-2xl font-bold uppercase">{{
+            workouts[session.workoutId].name
+          }}</strong>
           <small class="text-muted-foreground text-xs">{{
             formatDate(session.date, {
               weekday: 'short',
@@ -78,7 +80,14 @@ const entries = computed(() =>
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <Progress :model-value="(progress.done / progress.total) * 100" class="h-1.5" />
+        <div class="segments flex-1" aria-hidden="true">
+          <span v-for="item in session.exercises" :key="item.exercise.id"
+            ><i
+              :style="{
+                transform: `scaleX(${Math.min(1, item.logs.length / item.exercise.sets)})`,
+              }"
+          /></span>
+        </div>
         <span class="text-muted-foreground text-xs font-semibold whitespace-nowrap tabular-nums"
           >{{ progress.done }}/{{ progress.total }} exercises</span
         >

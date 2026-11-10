@@ -22,7 +22,6 @@ import {
 } from '@/domain/sessions';
 import type { Session, SetLog } from '@/domain/state';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import ExerciseGuide from '@/components/ExerciseGuide.vue';
 import RestTimer from '@/components/RestTimer.vue';
@@ -126,11 +125,22 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
         {{ workouts[session.workoutId].name }}
       </span>
     </div>
-    <div class="flex items-center gap-3">
-      <Progress :model-value="(progress.done / progress.total) * 100" class="h-2.5" />
-      <span class="text-sm font-bold whitespace-nowrap tabular-nums"
-        >{{ progress.done }}/{{ progress.total }} exercises done</span
-      >
+    <div class="flex flex-col gap-2">
+      <div class="flex items-baseline justify-between">
+        <span class="eyebrow">Workout progress</span>
+        <span class="text-sm font-bold whitespace-nowrap tabular-nums"
+          >{{ progress.done }}/{{ progress.total }} exercises done</span
+        >
+      </div>
+      <div class="segments" aria-hidden="true">
+        <span
+          v-for="(item, index) in session.exercises"
+          :key="item.exercise.id"
+          :class="{ 'is-current': index === selected }"
+          ><i
+            :style="{ transform: `scaleX(${Math.min(1, item.logs.length / item.exercise.sets)})` }"
+        /></span>
+      </div>
     </div>
   </div>
 
@@ -143,20 +153,27 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
       :class="
         cn(
-          'flex min-h-11 shrink-0 snap-center items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors',
+          'flex min-h-11 shrink-0 snap-center items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-300',
           'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
           selected === index
-            ? 'bg-primary text-primary-foreground border-primary'
+            ? 'bg-primary text-primary-foreground border-primary shadow-[0_6px_20px_-6px_#d4f53c99]'
             : finished
-              ? 'border-success/40 bg-success-soft hover:bg-success-soft/70'
-              : 'bg-card hover:bg-muted',
+              ? 'border-success/30 bg-success-soft text-success hover:bg-success-soft/70'
+              : 'bg-card text-secondary-foreground hover:bg-secondary',
         )
       "
       @click="selected = index"
     >
       <span
         v-if="finished"
-        class="bg-success flex size-4 items-center justify-center rounded-full text-white"
+        :class="
+          cn(
+            'flex size-4 items-center justify-center rounded-full',
+            selected === index
+              ? 'bg-primary-foreground text-primary'
+              : 'bg-success text-primary-foreground',
+          )
+        "
         ><Check class="size-3 stroke-3"
       /></span>
       <span v-else class="tabular-nums">{{ index + 1 }}</span>
@@ -164,7 +181,8 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     </button>
   </nav>
 
-  <section class="flex flex-col gap-2">
+  <section :key="exercise.id" class="screen-enter flex flex-col gap-2">
+    <span class="eyebrow">Exercise {{ selected + 1 }} of {{ session.exercises.length }}</span>
     <h1 class="page-heading">{{ exercise.name }}</h1>
     <p class="text-muted-foreground text-sm leading-6">
       {{ loadHint
@@ -176,17 +194,17 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <div
       v-for="stat in stats"
       :key="stat.label"
-      class="flex flex-col-reverse items-center gap-1 border-y px-2 py-4 text-center"
+      class="stat-tile flex flex-col-reverse items-center gap-1.5 px-2 py-4 text-center"
     >
-      <dt class="text-muted-foreground text-xs">{{ stat.label }}</dt>
-      <dd class="font-display text-3xl leading-none font-semibold tabular-nums">
+      <dt class="eyebrow">{{ stat.label }}</dt>
+      <dd class="font-display condensed text-[32px] leading-none font-bold tabular-nums">
         {{ stat.value }}
       </dd>
     </div>
   </dl>
 
-  <section class="bg-secondary/60 flex gap-3 rounded-xl p-4">
-    <History class="text-primary mt-0.5 size-4 shrink-0" />
+  <section class="bg-card flex gap-3 rounded-[18px] p-4 shadow-(--panel-shadow)">
+    <History class="text-muted-foreground mt-0.5 size-4 shrink-0" />
     <div class="flex flex-col gap-0.5 text-sm">
       <h3 class="font-semibold">Previous session</h3>
       <p v-if="previous" class="text-secondary-foreground">
@@ -201,12 +219,18 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     v-if="target"
     :class="
       cn(
-        'flex gap-3 rounded-xl p-4',
-        target.stalled ? 'bg-amber-500/10' : target.ready ? 'bg-success-soft' : 'bg-secondary/60',
+        'relative flex gap-3 overflow-hidden rounded-[18px] p-4 ring-1',
+        target.stalled
+          ? 'bg-coral-soft ring-coral/30'
+          : target.ready
+            ? 'bg-success-soft ring-primary/40'
+            : 'bg-card ring-white/5',
       )
     "
   >
-    <TrendingUp class="text-primary mt-0.5 size-4 shrink-0" />
+    <TrendingUp
+      :class="cn('mt-0.5 size-4 shrink-0', target.stalled ? 'text-coral' : 'text-primary')"
+    />
     <div class="flex flex-col gap-0.5 text-sm">
       <h3 class="font-semibold">Today's target</h3>
       <p class="text-secondary-foreground">{{ target.text }}</p>
@@ -221,7 +245,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <li
       v-for="log in entry.logs"
       :key="log.index"
-      class="bg-card flex items-center gap-3 rounded-xl border py-2 pr-2 pl-3 text-sm"
+      class="bg-card pop-in flex items-center gap-3 rounded-2xl py-2 pr-2 pl-3 text-sm shadow-(--panel-shadow)"
     >
       <span
         class="bg-primary text-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
@@ -252,12 +276,12 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   />
   <p
     v-else
-    class="bg-success-soft text-success flex items-center gap-2 rounded-xl p-4 text-sm font-semibold"
+    class="bg-success-soft text-success pop-in flex items-center gap-2 rounded-[18px] p-4 text-sm font-semibold ring-1 ring-primary/30"
   >
     <Check class="size-4 stroke-3" />All planned sets for this exercise are saved.
   </p>
 
-  <details class="group bg-card rounded-xl border px-4">
+  <details class="group bg-card rounded-[18px] px-4 shadow-(--panel-shadow)">
     <summary class="flex min-h-12 items-center text-sm font-semibold">
       How to do it · video & form check
       <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
@@ -286,13 +310,16 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <Button
       variant="outline"
       size="lg"
-      class="border-primary/40 text-primary"
+      class="border-primary/40 text-primary rounded-2xl bg-transparent"
       :disabled="busy || !session.exercises.some((item) => item.logs.length)"
       @click="confirmingFinish = !confirmingFinish"
     >
       Finish workout
     </Button>
-    <div v-if="confirmingFinish" class="bg-card flex flex-col gap-3 rounded-xl border p-4">
+    <div
+      v-if="confirmingFinish"
+      class="bg-card pop-in flex flex-col gap-3 rounded-[20px] p-4 shadow-(--panel-shadow)"
+    >
       <p class="text-sm leading-6">
         {{ progress.done }} of {{ progress.total }} exercises done.
         {{

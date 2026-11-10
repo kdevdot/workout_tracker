@@ -1,29 +1,33 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Night-gym theme: graphite surfaces, one volt accent for action and completion, coral for effort. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --radius: 0.75rem;
-  --background: #f3f4f6;
-  --foreground: #252a32;
-  --card: #ffffff;
+  --radius: 0.875rem;
+  --background: #0a0c0f;
+  --foreground: #eef0ea;
+  --card: #13161b;
   --card-foreground: var(--foreground);
-  --primary: #09638b;
-  --primary-foreground: #ffffff;
-  --secondary: #edf1f6;
-  --secondary-foreground: #45546c;
-  --muted: #f3f4f6;
-  --muted-foreground: #677184;
-  --accent: #eaf2f8;
-  --accent-foreground: #09638b;
-  --coral: #a94f36;
-  --coral-soft: #f8eee9;
-  --destructive: #b33328;
-  --success: #1f8a4c;
-  --success-soft: #e6f4eb;
-  --border: #e6e9ef;
-  --input: #b8c1cd;
-  --ring: #09638b;
-  --panel-shadow: 0 2px 5px #1c294014;
+  --primary: #d4f53c;
+  --primary-foreground: #0a0c0f;
+  --secondary: #1b1f26;
+  --secondary-foreground: #c3c9d2;
+  --muted: #171a20;
+  --muted-foreground: #8b94a3;
+  --accent: #1f2430;
+  --accent-foreground: #d4f53c;
+  --coral: #ff7a59;
+  --coral-soft: #ff7a5920;
+  --destructive: #ff5a52;
+  --success: #d4f53c;
+  --success-soft: #d4f53c1c;
+  --border: #242932;
+  --input: #333a46;
+  --ring: #d4f53c;
+  --glow: #d4f53c;
+  --panel-shadow: inset 0 1px 0 #ffffff0a, 0 12px 32px -16px #000000b3;
 }
 
 @theme inline {
@@ -60,12 +64,34 @@
     @apply border-border outline-ring/50;
   }
   html {
-    color-scheme: light;
+    color-scheme: dark;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: 6rem;
   }
   body {
     @apply bg-background text-foreground min-w-[320px] font-sans antialiased;
+  }
+  /* Atmosphere: a soft volt glow up top, a coral ember below, and fine grain over everything. */
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before {
+    background:
+      radial-gradient(60% 40% at 15% -5%, #d4f53c1f, transparent 70%),
+      radial-gradient(50% 35% at 110% 105%, #ff7a591a, transparent 70%);
+  }
+  body::after {
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  #app {
+    position: relative;
+    z-index: 1;
   }
   button,
   summary {
@@ -78,6 +104,15 @@
   input {
     accent-color: var(--primary);
     caret-color: var(--primary);
+  }
+  /* Big tap-to-type numbers; the native spinners are too small to hit mid-set. */
+  input[type='number'] {
+    appearance: textfield;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
   }
   a:focus-visible,
   summary:focus-visible {
@@ -92,8 +127,8 @@
     display: none;
   }
   ::selection {
-    background: #d5e7f5;
-    color: var(--foreground);
+    background: var(--primary);
+    color: var(--primary-foreground);
   }
 }
 
@@ -104,88 +139,164 @@
 }
 
 .app-header {
-  min-height: 68px;
-  padding-top: max(env(safe-area-inset-top), 16px);
+  min-height: 64px;
+  padding-top: max(env(safe-area-inset-top), 14px);
+  background: #0a0c0fd9;
+  box-shadow: 0 1px 0 #ffffff0d;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .app-main {
-  padding-top: 16px;
+  padding-top: 12px;
   padding-bottom: calc(128px + env(safe-area-inset-bottom));
 }
 
 .page-header {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+}
+
+/* Condensed display: scoreboard numbers and big titles. */
+.font-display,
+.wordmark,
+.page-heading,
+.section-heading,
+.workout-title {
+  font-family: var(--font-display);
+}
+
+.condensed {
+  font-stretch: 75%;
 }
 
 .wordmark {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
+  font-stretch: 80%;
   line-height: 1;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 .page-heading {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: 34px;
+  font-weight: 700;
+  font-stretch: 80%;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
 .section-heading {
-  font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 650;
   font-size: 18px;
-  line-height: 1.4;
-  letter-spacing: -0.015em;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* The hero: a lit panel with a volt edge and a giant watermark letter. */
 .workout-hero {
-  background: var(--card);
-  color: var(--foreground);
-  border-radius: 10px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 100% 0%, #d4f53c14, transparent 60%),
+    linear-gradient(160deg, #191d24, var(--card) 55%);
+  border-radius: 22px;
   box-shadow: var(--panel-shadow);
-  padding: 20px;
+  padding: 22px;
   display: grid;
   gap: 20px;
 }
 
-.workout-title {
+.workout-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, #d4f53c66, #ffffff10 35%, transparent 60%, #ff7a5933);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hero-watermark {
+  position: absolute;
+  z-index: -1;
+  right: -12px;
+  top: -34px;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  font-size: 220px;
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #ffffff17;
+  pointer-events: none;
+  user-select: none;
+}
+
+.workout-title {
+  font-weight: 800;
+  font-size: 52px;
+  font-stretch: 75%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
 }
 
 .hero-action {
+  position: relative;
   background: var(--primary);
   color: var(--primary-foreground);
-  min-height: 52px;
-  border-radius: 8px;
+  min-height: 56px;
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 1px #d4f53c,
+    0 10px 30px -8px #d4f53c80;
+  transition:
+    transform 160ms ease,
+    box-shadow 200ms ease;
 }
 
 .hero-action.is-done {
-  background: var(--success);
+  background: var(--secondary);
+  color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
-/* Hover only where a real pointer exists, so taps don't leave a stuck hover colour on phones. */
+.hero-action:not(:disabled) svg {
+  transition: transform 200ms ease;
+}
+
 @media (hover: hover) {
   .hero-action:hover:not(:disabled) {
-    background: #075476;
+    background: #defa66;
+    box-shadow:
+      0 0 0 1px #defa66,
+      0 14px 36px -8px #d4f53ca6;
   }
-
+  .hero-action:hover:not(:disabled) svg {
+    transform: translateX(3px);
+  }
   .hero-action.is-done:hover:not(:disabled) {
-    background: #19733f;
-  }
-
-  .nav-item:hover:not([aria-current='page']):not(:disabled) {
     background: var(--accent);
-    color: var(--primary);
+    box-shadow: inset 0 0 0 1px var(--input);
+  }
+  .nav-item:hover:not([aria-current='page']):not(:disabled) {
+    color: var(--foreground);
   }
 }
 
@@ -195,34 +306,39 @@
 }
 
 .exercise-list {
-  background: var(--card);
-  border-radius: 10px;
-  box-shadow: var(--panel-shadow);
-  padding-inline: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.exercise-list > details + details {
-  border-top: 1px solid var(--border);
+.exercise-list > details {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--panel-shadow);
+  padding-inline: 12px;
+  transition: background 200ms ease;
+}
+
+.exercise-list > details[open] {
+  background: #161a20;
+  padding-bottom: 12px;
 }
 
 .exercise-row {
   display: flex;
   align-items: center;
   gap: 14px;
-  min-height: 88px;
-  padding: 14px 0;
-  transition: background 150ms ease;
-}
-
-.exercise-row:hover {
-  background: var(--muted);
+  min-height: 84px;
+  padding: 12px 0;
 }
 
 .exercise-row [data-exercise-icon] {
-  background: var(--muted);
-  border-radius: 8px;
+  background: linear-gradient(150deg, #22272f, #181c22);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px #ffffff0d;
 }
 
+/* Floating glass navigation with a sliding volt pill. */
 .app-nav {
   position: fixed;
   z-index: 30;
@@ -230,22 +346,38 @@
   left: 50%;
   transform: translateX(-50%);
   width: min(calc(100% - 24px), 448px);
-  background: var(--card);
+  background: #13161bcc;
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
   color: var(--foreground);
-  border-radius: 16px;
+  border-radius: 24px;
   padding: 6px;
-  box-shadow: 0 4px 20px #1c29401a;
+  box-shadow:
+    inset 0 0 0 1px #ffffff12,
+    0 16px 40px -12px #000000d9;
+}
+
+.nav-pill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 20%;
+  border-radius: 18px;
+  background: var(--primary);
+  box-shadow: 0 6px 20px -6px #d4f53c99;
+  transition: transform 420ms cubic-bezier(0.34, 1.4, 0.5, 1);
 }
 
 .nav-item {
-  min-height: 60px;
-  gap: 5px;
+  position: relative;
+  min-height: 58px;
+  gap: 4px;
   color: var(--muted-foreground);
-  border-radius: 10px;
+  border-radius: 18px;
+  transition: color 250ms ease;
 }
 
 .nav-item[aria-current='page'] {
-  background: var(--primary);
   color: var(--primary-foreground);
 }
 
@@ -256,10 +388,9 @@
 
 [data-slot='card'],
 .muscle-panel,
-.workout-hero,
 .exercise-list,
 .set-form {
-  border-radius: 12px;
+  border-radius: 20px;
 }
 
 [data-slot='card-header'],
@@ -276,34 +407,110 @@
   font-size: 18px;
 }
 
-.exercise-row strong.font-display {
-  font-size: 18px;
-}
-
 .set-form {
   border-color: transparent;
   box-shadow: var(--panel-shadow);
+  background: radial-gradient(90% 60% at 50% 0%, #d4f53c0d, transparent 70%), var(--card);
 }
 
 .set-form input {
-  min-height: 60px;
+  min-height: 64px;
   background: var(--background);
+  border-color: var(--border);
+  border-radius: 14px;
   font-family: var(--font-display);
-  font-size: 26px;
+  font-stretch: 75%;
+  font-size: 32px;
+  font-weight: 700;
 }
 
+.set-form input:focus-visible {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #d4f53c33;
+}
+
+/* Scoreboard tiles for the session's target numbers. */
+.stat-tile {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--panel-shadow);
+}
+
+/* One segment per exercise: fills volt when every set of it is logged. */
+.segments {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+}
+
+.segments > span {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--secondary);
+  overflow: hidden;
+  position: relative;
+}
+
+.segments > span > i {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  transform-origin: left;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.segments > span.is-current {
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* Motion */
 .screen-enter {
-  animation: screen-enter 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: screen-enter 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stagger > * {
+  animation: screen-enter 550ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms + 80ms);
+}
+
+.pop-in {
+  animation: pop-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.live-dot {
+  animation: live 2.4s ease-in-out infinite;
 }
 
 @keyframes screen-enter {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes live {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 #d4f53c80;
+  }
+  50% {
+    box-shadow: 0 0 0 5px #d4f53c00;
   }
 }
 

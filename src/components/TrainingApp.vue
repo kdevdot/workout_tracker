@@ -33,6 +33,7 @@ const nav = [
   { view: 'settings', label: 'Settings', icon: Settings2 },
 ] as const;
 const activeTab = computed<View>(() => (view.value === 'session' ? 'plan' : view.value));
+const activeIndex = computed(() => nav.findIndex((item) => item.view === activeTab.value));
 const saveStatus = computed(() => {
   if (busy.value) return 'Saving…';
   const savedAt = state.value.savedAt;
@@ -44,11 +45,9 @@ const saveStatus = computed(() => {
 
 <template>
   <div class="app-shell flex flex-col">
-    <header
-      class="app-header bg-background sticky top-0 z-20 mx-5 flex items-center justify-between border-b pb-3"
-    >
+    <header class="app-header sticky top-0 z-20 flex items-center justify-between px-5 pb-3">
       <span class="wordmark flex items-center gap-1"
-        >steady<MoveUpRight class="size-5" :stroke-width="2.5"
+        >steady<MoveUpRight class="text-primary size-5" :stroke-width="3"
       /></span>
       <span
         v-if="ready"
@@ -56,7 +55,9 @@ const saveStatus = computed(() => {
         role="status"
       >
         <span
-          :class="cn('size-1.5 rounded-full', busy ? 'animate-pulse bg-amber-500' : 'bg-primary')"
+          :class="
+            cn('size-1.5 rounded-full', busy ? 'bg-coral animate-pulse' : 'bg-primary live-dot')
+          "
         />
         {{ saveStatus }}
       </span>
@@ -157,7 +158,13 @@ const saveStatus = computed(() => {
     <UpdatePrompt :busy="busy" />
 
     <nav v-if="ready" class="app-nav" aria-label="Main navigation">
-      <div class="grid grid-cols-5 gap-1">
+      <div class="relative grid grid-cols-5">
+        <span
+          v-show="activeIndex >= 0"
+          class="nav-pill"
+          aria-hidden="true"
+          :style="{ transform: `translateX(${activeIndex * 100}%)` }"
+        />
         <button
           v-for="item in nav"
           :key="item.view"
@@ -172,7 +179,11 @@ const saveStatus = computed(() => {
           @click="view = item.view"
         >
           <span class="flex items-center justify-center">
-            <component :is="item.icon" class="size-5" :stroke-width="1.8" /> </span
+            <component
+              :is="item.icon"
+              class="size-5"
+              :stroke-width="activeTab === item.view ? 2.4 : 1.8"
+            /> </span
           >{{ item.label }}
         </button>
       </div>

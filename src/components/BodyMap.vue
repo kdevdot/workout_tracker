@@ -33,13 +33,13 @@ const label = computed(() =>
   <figure role="img" :aria-label="label" :class="cn('grid grid-cols-2 gap-1', props.class)">
     <div v-for="view in views" :key="view.side" class="flex flex-col items-center gap-1">
       <div class="relative w-full">
-        <img :src="`${base}muscles/${view.side}.svg`" alt="" class="w-full opacity-35" />
+        <img :src="`${base}muscles/${view.side}.svg`" alt="" class="w-full opacity-60 invert" />
         <img
           v-for="layer in view.layers"
           :key="layer"
           :src="`${base}muscles/${layer}.svg`"
           alt=""
-          class="absolute inset-x-0 top-0 w-full"
+          :class="cn('absolute inset-x-0 top-0 w-full', layer.startsWith('s-') && 'opacity-60')"
         />
       </div>
       <span class="text-muted-foreground text-[9px] font-medium uppercase">

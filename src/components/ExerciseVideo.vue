@@ -77,12 +77,12 @@ useEventListener(disclosure, 'toggle', () => {
       type="button"
       data-watch
       :aria-label="`Watch demonstration: ${exerciseName}`"
-      class="group/poster focus-visible:ring-ring/60 relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-stone-100 outline-none focus-visible:ring-2"
+      class="group/poster focus-visible:ring-ring/60 relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-secondary outline-none ring-1 ring-white/5 focus-visible:ring-2"
       @click="watching = true"
     >
-      <ExerciseIcon :exercise-id="exerciseId" class="aspect-square h-4/5 opacity-60" />
+      <ExerciseIcon :exercise-id="exerciseId" class="aspect-square h-4/5 opacity-50" />
       <span
-        class="bg-primary text-primary-foreground absolute flex size-14 items-center justify-center rounded-full shadow-lg transition-transform group-active/poster:scale-95"
+        class="bg-primary text-primary-foreground absolute flex size-14 items-center justify-center rounded-full shadow-[0_0_0_8px_#d4f53c26,0_10px_30px_-6px_#d4f53c99] transition-transform group-active/poster:scale-95"
         ><Play class="ml-0.5 size-6 fill-current"
       /></span>
       <span class="bg-card/90 absolute bottom-2 left-2 rounded-md px-2 py-1 text-xs font-semibold"

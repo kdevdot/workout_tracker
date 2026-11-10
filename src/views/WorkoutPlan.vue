@@ -6,12 +6,11 @@ import type { Phase, WorkoutId } from '@/domain/programme-types';
 import type { Session } from '@/domain/state';
 import { restFor, sessionProgress } from '@/domain/sessions';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import ExerciseGuide from '@/components/ExerciseGuide.vue';
 import ExerciseIcon from '@/components/ExerciseIcon.vue';
 import MuscleMap from '@/components/MuscleMap.vue';
 import WeekStrip from '@/components/WeekStrip.vue';
-import WorkoutArt from '@/components/WorkoutArt.vue';
 
 const props = defineProps<{
   date: string;
@@ -47,6 +46,17 @@ const activePhase = computed(() => shown.value?.phase ?? props.phase);
 const progress = computed(() => (shown.value ? sessionProgress(shown.value) : null));
 const done = computed(() => !props.session && props.completed !== null);
 const future = computed(() => props.date > props.today);
+// Rough session length: each set plus its rest, and about 40 s to do the set itself.
+const minutes = computed(
+  () =>
+    Math.round(
+      exercises.value.reduce(
+        (sum, exercise) =>
+          sum + exercise.sets * (restFor(exercise, props.restMinutes).seconds + 40),
+        0,
+      ) / 300,
+    ) * 5,
+);
 
 function chooseWorkout(event: Event) {
   const value = (event.target as HTMLSelectElement).value;
@@ -58,35 +68,56 @@ function chooseWorkout(event: Event) {
   <WeekStrip :date="date" :today="today" :done-dates="doneDates" @date="emit('date', $event)" />
 
   <section class="workout-hero screen-enter">
-    <div class="flex items-center justify-between gap-3">
-      <div class="flex min-w-0 flex-col gap-3">
+    <span class="hero-watermark" aria-hidden="true">{{
+      workout ? workout.name.slice(-1) : 'Zz'
+    }}</span>
+    <div class="flex flex-col gap-3">
+      <div class="flex min-h-7 items-center justify-between gap-3">
+        <p class="eyebrow flex items-center gap-2">
+          <span :class="cn('size-1.5 rounded-full', workout ? 'bg-primary' : 'bg-coral')" />
+          {{
+            !workout
+              ? 'Recovery'
+              : activePhase === 'intro'
+                ? 'Introduction · 2 sets, 3 RIR'
+                : 'Full baseline · exercise-specific RIR'
+          }}
+        </p>
         <p
           v-if="done && progress"
-          class="bg-success-soft text-success flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
+          class="bg-success-soft text-success pop-in flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
         >
           <CircleCheck class="size-4" />{{
             progress.done < progress.total ? 'Completed · partial' : 'Completed'
           }}
         </p>
-        <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
-        <p v-if="workout" class="text-muted-foreground text-xs leading-5 font-medium">
-          {{ exercises.length }} exercises<span class="mx-1.5">·</span>{{ totalSets }} working sets
-        </p>
-        <p v-else class="text-muted-foreground text-xs leading-5">
-          Recovery is part of your programme. Supplements stay on track, even today.
-        </p>
       </div>
-      <WorkoutArt :rest="!workout" class="size-20 shrink-0" />
+      <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
+      <p v-if="workout" class="flex gap-5 text-xs font-medium">
+        <span class="text-muted-foreground"
+          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold">{{
+            exercises.length
+          }}</strong>
+          exercises</span
+        >
+        <span class="text-muted-foreground"
+          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold">{{
+            totalSets
+          }}</strong>
+          working sets</span
+        >
+        <span class="text-muted-foreground"
+          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold"
+            >~{{ minutes }}</strong
+          >
+          min</span
+        >
+      </p>
+      <p v-else class="text-muted-foreground max-w-[26ch] text-sm leading-6">
+        Recovery is part of your programme. Supplements stay on track, even today.
+      </p>
     </div>
     <div class="flex flex-col gap-4">
-      <p v-if="workout" class="text-muted-foreground flex items-start gap-2 text-xs leading-5">
-        <span class="bg-primary mt-1.5 size-1.5 shrink-0 rounded-full" />
-        {{
-          activePhase === 'intro'
-            ? 'Introduction · 2 sets, 3 RIR'
-            : 'Full baseline · exercise-specific RIR'
-        }}
-      </p>
       <p
         v-if="workout && readyForBaseline && !shown"
         class="bg-secondary flex flex-wrap items-center gap-x-1 rounded-lg px-3 py-2 text-xs leading-5"
@@ -96,21 +127,21 @@ function chooseWorkout(event: Event) {
           >Switch to Full baseline</Button
         >
       </p>
-      <div v-if="progress" class="flex flex-col gap-2">
+      <div v-if="progress && shown" class="flex flex-col gap-2">
         <div class="flex justify-between text-xs font-medium">
           <span>{{ progress.done }} / {{ progress.total }} exercises done</span>
           <span class="text-muted-foreground">{{
             done ? 'Saved to history' : 'Session targets locked'
           }}</span>
         </div>
-        <Progress
-          :model-value="(progress.done / progress.total) * 100"
-          :class="
-            done
-              ? 'bg-success-soft [&_[data-slot=progress-indicator]]:bg-success'
-              : 'bg-secondary [&_[data-slot=progress-indicator]]:bg-primary'
-          "
-        />
+        <div class="segments" aria-hidden="true">
+          <span v-for="item in shown.exercises" :key="item.exercise.id"
+            ><i
+              :style="{
+                transform: `scaleX(${Math.min(1, item.logs.length / item.exercise.sets)})`,
+              }"
+          /></span>
+        </div>
       </div>
       <p v-if="workout && future" class="text-muted-foreground text-xs leading-5">
         Future date: preview only. Choose today or an earlier date to record actual training.
@@ -145,13 +176,13 @@ function chooseWorkout(event: Event) {
         Log supplements<ArrowRight class="size-5" />
       </Button>
       <label class="flex items-center justify-between gap-3 text-sm font-medium">
-        <span class="flex items-center gap-2"
-          ><Repeat class="text-muted-foreground size-4" />Switch workout</span
+        <span class="text-muted-foreground flex items-center gap-2"
+          ><Repeat class="size-4" />Switch workout</span
         >
         <select
           :value="workoutId ?? ''"
           :disabled="busy"
-          class="border-input bg-card focus-visible:ring-ring/50 h-10 rounded-lg border px-3 outline-none focus-visible:ring-3"
+          class="border-input bg-background/60 focus-visible:ring-ring/50 h-10 rounded-xl border px-3 outline-none focus-visible:ring-3"
           @change="chooseWorkout"
         >
           <option value="">Rest day</option>
@@ -169,9 +200,9 @@ function chooseWorkout(event: Event) {
     </aside>
 
     <div v-if="workout" class="workout-content flex min-w-0 flex-col gap-6">
-      <details class="group bg-secondary rounded-xl px-4">
+      <details class="group bg-card rounded-[20px] px-4 shadow-(--panel-shadow)">
         <summary class="flex min-h-14 items-center gap-3 text-sm font-semibold">
-          <Flame class="size-4" />Warm-up & preparation
+          <Flame class="text-coral size-4" />Warm-up & preparation
           <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
         </summary>
         <div class="flex flex-col gap-2 pb-4 text-sm leading-6">
@@ -194,8 +225,13 @@ function chooseWorkout(event: Event) {
             }}</span
           >
         </div>
-        <div class="exercise-list">
-          <details v-for="exercise in exercises" :key="exercise.id" class="group/exercise">
+        <div class="exercise-list stagger">
+          <details
+            v-for="(exercise, index) in exercises"
+            :key="exercise.id"
+            class="group/exercise"
+            :style="{ '--i': index }"
+          >
             <summary class="exercise-row">
               <ExerciseIcon :exercise-id="exercise.id" class="size-14 shrink-0" />
               <span class="flex min-w-0 flex-1 flex-col gap-1.5">
@@ -206,7 +242,8 @@ function chooseWorkout(event: Event) {
                 >
               </span>
               <span class="flex shrink-0 flex-col items-end gap-1 text-right">
-                <strong class="font-display text-[24px] leading-none font-semibold tabular-nums"
+                <strong
+                  class="font-display condensed text-[28px] leading-none font-bold tabular-nums"
                   >{{ exercise.sets }} × {{ exercise.min }}–{{ exercise.max }}</strong
                 >
                 <small
@@ -219,7 +256,9 @@ function chooseWorkout(event: Event) {
                 />
               </span>
             </summary>
-            <div class="bg-card rounded-xl border p-4"><ExerciseGuide :exercise="exercise" /></div>
+            <div class="bg-background/60 rounded-2xl border p-4">
+              <ExerciseGuide :exercise="exercise" />
+            </div>
           </details>
         </div>
         <p class="text-muted-foreground text-xs leading-5">

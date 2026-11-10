@@ -69,7 +69,7 @@ const statTiles = computed(() => [
 ]);
 
 const dayClass: Record<ChallengeDay['state'], string> = {
-  done: 'bg-success text-white',
+  done: 'bg-success text-primary-foreground',
   partial: 'bg-success-soft text-success',
   missed: 'bg-muted text-muted-foreground/60',
   today: 'bg-card text-primary border-primary border-2',
@@ -131,7 +131,11 @@ function addCustom() {
     <section class="workout-hero flex flex-col gap-5">
       <div class="flex items-center gap-5">
         <div class="relative size-32 shrink-0">
-          <svg viewBox="0 0 120 120" class="size-full -rotate-90" aria-hidden="true">
+          <svg
+            viewBox="0 0 120 120"
+            class="size-full -rotate-90 overflow-visible"
+            aria-hidden="true"
+          >
             <circle
               cx="60"
               cy="60"
@@ -151,16 +155,17 @@ function addCustom() {
               :stroke-dashoffset="ring.offset"
               :class="
                 cn(
-                  'transition-[stroke-dashoffset] duration-500',
+                  'drop-shadow-[0_0_8px_#d4f53c80] transition-[stroke-dashoffset] duration-700 ease-out',
                   reps >= target ? 'stroke-success' : 'stroke-primary',
                 )
               "
             />
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <strong class="font-display text-3xl leading-none font-semibold tabular-nums">{{
-              reps
-            }}</strong>
+            <strong
+              class="font-display condensed text-[44px] leading-none font-bold tabular-nums"
+              >{{ reps }}</strong
+            >
             <span class="text-muted-foreground text-xs tabular-nums">of {{ target }}</span>
           </div>
         </div>
@@ -169,7 +174,7 @@ function addCustom() {
             <template v-if="day">Day {{ dayIndex + 1 }}</template>
             <template v-else>Before you started</template>
           </p>
-          <h2 class="font-display text-2xl leading-tight font-semibold">
+          <h2 class="font-display condensed text-3xl leading-tight font-bold uppercase">
             {{ !day ? 'Push-ups' : reps >= target ? 'Target hit ✓' : `${target - reps} to go` }}
           </h2>
           <p class="text-muted-foreground text-sm">
@@ -239,7 +244,7 @@ function addCustom() {
       </div>
     </dl>
 
-    <section class="bg-card flex flex-col gap-3 rounded-xl p-4 shadow-[var(--panel-shadow)]">
+    <section class="bg-card flex flex-col gap-3 rounded-[20px] p-4 shadow-[var(--panel-shadow)]">
       <div class="flex items-baseline justify-between">
         <h2 class="section-heading">Last 12 weeks</h2>
         <span class="text-muted-foreground text-xs">Tap a day to log or review it</span>
@@ -251,7 +256,7 @@ function addCustom() {
           </li>
         </ol>
         <div
-          class="grid flex-1 grid-flow-col grid-rows-7 gap-1"
+          class="grid min-w-0 flex-1 auto-cols-fr grid-flow-col grid-rows-7 gap-1"
           role="group"
           aria-label="Push-up days"
         >
@@ -268,7 +273,7 @@ function addCustom() {
                   'flex aspect-square items-center justify-center rounded-[4px] text-[9px] font-semibold tabular-nums transition-transform',
                   'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 enabled:active:scale-90',
                   dayClass[item.state],
-                  item.date === selected && 'ring-foreground ring-2 ring-offset-1',
+                  item.date === selected && 'ring-foreground ring-offset-card ring-2 ring-offset-1',
                 )
               "
               @click="selected = item.date"

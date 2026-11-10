@@ -145,6 +145,7 @@ export function useTrainingApp() {
               Date.now() + restFor(entry.exercise, current.settings.restMinutes).seconds * 1000,
           },
     }));
+    if (saved) navigator.vibrate?.(15);
     if (saved)
       notify(correcting ? 'Corrected set saved on this device.' : 'Set saved on this device.');
   }
@@ -161,6 +162,29 @@ export function useTrainingApp() {
       }))
     )
       view.value = 'history';
+  }
+  // Share of the rest still to go, for the countdown ring.
+  const timerFraction = computed(() => {
+    const running = state.value.timer;
+    const exercise = state.value.sessions
+      .find((session) => session.id === running?.sessionId)
+      ?.exercises.find((entry) => entry.exercise.id === running?.exerciseId)?.exercise;
+    if (!exercise) return 0;
+    const total = restFor(exercise, state.value.settings.restMinutes).seconds;
+    return Math.min(1, timer.seconds.value / total);
+  });
+  function adjustTimer(seconds: number) {
+    return update((current) =>
+      current.timer
+        ? {
+            ...current,
+            timer: {
+              ...current.timer,
+              endsAt: Math.max(Date.now(), current.timer.endsAt + seconds * 1000),
+            },
+          }
+        : current,
+    );
   }
   function stopTimer() {
     return update((current) => ({ ...current, timer: null }));
@@ -236,6 +260,8 @@ export function useTrainingApp() {
     saveSet,
     finish,
     stopTimer,
+    adjustTimer,
+    timerFraction,
     addIntake,
     removeIntake,
     saveSettings,

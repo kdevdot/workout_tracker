@@ -104,10 +104,12 @@ const saveStatus = computed(() => {
           :timer-display="timer.display.value"
           :timer-done="timer.seconds.value === 0"
           :timer-visible="state.timer?.sessionId === app.currentSession.value.id"
+          :timer-fraction="app.timerFraction.value"
           @back="view = 'plan'"
           @record="app.saveSet"
           @finish="app.finish"
           @stop-timer="app.stopTimer"
+          @adjust-timer="app.adjustTimer"
         />
         <HistoryView v-else-if="view === 'history'" :sessions="state.sessions" @resume="app.open" />
         <PushupsView

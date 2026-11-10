@@ -1,4 +1,4 @@
-import { computed, type Ref } from 'vue';
+import { computed, watch, type Ref } from 'vue';
 import { useEventListener, useIntervalFn, useTimestamp } from '@vueuse/core';
 import type { AppState } from '../domain/state';
 
@@ -12,5 +12,9 @@ export function useRestTimer(state: Ref<AppState>) {
   const display = computed(
     () => `${Math.floor(seconds.value / 60)}:${String(seconds.value % 60).padStart(2, '0')}`,
   );
+  // A buzz when rest ends, where the phone supports it (Android; iOS Safari ignores it).
+  watch(seconds, (left, before) => {
+    if (left === 0 && before > 0 && state.value.timer) navigator.vibrate?.([200, 100, 200]);
+  });
   return { seconds, display };
 }

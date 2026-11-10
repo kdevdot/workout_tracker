@@ -35,12 +35,14 @@ const props = defineProps<{
   timerDisplay: string;
   timerDone: boolean;
   timerVisible: boolean;
+  timerFraction: number;
 }>();
 const emit = defineEmits<{
   back: [];
   record: [exerciseId: string, log: SetLog];
   finish: [];
   stopTimer: [];
+  adjustTimer: [seconds: number];
 }>();
 
 // Resume at the first exercise with sets left, or the last one when all are done.
@@ -340,6 +342,8 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     :display="timerDisplay"
     :done="timerDone"
     :busy="busy"
+    :fraction="timerFraction"
     @dismiss="emit('stopTimer')"
+    @adjust="emit('adjustTimer', $event)"
   />
 </template>

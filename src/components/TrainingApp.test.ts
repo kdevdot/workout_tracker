@@ -331,7 +331,7 @@ describe('working app integration', () => {
   it('applies a phase change to the plan and to a started workout with nothing logged', async () => {
     const wrapper = await app();
     await begin(wrapper);
-    expect(wrapper.text()).toContain('0/14 sets saved');
+    expect(wrapper.text()).toContain('0/7 exercises done');
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Settings').trigger('click');
     await wrapper.get('#phase').setValue('baseline');
@@ -340,7 +340,7 @@ describe('working app integration', () => {
     await button(wrapper, 'Plan').trigger('click');
     expect(wrapper.text()).toContain('19 working sets');
     await button(wrapper, 'Start workout').trigger('click');
-    await vi.waitFor(() => expect(wrapper.text()).toContain('0/19 sets saved'));
+    await vi.waitFor(() => expect(wrapper.text()).toContain('0/7 exercises done'));
     expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['baseline']);
   });
 
@@ -357,7 +357,8 @@ describe('working app integration', () => {
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
     await button(wrapper, 'Plan').trigger('click');
-    expect(wrapper.text()).toContain('1 / 14 sets saved');
+    expect(wrapper.text()).toContain('0 / 7 exercises done');
+    expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['intro']);
   });
 
   it('resumes at the first exercise with sets left', async () => {
@@ -367,7 +368,9 @@ describe('working app integration', () => {
       const inputs = wrapper.findAll('.set-fields input');
       for (const [field, value] of ['20', '7', '3'].entries()) await inputs[field]!.setValue(value);
       await wrapper.get('form.set-form').trigger('submit');
-      await vi.waitFor(() => expect(wrapper.text()).toContain(`${index}/14 sets saved`));
+      await vi.waitFor(async () =>
+        expect((await savedData()).sessions[0]!.exercises[0]!.logs).toHaveLength(index),
+      );
     }
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Resume workout').trigger('click');

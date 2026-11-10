@@ -127,7 +127,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
     <div class="flex items-center gap-3">
       <Progress :model-value="(progress.done / progress.total) * 100" class="h-2.5" />
       <span class="text-sm font-bold whitespace-nowrap tabular-nums"
-        >{{ progress.done }}/{{ progress.total }} sets saved</span
+        >{{ progress.done }}/{{ progress.total }} exercises done</span
       >
     </div>
   </div>
@@ -265,14 +265,14 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       variant="outline"
       size="lg"
       class="border-primary/40 text-primary"
-      :disabled="busy || !progress.done"
+      :disabled="busy || !session.exercises.some((item) => item.logs.length)"
       @click="confirmingFinish = !confirmingFinish"
     >
       Finish workout
     </Button>
     <div v-if="confirmingFinish" class="bg-card flex flex-col gap-3 rounded-xl border p-4">
       <p class="text-sm leading-6">
-        {{ progress.done }} of {{ progress.total }} sets saved.
+        {{ progress.done }} of {{ progress.total }} exercises done.
         {{
           progress.done < progress.total
             ? 'This will be recorded as a partial workout, not full completion.'

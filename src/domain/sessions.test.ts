@@ -19,7 +19,7 @@ describe('session lifecycle', () => {
   it('snapshots prescriptions and preserves the actual calendar date', () => {
     const session = startSession('upperA', '2026-11-02', 'intro');
     expect(session.date).toBe('2026-11-02');
-    expect(sessionProgress(session)).toEqual({ done: 0, total: 14 });
+    expect(sessionProgress(session)).toEqual({ done: 0, total: 7 });
     expect(startSession('upperA', '2026-11-02', 'baseline').exercises[0]!.exercise.sets).toBe(4);
     expect(session.exercises[0]!.exercise.sets).toBe(2);
   });
@@ -28,9 +28,11 @@ describe('session lifecycle', () => {
     const exerciseId = session.exercises[0]!.exercise.id;
     const recorded = recordSet(session, exerciseId, set());
     const corrected = recordSet(recorded, exerciseId, { ...set(), reps: 8 });
-    expect(sessionProgress(session).done).toBe(0);
-    expect(sessionProgress(corrected).done).toBe(1);
+    expect(corrected.exercises[0]!.logs).toHaveLength(1);
     expect(corrected.exercises[0]!.logs[0]!.reps).toBe(8);
+    // An exercise counts once, and only when all its sets are logged.
+    expect(sessionProgress(corrected).done).toBe(0);
+    expect(sessionProgress(recordSet(corrected, exerciseId, set(2))).done).toBe(1);
   });
   it('rejects invalid set indexes, blank loaded movements and invalid effort', () => {
     const session = startSession('upperA', '2026-11-02', 'intro');
@@ -50,7 +52,7 @@ describe('session lifecycle', () => {
     expect(() => finishSession(session)).toThrow();
     const completed = finishSession(recordSet(session, session.exercises[0]!.exercise.id, set()));
     expect(completed.status).toBe('completed');
-    expect(sessionProgress(completed)).toEqual({ done: 1, total: 14 });
+    expect(sessionProgress(completed)).toEqual({ done: 0, total: 7 });
     expect(() => recordSet(completed, completed.exercises[0]!.exercise.id, set())).toThrow();
   });
   it('finds previous completed performances, not future dates or drafts', () => {

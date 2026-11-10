@@ -48,10 +48,11 @@ export function finishSession(session: Session): Session {
   });
 }
 
+/** Progress counts whole exercises: one is done once all its sets are logged. */
 export function sessionProgress(session: Session): { done: number; total: number } {
   return {
-    done: session.exercises.reduce((sum, entry) => sum + entry.logs.length, 0),
-    total: session.exercises.reduce((sum, entry) => sum + entry.exercise.sets, 0),
+    done: session.exercises.filter((entry) => entry.logs.length >= entry.exercise.sets).length,
+    total: session.exercises.length,
   };
 }
 

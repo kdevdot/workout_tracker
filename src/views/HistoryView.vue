@@ -80,7 +80,7 @@ const entries = computed(() =>
       <div class="flex items-center gap-3">
         <Progress :model-value="(progress.done / progress.total) * 100" class="h-1.5" />
         <span class="text-muted-foreground text-xs font-semibold whitespace-nowrap tabular-nums"
-          >{{ progress.done }}/{{ progress.total }} sets</span
+          >{{ progress.done }}/{{ progress.total }} exercises</span
         >
       </div>
       <ul

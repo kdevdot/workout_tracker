@@ -98,7 +98,7 @@ function chooseWorkout(event: Event) {
       </p>
       <div v-if="progress" class="flex flex-col gap-2">
         <div class="flex justify-between text-xs font-medium">
-          <span>{{ progress.done }} / {{ progress.total }} sets {{ done ? 'done' : 'saved' }}</span>
+          <span>{{ progress.done }} / {{ progress.total }} exercises done</span>
           <span class="text-muted-foreground">{{
             done ? 'Saved to history' : 'Session targets locked'
           }}</span>

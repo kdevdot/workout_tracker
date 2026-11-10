@@ -205,6 +205,8 @@ describe('working app integration', () => {
     const restMs = (await savedData()).timer!.endsAt - before;
     expect(restMs).toBeGreaterThanOrEqual(120_000);
     expect(restMs).toBeLessThan(125_000);
+    // Starts at the full rest, not a second over.
+    expect(wrapper.get('[role=timer]').text()).toContain('2:00');
   });
 
   it('starts the next set with the values of the last one', async () => {

@@ -361,6 +361,23 @@ describe('working app integration', () => {
     expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['intro']);
   });
 
+  it('swaps an exercise for its alternative and logs it', async () => {
+    const wrapper = await app();
+    await begin(wrapper);
+    await wrapper
+      .findAll('button')
+      .find((item) => item.text().includes('Swap to'))!
+      .trigger('click');
+    await vi.waitFor(() => expect(wrapper.get('main h1').text()).toBe('Smith flat bench press'));
+    const inputs = wrapper.findAll('.set-fields input');
+    for (const [index, value] of ['20', '7', '3'].entries()) await inputs[index]!.setValue(value);
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(async () =>
+      expect((await savedData()).sessions[0]!.exercises[0]!.logs).toHaveLength(1),
+    );
+    expect((await savedData()).sessions[0]!.exercises[0]!.exercise.loadKind).toBe('smith');
+  });
+
   it('resumes at the first exercise with sets left', async () => {
     const wrapper = await app();
     await begin(wrapper);

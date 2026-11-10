@@ -107,6 +107,7 @@ const saveStatus = computed(() => {
           :timer-fraction="app.timerFraction.value"
           @back="view = 'plan'"
           @record="app.saveSet"
+          @swap="app.swap"
           @finish="app.finish"
           @stop-timer="app.stopTimer"
           @adjust-timer="app.adjustTimer"

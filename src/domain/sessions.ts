@@ -37,6 +37,63 @@ export function recordSet(session: Session, exerciseId: string, input: SetLog): 
   });
 }
 
+const ALT = '~alt';
+
+function loadKindOf(name: string): Exercise['loadKind'] {
+  if (/smith/i.test(name)) return 'smith';
+  if (/unica|machine/i.test(name)) return 'machine';
+  if (/cable/i.test(name)) return 'cable';
+  if (/\bDB\b|dumbbell/i.test(name)) return 'dumbbell';
+  if (/barbell/i.test(name)) return 'barbell';
+  return 'bodyweight';
+}
+
+/** The programme's listed alternative as a loggable exercise, e.g. "2 × 10–15 reps/side". */
+export function alternativeOf(exercise: Exercise): Exercise {
+  const { name, prescription, note } = exercise.alternative;
+  const match = /(\d+) × (\d+)–(\d+) (reps|s)(\/side|\/leg)?/.exec(prescription);
+  if (!match) throw new Error(`Unreadable alternative prescription: ${prescription}`);
+  const [, sets, min, max, unit, side] = match;
+  return {
+    ...exercise,
+    id: `${exercise.id}${ALT}`,
+    name,
+    sets: Number(sets),
+    min: Number(min),
+    max: Number(max),
+    unit: unit === 's' ? 'seconds' : 'reps',
+    perSide: !!side,
+    loadKind: loadKindOf(name),
+    equipment: name,
+    cues: [note],
+    alternative: {
+      name: exercise.name,
+      prescription: `${exercise.sets} × ${exercise.min}–${exercise.max} ${exercise.unit}`,
+      note: 'The programmed exercise.',
+    },
+  };
+}
+
+/** Swap an exercise with no sets yet for its alternative, or back to the programmed one. */
+export function swapExercise(session: Session, exerciseId: string): Session {
+  if (session.status !== 'active') throw new Error('Completed workouts cannot be edited.');
+  const entry = session.exercises.find((item) => item.exercise.id === exerciseId);
+  if (!entry) throw new Error('Exercise is not part of this session.');
+  if (entry.logs.length) throw new Error('Exercises with logged sets cannot be swapped.');
+  const original = exerciseId.endsWith(ALT)
+    ? getExercises(session.workoutId, session.phase).find(
+        (item) => item.id === exerciseId.slice(0, -ALT.length),
+      )
+    : undefined;
+  const next = original ?? alternativeOf(entry.exercise);
+  return sessionSchema.parse({
+    ...session,
+    exercises: session.exercises.map((item) =>
+      item === entry ? { exercise: next, logs: [] } : item,
+    ),
+  });
+}
+
 export function finishSession(session: Session): Session {
   if (!session.exercises.some((entry) => entry.logs.length > 0)) {
     throw new Error('Record at least one set before completing a workout.');

@@ -3,7 +3,7 @@ import { useEventListener } from '@vueuse/core';
 import { localDate, shiftDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
-import { finishSession, recordSet, restFor, startSession } from '../domain/sessions';
+import { finishSession, recordSet, restFor, startSession, swapExercise } from '../domain/sessions';
 import { CREATINE, intakeSchema, type AppState, type Session, type SetLog } from '../domain/state';
 import { usePushups } from './usePushups';
 import { useRestTimer } from './useRestTimer';
@@ -149,6 +149,19 @@ export function useTrainingApp() {
     if (saved)
       notify(correcting ? 'Corrected set saved on this device.' : 'Set saved on this device.');
   }
+  async function swap(exerciseId: string) {
+    const active = currentSession.value;
+    if (!active) return;
+    if (
+      await update((current) => ({
+        ...current,
+        sessions: current.sessions.map((session) =>
+          session.id === active.id ? swapExercise(session, exerciseId) : session,
+        ),
+      }))
+    )
+      notify('Exercise swapped for this workout.');
+  }
   async function finish() {
     const active = currentSession.value;
     if (!active) return;
@@ -260,6 +273,7 @@ export function useTrainingApp() {
     saveSet,
     finish,
     stopTimer,
+    swap,
     adjustTimer,
     timerFraction,
     addIntake,

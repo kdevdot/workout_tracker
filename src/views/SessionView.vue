@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
 import {
   ArrowLeft,
+  ArrowRightLeft,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -40,6 +41,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   back: [];
   record: [exerciseId: string, log: SetLog];
+  swap: [exerciseId: string];
   finish: [];
   stopTimer: [];
   adjustTimer: [seconds: number];
@@ -55,6 +57,7 @@ const confirmingFinish = shallowRef(false);
 const entry = computed(() => props.session.exercises[selected.value]!);
 const exercise = computed(() => entry.value.exercise);
 const progress = computed(() => sessionProgress(props.session));
+const swapped = computed(() => exercise.value.id.endsWith('~alt'));
 const previous = computed(() =>
   previousPerformance(props.history, props.session, exercise.value.id),
 );
@@ -191,6 +194,30 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
       }}{{ exercise.perSide ? ' One set = left and right. Log each side; aim to match them.' : '' }}
     </p>
   </section>
+
+  <button
+    v-if="!entry.logs.length"
+    type="button"
+    :disabled="busy"
+    :class="
+      cn(
+        'flex min-h-12 items-center gap-3 rounded-[18px] px-4 py-2.5 text-left text-sm ring-1 transition-colors',
+        'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 disabled:opacity-50',
+        swapped ? 'bg-coral-soft ring-coral/30' : 'bg-card ring-white/5 hover:bg-secondary',
+      )
+    "
+    @click="emit('swap', exercise.id)"
+  >
+    <ArrowRightLeft :class="cn('size-4 shrink-0', swapped ? 'text-coral' : 'text-primary')" />
+    <span class="flex flex-col">
+      <span class="text-muted-foreground text-xs">{{
+        swapped ? 'Swapped for this workout' : "Can't do it today?"
+      }}</span>
+      <span class="font-semibold"
+        >{{ swapped ? 'Back to' : 'Swap to' }} {{ exercise.alternative.name }}</span
+      >
+    </span>
+  </button>
 
   <dl class="grid grid-cols-3 gap-2">
     <div

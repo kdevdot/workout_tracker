@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { getExercises, workouts } from './programme';
+import type { WorkoutId } from './programme-types';
 import { MAX_BACKUP_BYTES, emptyState, encodeBackup, parseBackup, sessionSchema } from './state';
 import {
   bestSet,
+  alternativeOf,
   finishSession,
   nextTarget,
   previousPerformance,
@@ -10,6 +13,7 @@ import {
   sessionProgress,
   shortSet,
   startSession,
+  swapExercise,
 } from './sessions';
 
 function set(index = 1) {
@@ -190,6 +194,37 @@ describe('next-session target', () => {
   });
   it('has no target without a previous session', () => {
     expect(target([])).toBeNull();
+  });
+});
+
+describe('swapping to the alternative', () => {
+  it('turns every listed alternative into a loggable exercise', () => {
+    for (const id of Object.keys(workouts) as WorkoutId[]) {
+      for (const phase of ['intro', 'baseline'] as const) {
+        for (const exercise of getExercises(id, phase)) {
+          const alt = alternativeOf(exercise);
+          expect(alt.sets).toBe(exercise.sets);
+          expect(alt.min).toBeLessThanOrEqual(alt.max);
+        }
+      }
+    }
+    const [bench, pullUp] = getExercises('upperA', 'baseline');
+    expect(alternativeOf(bench!)).toMatchObject({
+      name: 'Smith flat bench press',
+      loadKind: 'smith',
+      min: 5,
+      max: 8,
+    });
+    expect(alternativeOf(pullUp!)).toMatchObject({ loadKind: 'machine' });
+  });
+  it('swaps an untouched exercise and back, but never one with sets logged', () => {
+    const session = startSession('upperA', '2026-11-02', 'intro');
+    const id = session.exercises[0]!.exercise.id;
+    const swapped = swapExercise(session, id);
+    expect(swapped.exercises[0]!.exercise.name).toBe('Smith flat bench press');
+    const back = swapExercise(swapped, `${id}~alt`);
+    expect(back.exercises[0]!.exercise).toEqual(session.exercises[0]!.exercise);
+    expect(() => swapExercise(recordSet(session, id, set()), id)).toThrow();
   });
 });
 

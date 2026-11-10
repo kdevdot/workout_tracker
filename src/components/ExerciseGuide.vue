@@ -3,25 +3,45 @@ import { computed } from 'vue';
 import { ArrowRightLeft, ChevronDown, ExternalLink, OctagonAlert, Scale } from '@lucide/vue';
 import type { Exercise } from '@/domain/programme-types';
 import { guides } from '@/domain/guides';
+import { demos } from '@/domain/demos';
 import BodyMap from './BodyMap.vue';
+import ExerciseDemo from './ExerciseDemo.vue';
 import ExerciseVideo from './ExerciseVideo.vue';
 
 const props = defineProps<{ exercise: Exercise; swappable?: boolean }>();
 const emit = defineEmits<{ swap: [] }>();
 const guide = computed(() => guides[props.exercise.id]);
+const demo = computed(() => demos[props.exercise.id]);
 </script>
 
 <template>
   <div class="flex flex-col gap-4 text-sm">
-    <ExerciseVideo
-      v-if="guide?.video"
-      :video="guide.video"
+    <ExerciseDemo
+      v-if="demo"
+      :demo="demo"
       :exercise-id="exercise.id"
       :exercise-name="exercise.name"
     />
     <p v-else class="text-muted-foreground bg-muted rounded-lg px-3 py-2 text-xs">
-      No matching demonstration has been selected for this movement yet.
+      A matching quick demo is not available yet. Use the form checks or the optional detailed
+      explanation below.
     </p>
+
+    <details v-if="guide?.video" class="group/tutorial rounded-xl border border-border px-3">
+      <summary class="flex min-h-11 items-center gap-2 text-xs font-semibold">
+        Detailed explanation · YouTube
+        <ChevronDown
+          class="ml-auto size-4 shrink-0 transition-transform group-open/tutorial:rotate-180"
+        />
+      </summary>
+      <div class="pb-3">
+        <ExerciseVideo
+          :video="guide.video"
+          :exercise-id="exercise.id"
+          :exercise-name="exercise.name"
+        />
+      </div>
+    </details>
 
     <div class="grid grid-cols-[7.5rem_1fr] items-start gap-4">
       <BodyMap :primary="exercise.primary" :supporting="exercise.supporting" />

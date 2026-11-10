@@ -26,7 +26,6 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // shortcut: demo videos (17 MB) stream online only; runtime-cache them if offline demos are needed.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
       },
     }),

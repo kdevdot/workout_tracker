@@ -188,10 +188,18 @@ function save() {
           highlight colours changed. Modified files are shared under the same licence.
         </p>
         <p class="mt-2">
-          Demonstrations stream from YouTube creators (mainly Renaissance Periodization, plus Runna,
-          Hinge Health, Bodhi Bodies and Josh Evans) inside the exercise guide. They load only when
-          you tap Watch, require internet and may show ads. YouTube receives that player connection;
-          its privacy rules apply. These streams are not bundled or licensed under the wger notice.
+          Quick demos use Your Move streams and adapted Goulart / wger videos (CC BY-SA 4.0). Each
+          demo shows its credit, licence and any variation note. Videos load after you tap Play and
+          need internet; they are not included in the offline cache.
+        </p>
+        <a class="text-primary underline underline-offset-4" :href="`${base}demos/ATTRIBUTION.md`">
+          Quick demo credits and modifications
+        </a>
+        <p class="mt-2">
+          YouTube tutorials remain optional detailed explanations. Only tapping Watch loads the
+          YouTube player, which needs internet and may show ads. Your Move or YouTube receives the
+          connection when its player loads; the provider’s privacy rules apply. YouTube streams are
+          not bundled or covered by the wger licence.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
           >Read the licence notice</a

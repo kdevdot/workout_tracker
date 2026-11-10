@@ -80,9 +80,11 @@ describe('working app integration', () => {
       .find((details) => details.find('summary').text().includes('How to do it'))!;
     (disclosure.element as HTMLDetailsElement).open = true;
     await disclosure.trigger('toggle');
-    await wrapper.get('[data-watch]').trigger('click');
-    expect(wrapper.get('iframe').attributes('src')).toContain('/embed/A0NBCkpYatQ');
-    await button(wrapper, 'Close video').trigger('click');
+    await wrapper.get('[data-quick-demo]').trigger('click');
+    expect(wrapper.get('video').attributes('src')).toContain('https://ymove.app/api/free/');
+    expect(wrapper.find('iframe').exists()).toBe(false);
+    await button(wrapper, 'Close demo').trigger('click');
+    expect(wrapper.find('video').exists()).toBe(false);
     expect(wrapper.find('iframe').exists()).toBe(false);
     expect((load.element as HTMLInputElement).value).toBe('20');
     expect((await savedData()).sessions[0]!.exercises[0]!.logs).toHaveLength(0);

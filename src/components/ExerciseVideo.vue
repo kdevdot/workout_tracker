@@ -10,7 +10,15 @@ const props = defineProps<{ video: Video; exerciseId: string; exerciseName: stri
 const root = useTemplateRef<HTMLElement>('root');
 const watching = shallowRef(false);
 const retry = shallowRef(0);
-const disclosure = computed(() => root.value?.closest('details') ?? null);
+const disclosures = computed(() => {
+  const ancestors: HTMLDetailsElement[] = [];
+  let ancestor = root.value?.parentElement;
+  while (ancestor) {
+    if (ancestor instanceof HTMLDetailsElement) ancestors.push(ancestor);
+    ancestor = ancestor.parentElement;
+  }
+  return ancestors;
+});
 const embedUrl = computed(() => {
   const params = new URLSearchParams({
     playsinline: '1',
@@ -31,8 +39,8 @@ async function close() {
 }
 
 watch(() => props.video, stop);
-useEventListener(disclosure, 'toggle', () => {
-  if (!disclosure.value?.open) stop();
+useEventListener(disclosures, 'toggle', (event) => {
+  if (!(event.currentTarget as HTMLDetailsElement).open) stop();
 });
 </script>
 

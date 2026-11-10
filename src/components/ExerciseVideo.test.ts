@@ -94,6 +94,24 @@ describe('inline exercise demonstration', () => {
     expect(open).not.toHaveBeenCalled();
   });
 
+  it('unloads a nested tutorial when the outer exercise guide is collapsed', async () => {
+    const wrapper = mount(
+      defineComponent({
+        components: { ExerciseVideo },
+        setup: () => ({ video }),
+        template:
+          '<details open data-guide><summary>Exercise</summary><details open><summary>Tutorial</summary><ExerciseVideo :video="video" exercise-id="barbell-bench-press" exercise-name="Barbell bench press" /></details></details>',
+      }),
+    );
+    wrappers.push(wrapper);
+    await nextTick();
+    await wrapper.get('[data-watch]').trigger('click');
+    const guide = wrapper.get('[data-guide]');
+    (guide.element as HTMLDetailsElement).open = false;
+    await guide.trigger('toggle');
+    expect(wrapper.find('iframe').exists()).toBe(false);
+  });
+
   it('shows the variation warning when the clip differs from your setup', () => {
     const wrapper = mount(ExerciseVideo, {
       props: {

@@ -125,13 +125,11 @@ const saveStatus = computed(() => {
           :date="date"
           :today="today"
           :intakes="state.intakes"
-          :body-weights="state.bodyWeights"
           :busy="busy"
           :has-label="app.hasLabel.value"
           @date="app.changeDate"
           @add="app.addIntake"
           @remove="app.removeIntake"
-          @weight="app.saveWeight"
           @settings="view = 'settings'"
         />
         <SettingsView

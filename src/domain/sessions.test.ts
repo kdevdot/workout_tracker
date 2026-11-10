@@ -202,6 +202,10 @@ describe('rest between sets', () => {
 });
 
 describe('backup validation', () => {
+  it('still opens saves from the retired body-weight log', () => {
+    const old = { ...emptyState(), bodyWeights: [{ date: '2026-11-10', kg: 63 }] };
+    expect(parseBackup(encodeBackup(old as never)).data).not.toHaveProperty('bodyWeights');
+  });
   it('loads older backups saved before the rest setting existed', () => {
     const { restMinutes: _, ...oldSettings } = emptyState().settings;
     const old = {

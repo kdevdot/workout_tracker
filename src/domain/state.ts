@@ -129,13 +129,11 @@ export const stateSchema = z
         entries: z.array(pushupSchema).max(100000),
       })
       .default({ startDate: null, dailyTarget: 100, entries: [] }),
-    // Morning body weight, one per date. Older saves have none.
+    // Retired body-weight log: accepted from saves made while it existed, then dropped.
     bodyWeights: z
-      .array(
-        z.strictObject({ date, kg: z.number().finite().min(20).max(400), recordedAt: timestamp }),
-      )
-      .max(50000)
-      .default([]),
+      .unknown()
+      .transform(() => undefined)
+      .optional(),
     timer: z
       .strictObject({
         sessionId: z.uuid(),
@@ -149,10 +147,6 @@ export const stateSchema = z
       if (new Set(records.map((record) => record.id)).size !== records.length) {
         context.addIssue({ code: 'custom', message: 'Duplicate record ID' });
       }
-    }
-    const weighDates = state.bodyWeights.map((entry) => entry.date);
-    if (new Set(weighDates).size !== weighDates.length) {
-      context.addIssue({ code: 'custom', message: 'Duplicate body-weight date' });
     }
     const activeKeys = state.sessions
       .filter((session) => session.status === 'active')
@@ -172,7 +166,6 @@ export type AppState = z.infer<typeof stateSchema>;
 export type Session = z.infer<typeof sessionSchema>;
 export type SetLog = z.infer<typeof setSchema>;
 export type Intake = z.infer<typeof intakeSchema>;
-export type BodyWeight = AppState['bodyWeights'][number];
 export type Backup = z.infer<typeof backupSchema>;
 
 export function emptyState(): AppState {
@@ -188,7 +181,6 @@ export function emptyState(): AppState {
     sessions: [],
     intakes: [],
     pushups: { startDate: null, dailyTarget: 100, entries: [] },
-    bodyWeights: [],
     timer: null,
   };
 }

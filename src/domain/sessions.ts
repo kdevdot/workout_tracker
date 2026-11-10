@@ -94,6 +94,10 @@ const nextStep: Record<Exercise['loadKind'], string> = {
   bodyweight: 'Keep adding reps or slow the lowering',
 };
 
+// Hard for this lifter: start at the lightest setting and add up to 3 reps above the range
+// before the next (relatively big) dumbbell or pin, as the research plan suggests.
+const buildSlowly = new Set(['db-lateral-raise', 'one-arm-cable-overhead-triceps-extension']);
+
 /** Top load, then total reps at that load: higher means better. */
 function score(logs: SetLog[]): [number, number] {
   const top = bestSet(logs)?.load ?? 0;
@@ -112,14 +116,25 @@ const beats = (a: [number, number], b: [number, number]) =>
  */
 export function nextTarget(sessions: readonly Session[], session: Session, exercise: Exercise) {
   const [last, middle, oldest] = exposures(sessions, session, exercise.id);
-  if (!last) return null;
+  const slow = buildSlowly.has(exercise.id);
+  if (!last) {
+    return slow
+      ? {
+          ready: false,
+          stalled: false,
+          load: null,
+          text: `Start with the ${exercise.loadKind === 'dumbbell' ? 'lightest dumbbells' : 'lowest pin'}, even if it feels easy. Clean reps first; weight comes later.`,
+        }
+      : null;
+  }
+  const goal = slow ? exercise.max + 3 : exercise.max;
   const top = bestSet(last.logs)!;
   // One RIR below target still counts: the plan takes isolation last sets to 0–1 RIR.
   const reserve = Number.parseFloat(exercise.targetRir) - 1;
   const ready =
     last.logs.length >= last.sets &&
     last.logs.every(
-      (log) => log.reps >= exercise.max && (exercise.unit === 'seconds' || log.effort >= reserve),
+      (log) => log.reps >= goal && (exercise.unit === 'seconds' || log.effort >= reserve),
     );
   const reps = last.logs.map((log) => log.reps).join(' / ');
   const stalled =
@@ -134,7 +149,7 @@ export function nextTarget(sessions: readonly Session[], session: Session, exerc
     // Pre-fill the heavier load where the jump is known; other kinds depend on the gym's steps.
     load: ready && fixedJump && top.load !== null ? top.load + 2.5 : null,
     text: ready
-      ? `${nextStep[exercise.loadKind]}${fixedJump && top.load !== null ? ` (${top.load + 2.5} kg)` : ''}. Every set reached ${exercise.max} ${exercise.unit} last time, so expect about ${exercise.min} now.`
+      ? `${nextStep[exercise.loadKind]}${fixedJump && top.load !== null ? ` (${top.load + 2.5} kg)` : ''}. Every set reached ${goal} ${exercise.unit} last time, so expect about ${exercise.min} now.`
       : `${top.load === null ? 'Beat' : `Same ${top.load} kg, beat`} ${reps} by one rep on any set.`,
   };
 }

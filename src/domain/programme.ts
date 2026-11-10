@@ -7,6 +7,7 @@ const rackSafety =
 const smithSafety =
   'Learn the hooks and test the stops with a light load. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.';
 const lastSetCue = 'After the intro phase, take the last set to 0–1 RIR.';
+const startLightCue = 'Start at the lightest setting; add reps before weight.';
 const unilateralCue =
   'Complete both sides for one set. Start with the weaker side and match clean reps; allow 20–30 seconds to switch sides, then take the listed rest.';
 
@@ -98,6 +99,7 @@ const lateralRaise: Movement = {
   cues: [
     'Stand tall with soft elbows; raise slightly forward of your sides toward shoulder height, then lower slowly.',
     'Allow comfortable individual shoulder motion; stop before shrugging, swinging or heaving takes over.',
+    startLightCue,
     lastSetCue,
   ],
   alternative: {
@@ -149,6 +151,7 @@ const cableOverheadExtension: Movement = {
     'Let the elbow bend fully for the stretch, then extend without the upper arm drifting.',
     'Superset with the arm curl: one set of each, then rest.',
     unilateralCue,
+    startLightCue,
     lastSetCue,
   ],
   alternative: {

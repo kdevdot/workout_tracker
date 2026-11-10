@@ -172,6 +172,22 @@ describe('next-session target', () => {
     ];
     expect(target(rising)!.stalled).toBe(false);
   });
+  it('builds hard isolation lifts slowly: lightest first, 3 extra reps before more weight', () => {
+    const raise = (date: string, reps: number) => {
+      let session = startSession('upperA', date, 'intro');
+      for (const index of [1, 2]) {
+        session = recordSet(session, 'db-lateral-raise', { ...set(index), load: 2, reps });
+      }
+      return finishSession(session);
+    };
+    const current = startSession('upperA', '2026-12-01', 'intro');
+    const exercise = current.exercises.find(
+      (item) => item.exercise.id === 'db-lateral-raise',
+    )!.exercise;
+    expect(nextTarget([], current, exercise)!.text).toContain('lightest dumbbells');
+    expect(nextTarget([raise('2026-11-02', 20)], current, exercise)!.ready).toBe(false);
+    expect(nextTarget([raise('2026-11-02', 23)], current, exercise)!.ready).toBe(true);
+  });
   it('has no target without a previous session', () => {
     expect(target([])).toBeNull();
   });

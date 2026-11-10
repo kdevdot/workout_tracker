@@ -175,22 +175,28 @@ function chooseWorkout(event: Event) {
       >
         Log supplements<ArrowRight class="size-5" />
       </Button>
-      <label class="flex items-center justify-between gap-3 text-sm font-medium">
-        <span class="text-muted-foreground flex items-center gap-2"
-          ><Repeat class="size-4" />Switch workout</span
+      <!-- Out of the way: only for a missed day or a busy station, not a change of plan. -->
+      <details class="group/switch text-xs">
+        <summary
+          class="text-muted-foreground hover:text-foreground mx-auto flex min-h-10 w-fit items-center gap-1.5 font-medium"
         >
-        <select
-          :value="workoutId ?? ''"
-          :disabled="busy"
-          class="border-input bg-background/60 focus-visible:ring-ring/50 h-10 rounded-xl border px-3 outline-none focus-visible:ring-3"
-          @change="chooseWorkout"
-        >
-          <option value="">Rest day</option>
-          <option v-for="option in workouts" :key="option.id" :value="option.id">
-            {{ option.name }}
-          </option>
-        </select>
-      </label>
+          <Repeat class="size-3.5" />Training on a different day?
+        </summary>
+        <label class="flex items-center justify-between gap-3 pt-2 text-sm font-medium">
+          <span class="text-muted-foreground">Do this workout today</span>
+          <select
+            :value="workoutId ?? ''"
+            :disabled="busy"
+            class="border-input bg-background/60 focus-visible:ring-ring/50 h-10 rounded-xl border px-3 outline-none focus-visible:ring-3"
+            @change="chooseWorkout"
+          >
+            <option value="">Rest day</option>
+            <option v-for="option in workouts" :key="option.id" :value="option.id">
+              {{ option.name }}
+            </option>
+          </select>
+        </label>
+      </details>
     </div>
   </section>
 

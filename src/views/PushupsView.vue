@@ -175,14 +175,19 @@ function addCustom() {
             <template v-else>Before you started</template>
           </p>
           <h2 class="font-display condensed text-3xl leading-tight font-bold uppercase">
-            {{ !day ? 'Push-ups' : reps >= target ? 'Target hit ✓' : `${target - reps} to go` }}
-          </h2>
-          <p class="text-muted-foreground text-sm">
             {{
               selected === today
                 ? 'Today'
-                : formatDate(selected, { weekday: 'long', day: 'numeric', month: 'short' })
+                : formatDate(selected, { weekday: 'short', day: 'numeric', month: 'short' })
             }}
+          </h2>
+          <p
+            v-if="day"
+            :class="
+              cn('text-sm', reps >= target ? 'text-success font-semibold' : 'text-muted-foreground')
+            "
+          >
+            {{ reps >= target ? 'Target hit ✓' : `${target - reps} to go` }}
           </p>
         </div>
       </div>

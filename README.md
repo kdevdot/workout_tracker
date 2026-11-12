@@ -48,7 +48,7 @@ Every push to `main` runs `.github/workflows/check.yml`. The `deploy.yml` workfl
 
 - Muscle maps: [wger](https://wger.de), CC BY-SA 4.0, with colours changed. See `public/muscles/LICENSE.txt`.
 - Exercise illustrations: [Workout Guide](https://github.com/bryllim/workout-guide) / [Everkinetic](https://github.com/everkinetic/data), CC BY-SA 4.0. See `public/exercises/ATTRIBUTION.md`.
-- Quick demos: five remotely hosted [Your Move](https://ymove.app/free-exercise-videos) clips and six adapted Goulart / [wger](https://wger.de) clips (CC BY-SA 4.0), covering 13 guide entries including explicitly labelled related variations. Your Move files are not redistributed in the repository. See `public/demos/ATTRIBUTION.md` and `docs/SHORT-DEMO-AUDIT.md` for sources, changes and gaps. Videos load only after a tap and are not precached offline.
+- Quick demos: eight remotely hosted [Your Move](https://ymove.app/free-exercise-videos) clips and thirteen adapted Goulart / [wger](https://wger.de) clips (CC BY-SA 4.0), covering 23 of 26 guide entries including explicitly labelled related variations. Your Move files are not redistributed in the repository. See `public/demos/ATTRIBUTION.md` and `docs/SHORT-DEMO-AUDIT.md` for sources, changes and gaps. Videos load only after a tap and are not precached offline.
 - Detailed explanations: optional YouTube clips via privacy-enhanced embeds, loaded only after a tap. Sources remain in `src/domain/guides.ts`.
 - Fonts: Geist and Bricolage Grotesque, OFL.
 

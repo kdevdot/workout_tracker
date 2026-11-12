@@ -6,7 +6,7 @@ import { guides } from './guides';
 
 describe('audited short demonstrations', () => {
   it('only maps known exercises and records source, rights and duration', () => {
-    expect(Object.keys(demos)).toHaveLength(13);
+    expect(Object.keys(demos)).toHaveLength(23);
     for (const [exerciseId, demo] of Object.entries(demos)) {
       expect(guides[exerciseId]).toBeDefined();
       expect(demo).toBeDefined();
@@ -44,14 +44,25 @@ describe('audited short demonstrations', () => {
     }
   });
 
-  it('does not silently assign misleading clips to unmatched equipment or movements', () => {
+  it('labels clips that show different equipment from the programme', () => {
     for (const exerciseId of [
       'unica-lat-pulldown',
       'unica-seated-row',
-      'db-romanian-deadlift',
-      'one-arm-cable-overhead-triceps-extension',
-      'db-stationary-split-squat',
+      'unica-arm-curl',
+      'machine-pec-fly',
+      'machine-reverse-fly',
+      'supported-single-leg-standing-db-calf-raise',
       'seated-db-calf-raise',
+    ]) {
+      expect(demos[exerciseId]?.match).toBe('related');
+    }
+  });
+
+  it('leaves movements without an honest free clip unassigned', () => {
+    for (const exerciseId of [
+      'landmine-t-bar-row',
+      'hanging-knee-raise',
+      'cable-anti-rotation-press',
     ]) {
       expect(demos[exerciseId]).toBeUndefined();
     }

@@ -114,6 +114,93 @@ export const demos: Readonly<Partial<Record<string, ExerciseDemo>>> = {
     match: 'related',
     difference: 'Overhand bar pull-ups shown from behind; your fixed handles and grip may differ.',
   },
+  'unica-lat-pulldown': {
+    ...yourMove,
+    src: 'https://ymove.app/api/free/5971eaa2-5264-49cc-99c2-1310305c5342',
+    durationSeconds: 18.3,
+    match: 'related',
+    difference:
+      'A cable station with a close handle is shown. Use the UNICA lat bar on the high hook.',
+  },
+  'unica-seated-row': {
+    ...yourMove,
+    src: 'https://ymove.app/api/free/77976f52-b13a-4fd0-addf-f4404e3a8e95',
+    durationSeconds: 8.24,
+    match: 'related',
+    difference:
+      'A cable row with a V-handle is shown. Use the UNICA long bars; the pull is the same.',
+  },
+  'machine-pec-fly': {
+    ...yourMove,
+    src: 'https://ymove.app/api/free/e2b1d801-055a-4dc5-ad6e-486e3dbfcfb7',
+    durationSeconds: 20,
+    match: 'related',
+    difference: 'Standing cable fly shown. The machine guides the same arm path while you sit.',
+  },
+  'one-arm-cable-overhead-triceps-extension': {
+    ...wger,
+    src: 'demos/one-arm-cable-overhead-extension.mp4',
+    poster: 'demos/one-arm-cable-overhead-extension.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/803/99e0001f-217a-4b11-823c-014d24a5415e.MOV',
+    durationSeconds: 9.3,
+    match: 'movement',
+  },
+  'db-romanian-deadlift': {
+    ...wger,
+    src: 'demos/dumbbell-romanian-deadlift.mp4',
+    poster: 'demos/dumbbell-romanian-deadlift.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/507/6b6054b5-9236-4a63-8392-6ea7a9010ca6.MOV',
+    durationSeconds: 12,
+    match: 'movement',
+  },
+  'db-stationary-split-squat': {
+    ...wger,
+    src: 'demos/split-squat.mp4',
+    poster: 'demos/split-squat.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/205/4cd5dc48-897f-4e0c-8c5a-639a4098ceb1.MOV',
+    durationSeconds: 9,
+    match: 'movement',
+  },
+  'unica-arm-curl': {
+    ...wger,
+    src: 'demos/machine-preacher-curl.mp4',
+    poster: 'demos/machine-preacher-curl.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/465/5d2339a4-815f-46ba-aa19-8a763cfdeba0.MOV',
+    durationSeconds: 12,
+    match: 'related',
+    difference:
+      'Another preacher-curl machine is shown. Set the UNICA pad and bar as in your cues.',
+  },
+  'machine-reverse-fly': {
+    ...wger,
+    src: 'demos/seated-rear-delt-raise.mp4',
+    poster: 'demos/seated-rear-delt-raise.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/82/ebf1e6d2-df48-44b8-a791-97f77e801bf3.MOV',
+    durationSeconds: 6.97,
+    match: 'related',
+    difference:
+      'Bent-over dumbbell version shown. The machine makes the same arm sweep, chest on the pad.',
+  },
+  'supported-single-leg-standing-db-calf-raise': {
+    ...wger,
+    src: 'demos/standing-calf-raise.mp4',
+    poster: 'demos/standing-calf-raise.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV',
+    durationSeconds: 12,
+    match: 'related',
+    difference:
+      'Shown on a step without a dumbbell. Do one leg on the floor, DB in hand, holding the upright.',
+  },
+  'seated-db-calf-raise': {
+    ...wger,
+    src: 'demos/seated-calf-raise.mp4',
+    poster: 'demos/seated-calf-raise.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/590/a325ae2e-686b-4a1f-aff2-ba37fa3fa157.MOV',
+    durationSeconds: 12,
+    match: 'related',
+    difference:
+      'A seated calf machine is shown. Rest dumbbells on your thighs instead, never on the kneecaps.',
+  },
   'one-db-two-hand-overhead-triceps-extension': {
     ...wger,
     src: 'demos/overhead-dumbbell-extension.mp4',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
+import { computed, shallowRef, watch } from 'vue';
 import {
   ArrowLeft,
   ArrowRightLeft,
@@ -104,17 +104,6 @@ const stats = computed(() => [
   { value: restFor(exercise.value, props.restMinutes).label, label: 'rest' },
 ]);
 
-const chipButtons = useTemplateRef<HTMLButtonElement[]>('chipButtons');
-function centreActive(behavior: ScrollBehavior) {
-  chipButtons.value?.[selected.value]?.scrollIntoView?.({
-    inline: 'center',
-    block: 'nearest',
-    behavior,
-  });
-}
-onMounted(() => centreActive('instant'));
-watch(selected, () => nextTick(() => centreActive('smooth')));
-
 // A saved set (new or corrected) or a different exercise ends any correction in progress.
 watch([selected, () => JSON.stringify(entry.value.logs)], () => {
   editing.value = null;
@@ -137,53 +126,21 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
           >{{ progress.done }}/{{ progress.total }} exercises done</span
         >
       </div>
-      <div class="segments" aria-hidden="true">
-        <span
-          v-for="(item, index) in session.exercises"
+      <nav aria-label="Exercises" class="step-bar">
+        <button
+          v-for="({ item, finished }, index) in chips"
           :key="item.exercise.id"
-          :class="{ 'is-current': index === selected }"
-          ><i :style="{ transform: `scaleX(${item.logs.length >= item.exercise.sets ? 1 : 0})` }"
-        /></span>
-      </div>
+          type="button"
+          :aria-current="selected === index ? 'step' : undefined"
+          :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
+          :class="{ 'is-current': selected === index, 'is-done': finished }"
+          @click="selected = index"
+        >
+          <span />
+        </button>
+      </nav>
     </div>
   </div>
-
-  <nav aria-label="Exercises" class="-mx-5 flex snap-x scroll-px-5 gap-2 overflow-x-auto px-5 pb-1">
-    <button
-      v-for="({ item, finished }, index) in chips"
-      ref="chipButtons"
-      :key="item.exercise.id"
-      :aria-pressed="selected === index"
-      :aria-label="`${index + 1}. ${item.exercise.name}, ${item.logs.length} of ${item.exercise.sets} sets`"
-      :class="
-        cn(
-          'flex min-h-11 shrink-0 snap-center items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-300',
-          'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
-          selected === index
-            ? 'bg-primary text-primary-foreground border-primary shadow-[0_6px_20px_-6px_#d4f53c99]'
-            : finished
-              ? 'border-success/30 bg-success-soft text-success hover:bg-success-soft/70'
-              : 'bg-card text-secondary-foreground hover:bg-secondary',
-        )
-      "
-      @click="selected = index"
-    >
-      <span
-        v-if="finished"
-        :class="
-          cn(
-            'flex size-4 items-center justify-center rounded-full',
-            selected === index
-              ? 'bg-primary-foreground text-primary'
-              : 'bg-success text-primary-foreground',
-          )
-        "
-        ><Check class="size-3 stroke-3"
-      /></span>
-      <span v-else class="tabular-nums">{{ index + 1 }}</span>
-      <span>{{ item.exercise.name }}</span>
-    </button>
-  </nav>
 
   <section :key="exercise.id" class="screen-enter flex flex-col gap-2">
     <span class="eyebrow">Exercise {{ selected + 1 }} of {{ session.exercises.length }}</span>

@@ -355,8 +355,8 @@ describe('working app integration', () => {
     for (const [index, value] of ['20', '7', '3'].entries()) await inputs[index]!.setValue(value);
     await wrapper.get('form.set-form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('Set saved on this device.'));
-    // One set of a two-set exercise: the exercise is one unit, so its bar stays empty.
-    expect(wrapper.get('.segments i').attributes('style')).toContain('scaleX(0)');
+    // One set of a two-set exercise: the exercise is one unit, so its bar is not filled.
+    expect(wrapper.get('.step-bar button').classes()).not.toContain('is-done');
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Settings').trigger('click');
     await wrapper.get('#phase').setValue('baseline');

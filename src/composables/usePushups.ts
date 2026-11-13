@@ -1,5 +1,5 @@
 import type { Ref } from 'vue';
-import { localDate } from '../domain/dates';
+import { formatDate, localDate, validDate } from '../domain/dates';
 import type { AppState } from '../domain/state';
 
 interface Deps {
@@ -19,7 +19,8 @@ export function usePushups({ state, today, update, notify }: Deps) {
       notify('Tracking started. Day 1 is today.');
   }
   async function addPushups(day: string, reps: number) {
-    if (day > localDate()) return;
+    const startDate = state.value.pushups.startDate;
+    if (!startDate || !validDate(day) || day < startDate || day > localDate()) return;
     const entry = {
       id: crypto.randomUUID(),
       date: day,
@@ -27,7 +28,9 @@ export function usePushups({ state, today, update, notify }: Deps) {
       recordedAt: new Date().toISOString(),
     };
     if (await save((pushups) => ({ ...pushups, entries: [...pushups.entries, entry] })))
-      notify(`+${reps} push-ups saved.`);
+      notify(
+        `+${reps} push-ups saved for ${formatDate(day, { day: 'numeric', month: 'short', year: 'numeric' })}.`,
+      );
   }
   async function undoPushups(day: string) {
     const last = state.value.pushups.entries.findLastIndex((entry) => entry.date === day);

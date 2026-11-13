@@ -1,5 +1,5 @@
 import { computed, nextTick, onMounted, onUnmounted, shallowRef, watch } from 'vue';
-import { useEventListener } from '@vueuse/core';
+import { useEventListener, useIntervalFn } from '@vueuse/core';
 import { localDate, shiftDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
@@ -83,13 +83,15 @@ export function useTrainingApp() {
 
   const pushups = usePushups({ state, today, update, notify });
 
-  // Phones resume the app from memory, so re-check the calendar day whenever it comes back.
-  useEventListener(document, 'visibilitychange', () => {
+  // Catch midnight while open and refresh immediately when a suspended phone app resumes.
+  function refreshCalendarDay() {
     const now = localDate();
     if (document.visibilityState !== 'visible' || now === today.value) return;
     if (date.value === today.value) changeDate(now);
     today.value = now;
-  });
+  }
+  useEventListener(document, 'visibilitychange', refreshCalendarDay);
+  useIntervalFn(refreshCalendarDay, 30_000);
 
   onMounted(store.load);
   onUnmounted(() => clearTimeout(hideMessage));

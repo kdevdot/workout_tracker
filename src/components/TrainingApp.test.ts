@@ -183,6 +183,65 @@ describe('working app integration', () => {
     expect(wrapper.text()).toContain('50 to go');
   });
 
+  it('logs a missed push-up day after midnight and undoes only that day', async () => {
+    vi.setSystemTime(new Date(2026, 10, 2, 23, 55));
+    const wrapper = await app();
+    await button(wrapper, 'Push-ups').trigger('click');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.find('#pushup-date').exists()).toBe(true));
+    await button(wrapper, '+10').trigger('click');
+    await vi.waitFor(async () => expect((await savedData()).pushups.entries).toHaveLength(1));
+
+    vi.setSystemTime(new Date(2026, 10, 3, 0, 5));
+    document.dispatchEvent(new Event('visibilitychange'));
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Day 2'));
+    expect(wrapper.get('h2').text()).not.toBe('Today');
+    const date = () => wrapper.get<HTMLInputElement>('#pushup-date').element.value;
+    expect(date()).toBe('2026-11-03');
+    await button(wrapper, 'Yesterday').trigger('click');
+    expect(date()).toBe('2026-11-02');
+    expect(wrapper.text()).toContain('Monday, 2 November 2026');
+    await button(wrapper, '+25').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('65 to go'));
+    expect(wrapper.text()).toContain('saved for 2 Nov 2026');
+    await wrapper.get('[aria-label="Custom number of push-ups"]').setValue('7');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('58 to go'));
+    await button(wrapper, 'Today').trigger('click');
+    await button(wrapper, '+5').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('95 to go'));
+    await button(wrapper, 'Yesterday').trigger('click');
+    await wrapper.get('[aria-label="Undo last entry"]').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('65 to go'));
+    expect((await savedData()).pushups.entries.map(({ date, reps }) => ({ date, reps }))).toEqual([
+      { date: '2026-11-02', reps: 10 },
+      { date: '2026-11-02', reps: 25 },
+      { date: '2026-11-03', reps: 5 },
+    ]);
+    await wrapper.get('[aria-label="Next day"]').trigger('click');
+    expect(date()).toBe('2026-11-03');
+    expect(wrapper.get('[aria-label="Next day"]').attributes('disabled')).toBeDefined();
+    await wrapper.get('[aria-label="Previous day"]').trigger('click');
+    expect(date()).toBe('2026-11-02');
+    expect(wrapper.get('[aria-label="Previous day"]').attributes('disabled')).toBeDefined();
+  });
+
+  it('refreshes the push-up day across midnight without leaving the app', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
+    vi.setSystemTime(new Date(2026, 10, 2, 23, 59, 50));
+    const wrapper = await app();
+    await button(wrapper, 'Push-ups').trigger('click');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.find('#pushup-date').exists()).toBe(true));
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(wrapper.get<HTMLInputElement>('#pushup-date').element.value).toBe('2026-11-03');
+    expect(wrapper.text()).toContain('Day 2');
+    await button(wrapper, 'Yesterday').trigger('click');
+    await button(wrapper, '+20').trigger('click');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('80 to go'));
+    expect((await savedData()).pushups.entries[0]!.date).toBe('2026-11-02');
+  });
+
   it('uses the rest minutes chosen in Settings for the timer', async () => {
     const wrapper = await app();
     await button(wrapper, 'Settings').trigger('click');

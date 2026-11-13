@@ -4,6 +4,7 @@ import { Flame, Plus, RotateCcw, Trophy, Undo2 } from '@lucide/vue';
 import { formatDate } from '@/domain/dates';
 import { calendarWeeks, challengeDays, challengeStats, type ChallengeDay } from '@/domain/pushups';
 import type { AppState } from '@/domain/state';
+import PushupDatePicker from '@/components/PushupDatePicker.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,7 +33,14 @@ const selected = shallowRef(props.today);
 watch(
   () => props.today,
   (today, previous) => {
-    if (selected.value === previous) selected.value = today;
+    // Don't move a half-entered set onto a different day at midnight.
+    if (selected.value === previous && customReps.value === '') selected.value = today;
+  },
+);
+watch(
+  () => props.challenge.startDate,
+  (startDate) => {
+    if (startDate && selected.value < startDate) selected.value = props.today;
   },
 );
 
@@ -85,7 +93,7 @@ function reset() {
   confirmingReset.value = false;
 }
 function addCustom() {
-  if (!validCustom.value) return;
+  if (props.busy || !day.value || !validCustom.value) return;
   emit('add', selected.value, customValue.value);
   customReps.value = '';
 }
@@ -95,7 +103,7 @@ function addCustom() {
   <header class="page-header screen-enter">
     <h1 class="page-heading">Daily push-ups</h1>
     <p class="text-muted-foreground text-sm">
-      Hit your daily target every day. Spread it over the day in small sets.
+      Choose a date, then add the push-ups you did that day. You can log missed days later.
     </p>
   </header>
 
@@ -129,6 +137,12 @@ function addCustom() {
 
   <template v-else>
     <section class="workout-hero flex flex-col gap-5">
+      <PushupDatePicker
+        v-model="selected"
+        :start-date="challenge.startDate"
+        :today="today"
+        :busy="busy"
+      />
       <div class="flex items-center gap-5">
         <div class="relative size-32 shrink-0">
           <svg
@@ -170,16 +184,9 @@ function addCustom() {
           </div>
         </div>
         <div class="flex min-w-0 flex-col gap-1">
-          <p class="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+          <h2 class="font-display text-xl font-semibold">
             <template v-if="day">Day {{ dayIndex + 1 }}</template>
             <template v-else>Before you started</template>
-          </p>
-          <h2 class="font-display condensed text-3xl leading-tight font-bold uppercase">
-            {{
-              selected === today
-                ? 'Today'
-                : formatDate(selected, { weekday: 'short', day: 'numeric', month: 'short' })
-            }}
           </h2>
           <p
             v-if="day"
@@ -250,7 +257,7 @@ function addCustom() {
     </dl>
 
     <section class="bg-card flex flex-col gap-3 rounded-[20px] p-4 shadow-[var(--panel-shadow)]">
-      <div class="flex items-baseline justify-between">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <h2 class="section-heading">Last 12 weeks</h2>
         <span class="text-muted-foreground text-xs">Tap a day to log or review it</span>
       </div>

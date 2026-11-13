@@ -144,7 +144,7 @@ function chooseWorkout(event: Event) {
           <span v-for="item in shown.exercises" :key="item.exercise.id"
             ><i
               :style="{
-                transform: `scaleX(${Math.min(1, item.logs.length / item.exercise.sets)})`,
+                transform: `scaleX(${item.logs.length >= item.exercise.sets ? 1 : 0})`,
               }"
           /></span>
         </div>

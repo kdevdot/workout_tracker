@@ -142,8 +142,7 @@ watch([selected, () => JSON.stringify(entry.value.logs)], () => {
           v-for="(item, index) in session.exercises"
           :key="item.exercise.id"
           :class="{ 'is-current': index === selected }"
-          ><i
-            :style="{ transform: `scaleX(${Math.min(1, item.logs.length / item.exercise.sets)})` }"
+          ><i :style="{ transform: `scaleX(${item.logs.length >= item.exercise.sets ? 1 : 0})` }"
         /></span>
       </div>
     </div>

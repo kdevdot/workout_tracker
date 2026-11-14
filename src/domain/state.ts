@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { validDate } from './dates';
+import { MAX_PUSHUPS_PER_ENTRY } from './limits';
 
 const date = z.string().refine(validDate, 'Invalid local calendar date');
 const timestamp = z.iso.datetime();
@@ -8,6 +9,18 @@ const positive = z.number().finite().positive().max(10000);
 const nullableNutrition = z.number().finite().nonnegative().max(10000).nullable();
 export const workoutIdSchema = z.enum(['upperA', 'lowerA', 'upperB', 'lowerB']);
 export const phaseSchema = z.enum(['intro', 'baseline']);
+const unitSchema = z.enum(['reps', 'cycles', 'seconds']);
+const loadKindSchema = z.enum(['barbell', 'smith', 'dumbbell', 'cable', 'machine', 'bodyweight']);
+export const movementSchema = z
+  .strictObject({
+    id: text,
+    min: positive,
+    max: positive,
+    unit: unitSchema,
+    perSide: z.boolean(),
+    loadKind: loadKindSchema,
+  })
+  .refine((movement) => movement.min <= movement.max, 'Invalid alternative range');
 
 export const exerciseSchema = z
   .strictObject({
@@ -16,17 +29,23 @@ export const exerciseSchema = z
     sets: z.number().int().min(1).max(20),
     min: positive,
     max: positive,
-    unit: z.enum(['reps', 'cycles', 'seconds']),
+    unit: unitSchema,
     perSide: z.boolean(),
     restSeconds: z.number().int().min(1).max(3600),
     restLabel: text,
     targetRir: text,
-    loadKind: z.enum(['barbell', 'smith', 'dumbbell', 'cable', 'machine', 'bodyweight']),
+    loadKind: loadKindSchema,
     equipment: text,
     primary: z.array(text).max(30),
     supporting: z.array(text).max(30),
     cues: z.array(text).max(30),
-    alternative: z.strictObject({ name: text, prescription: text, note: z.string().max(2000) }),
+    alternative: z.strictObject({
+      name: text,
+      prescription: text,
+      note: z.string().max(2000),
+      // Optional only for saves made before alternatives had structured prescriptions.
+      movement: movementSchema.optional(),
+    }),
   })
   .refine((exercise) => exercise.min <= exercise.max, 'Invalid repetition range');
 
@@ -44,6 +63,8 @@ export const setSchema = z.strictObject({
 const sessionExerciseSchema = z
   .strictObject({
     exercise: exerciseSchema,
+    // Retained on new swaps so reversing one never consults a newer programme template.
+    originalExercise: exerciseSchema.optional(),
     logs: z.array(setSchema).max(20),
   })
   .superRefine(({ exercise, logs }, context) => {
@@ -104,7 +125,7 @@ export const intakeSchema = z.strictObject({
 const pushupSchema = z.strictObject({
   id: z.uuid(),
   date,
-  reps: z.number().int().min(1).max(1000),
+  reps: z.number().int().min(1).max(MAX_PUSHUPS_PER_ENTRY),
   recordedAt: timestamp,
 });
 
@@ -125,7 +146,7 @@ export const stateSchema = z
     pushups: z
       .strictObject({
         startDate: date.nullable(),
-        dailyTarget: z.number().int().min(1).max(1000),
+        dailyTarget: z.number().int().min(1).max(MAX_PUSHUPS_PER_ENTRY),
         entries: z.array(pushupSchema).max(100000),
       })
       .default({ startDate: null, dailyTarget: 100, entries: [] }),

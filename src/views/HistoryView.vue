@@ -7,6 +7,7 @@ import { bestSet, formatSet, sessionProgress, shortSet } from '@/domain/sessions
 import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import ExerciseProgress from '@/components/session/ExerciseProgress.vue';
 import ExerciseIcon from '@/components/ExerciseIcon.vue';
 
 const props = defineProps<{ sessions: Session[] }>();
@@ -80,14 +81,7 @@ const entries = computed(() =>
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <div class="segments flex-1" aria-hidden="true">
-          <span v-for="item in session.exercises" :key="item.exercise.id"
-            ><i
-              :style="{
-                transform: `scaleX(${item.logs.length >= item.exercise.sets ? 1 : 0})`,
-              }"
-          /></span>
-        </div>
+        <ExerciseProgress :exercises="session.exercises" class="flex-1" />
         <span class="text-muted-foreground text-xs font-semibold whitespace-nowrap tabular-nums"
           >{{ progress.done }}/{{ progress.total }} exercises</span
         >

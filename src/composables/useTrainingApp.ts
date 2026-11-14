@@ -3,23 +3,21 @@ import { useEventListener, useIntervalFn } from '@vueuse/core';
 import { localDate, shiftDate, validDate } from '../domain/dates';
 import { workoutForDate } from '../domain/programme';
 import type { WorkoutId } from '../domain/programme-types';
-import { finishSession, recordSet, restFor, startSession, swapExercise } from '../domain/sessions';
-import { CREATINE, intakeSchema, type AppState, type Session, type SetLog } from '../domain/state';
+import { isUntouchedSession } from '../domain/sessions';
+import type { AppState, Session } from '../domain/state';
 import { usePushups } from './usePushups';
 import { useRestTimer } from './useRestTimer';
 import { useTrainingStore } from './useTrainingStore';
-
-/** A started workout with no sets logged yet, safe to drop or replace. */
-const untouched = (session: Session) =>
-  session.status === 'active' && session.exercises.every((entry) => entry.logs.length === 0);
+import { useWorkoutSessions } from './useWorkoutSessions';
+import { useSupplements } from './useSupplements';
 
 export type View = 'plan' | 'session' | 'history' | 'pushups' | 'supplements' | 'settings';
 
-/** App-level orchestration: navigation state plus every persisted user action. */
+/** App shell state and feature wiring. Feature writes live in their own composables. */
 export function useTrainingApp() {
   const store = useTrainingStore();
   const { state, update } = store;
-  const timer = useRestTimer(state);
+  const timer = useRestTimer({ state, update });
   const view = shallowRef<View>('plan');
   const today = shallowRef(localDate());
   const date = shallowRef(today.value);
@@ -65,10 +63,6 @@ export function useTrainingApp() {
       .sort()[0];
     return first !== undefined && today.value >= shiftDate(first, 14);
   });
-  const hasLabel = computed(
-    () => state.value.settings.whey.calories !== null && state.value.settings.whey.protein !== null,
-  );
-
   let hideMessage: ReturnType<typeof setTimeout> | undefined;
   /** Shows a short confirmation toast that hides itself. */
   function notify(text: string) {
@@ -82,6 +76,20 @@ export function useTrainingApp() {
   }
 
   const pushups = usePushups({ state, today, update, notify });
+  const supplements = useSupplements({ state, date, update, notify });
+  const workouts = useWorkoutSessions({
+    state,
+    date,
+    workoutId,
+    draft,
+    currentSession,
+    update,
+    notify,
+    open,
+    onFinished: () => {
+      view.value = 'history';
+    },
+  });
 
   // Catch midnight while open and refresh immediately when a suspended phone app resumes.
   function refreshCalendarDay() {
@@ -112,134 +120,10 @@ export function useTrainingApp() {
     sessionId.value = id;
     view.value = 'session';
   }
-  async function begin() {
-    if (!workoutId.value || date.value > localDate()) return;
-    if (draft.value) return open(draft.value.id);
-    const session = startSession(workoutId.value, date.value, state.value.settings.phase);
-    // Switching workouts drops an untouched draft for this day instead of leaving it behind.
-    if (
-      await update((current) => ({
-        ...current,
-        sessions: [
-          ...current.sessions.filter((item) => item.date !== session.date || !untouched(item)),
-          session,
-        ],
-      }))
-    )
-      open(session.id);
-  }
-  async function saveSet(exerciseId: string, log: SetLog) {
-    const active = currentSession.value;
-    const entry = active?.exercises.find((item) => item.exercise.id === exerciseId);
-    if (!active || !entry) return;
-    const correcting = entry.logs.some((existing) => existing.index === log.index);
-    const saved = await update((current) => ({
-      ...current,
-      sessions: current.sessions.map((session) =>
-        session.id === active.id ? recordSet(session, exerciseId, log) : session,
-      ),
-      timer: correcting
-        ? current.timer
-        : {
-            sessionId: active.id,
-            exerciseId,
-            endsAt:
-              Date.now() + restFor(entry.exercise, current.settings.restMinutes).seconds * 1000,
-          },
-    }));
-    if (saved) navigator.vibrate?.(15);
-    if (saved)
-      notify(correcting ? 'Corrected set saved on this device.' : 'Set saved on this device.');
-  }
-  async function swap(exerciseId: string) {
-    const active = currentSession.value;
-    if (!active) return;
-    if (
-      await update((current) => ({
-        ...current,
-        sessions: current.sessions.map((session) =>
-          session.id === active.id ? swapExercise(session, exerciseId) : session,
-        ),
-      }))
-    )
-      notify('Exercise swapped for this workout.');
-  }
-  /** From the plan: start (or resume) today's workout, then swap the exercise in it. */
-  async function swapFromPlan(exerciseId: string) {
-    await begin();
-    if (currentSession.value?.exercises.some((entry) => entry.exercise.id === exerciseId))
-      await swap(exerciseId);
-  }
-  async function finish() {
-    const active = currentSession.value;
-    if (!active) return;
-    if (
-      await update((current) => ({
-        ...current,
-        sessions: current.sessions.map((session) =>
-          session.id === active.id ? finishSession(session) : session,
-        ),
-        timer: current.timer?.sessionId === active.id ? null : current.timer,
-      }))
-    )
-      view.value = 'history';
-  }
-  // Share of the rest still to go, for the countdown ring.
-  const timerFraction = computed(() => {
-    const running = state.value.timer;
-    const exercise = state.value.sessions
-      .find((session) => session.id === running?.sessionId)
-      ?.exercises.find((entry) => entry.exercise.id === running?.exerciseId)?.exercise;
-    if (!exercise) return 0;
-    const total = restFor(exercise, state.value.settings.restMinutes).seconds;
-    return Math.min(1, timer.seconds.value / total);
-  });
-  function adjustTimer(seconds: number) {
-    return update((current) =>
-      current.timer
-        ? {
-            ...current,
-            timer: {
-              ...current.timer,
-              endsAt: Math.max(Date.now(), current.timer.endsAt + seconds * 1000),
-            },
-          }
-        : current,
-    );
-  }
-  function stopTimer() {
-    return update((current) => ({ ...current, timer: null }));
-  }
-  async function addIntake(kind: 'whey' | 'creatine', amount: number) {
-    if (date.value > localDate()) return;
-    const whey = state.value.settings.whey;
-    const input = {
-      id: crypto.randomUUID(),
-      date: date.value,
-      kind,
-      amount,
-      product: kind === 'whey' ? whey.name : CREATINE,
-      calories: kind === 'whey' && whey.calories !== null ? whey.calories * amount : null,
-      protein: kind === 'whey' && whey.protein !== null ? whey.protein * amount : null,
-      recordedAt: new Date().toISOString(),
-    };
-    if (
-      await update((current) => ({
-        ...current,
-        intakes: [...current.intakes, intakeSchema.parse(input)],
-      }))
-    )
-      notify('Intake saved on this device.');
-  }
-  function removeIntake(id: string) {
-    return update((current) => ({
-      ...current,
-      intakes: current.intakes.filter((entry) => entry.id !== id),
-    }));
-  }
   async function saveSettings(settings: AppState['settings']) {
     // An untouched draft follows a phase change; drafts with logged sets keep their targets.
-    const stale = (session: Session) => untouched(session) && session.phase !== settings.phase;
+    const stale = (session: Session) =>
+      isUntouchedSession(session) && session.phase !== settings.phase;
     if (
       await update((current) => ({
         ...current,
@@ -270,25 +154,19 @@ export function useTrainingApp() {
     completed,
     doneDates,
     currentSession,
-    hasLabel,
     readyForBaseline,
     message,
     dismissMessage,
     changeDate,
     chooseWorkout,
     open,
-    begin,
-    saveSet,
-    finish,
-    stopTimer,
-    swap,
-    swapFromPlan,
-    adjustTimer,
-    timerFraction,
-    addIntake,
-    removeIntake,
     saveSettings,
     restore,
+    stopTimer: timer.stop,
+    adjustTimer: timer.adjust,
+    timerFraction: timer.fraction,
+    ...workouts,
+    ...supplements,
     ...pushups,
   };
 }

@@ -195,9 +195,43 @@ describe('next-session target', () => {
   it('has no target without a previous session', () => {
     expect(target([])).toBeNull();
   });
+
+  it('does not increase the top load when later sets used a lighter load', () => {
+    const result = target([
+      done('2026-11-02', [
+        [40, 6],
+        [20, 6],
+      ]),
+    ]);
+    expect(result).toMatchObject({ ready: false, load: null });
+    expect(result!.text).toContain('mixed loads');
+  });
 });
 
 describe('swapping to the alternative', () => {
+  it('restores the saved original prescription after a backup round-trip', () => {
+    const session = startSession('upperA', '2026-11-02', 'intro');
+    const original = session.exercises[0]!.exercise;
+    original.sets = 3;
+    original.targetRir = '4';
+    original.cues = ['A previously saved setup cue.'];
+    const swapped = swapExercise(session, original.id);
+    const restored = parseBackup(encodeBackup({ ...emptyState(), sessions: [swapped] }));
+    const back = swapExercise(restored.data.sessions[0]!, swapped.exercises[0]!.exercise.id);
+    expect(back.exercises[0]!.exercise).toEqual(original);
+  });
+
+  it('shares history for the same movement used as a swap and in the regular plan', () => {
+    let previous = swapExercise(
+      startSession('upperA', '2026-11-02', 'intro'),
+      'fixed-handle-pull-up',
+    );
+    const id = previous.exercises[1]!.exercise.id;
+    previous = finishSession(recordSet(previous, id, set()));
+    const current = startSession('upperB', '2026-11-05', 'intro');
+    expect(previousPerformance([previous], current, 'unica-lat-pulldown')?.date).toBe('2026-11-02');
+  });
+
   it('turns every listed alternative into a loggable exercise', () => {
     for (const id of Object.keys(workouts) as WorkoutId[]) {
       for (const phase of ['intro', 'baseline'] as const) {
@@ -222,9 +256,50 @@ describe('swapping to the alternative', () => {
     const id = session.exercises[0]!.exercise.id;
     const swapped = swapExercise(session, id);
     expect(swapped.exercises[0]!.exercise.name).toBe('Smith flat bench press');
-    const back = swapExercise(swapped, `${id}~alt`);
+    const back = swapExercise(swapped, swapped.exercises[0]!.exercise.id);
     expect(back.exercises[0]!.exercise).toEqual(session.exercises[0]!.exercise);
     expect(() => swapExercise(recordSet(session, id, set()), id)).toThrow();
+  });
+
+  it('reads legacy swap IDs without rewriting history or replacing saved reverse targets', () => {
+    const session = swapExercise(
+      startSession('upperA', '2026-11-02', 'intro'),
+      'fixed-handle-pull-up',
+    );
+    const entry = session.exercises[1]!;
+    entry.exercise.id = 'fixed-handle-pull-up~alt';
+    delete entry.originalExercise;
+    delete entry.exercise.alternative.movement;
+    entry.exercise.alternative.prescription = '3 × 5–9 reps';
+    entry.exercise.targetRir = '4';
+    const saved = parseBackup(encodeBackup({ ...emptyState(), sessions: [session] })).data
+      .sessions[0]!;
+    const completed = finishSession(recordSet(saved, entry.exercise.id, set()));
+    const current = startSession('upperB', '2026-11-05', 'intro');
+    expect(previousPerformance([completed], current, 'unica-lat-pulldown')?.date).toBe(
+      '2026-11-02',
+    );
+    const back = swapExercise(saved, entry.exercise.id).exercises[1]!.exercise;
+    expect(back).toMatchObject({
+      id: 'fixed-handle-pull-up',
+      sets: 3,
+      min: 5,
+      max: 9,
+      targetRir: '4',
+    });
+    expect(saved.exercises[1]!.exercise.id).toBe('fixed-handle-pull-up~alt');
+  });
+
+  it('restores both-side logging for an old unilateral exercise with no /side in its reverse text', () => {
+    const id = 'db-stationary-split-squat';
+    const session = swapExercise(startSession('lowerB', '2026-11-06', 'intro'), id);
+    const entry = session.exercises.find((item) => item.originalExercise?.id === id)!;
+    delete entry.originalExercise;
+    delete entry.exercise.alternative.movement;
+    entry.exercise.id = `${id}~alt`;
+    entry.exercise.alternative.prescription = '2 × 8–12 reps';
+    const restored = swapExercise(session, entry.exercise.id);
+    expect(restored.exercises.find((item) => item.exercise.id === id)!.exercise.perSide).toBe(true);
   });
 });
 

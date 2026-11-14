@@ -20,7 +20,7 @@ import PushupsView from '@/views/PushupsView.vue';
 import SessionView from '@/views/SessionView.vue';
 import SettingsView from '@/views/SettingsView.vue';
 import SupplementsView from '@/views/SupplementsView.vue';
-import WorkoutPlan from '@/views/WorkoutPlan.vue';
+import WorkoutPlanView from '@/views/WorkoutPlanView.vue';
 
 const app = useTrainingApp();
 const { state, ready, busy, error, view, date, today, timer } = app;
@@ -41,6 +41,10 @@ const saveStatus = computed(() => {
   const time = new Date(savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return `Saved on this device · ${time}`;
 });
+
+async function recordPushups(day: string, reps: number, onSaved?: () => void) {
+  if (await app.addPushups(day, reps)) onSaved?.();
+}
 </script>
 
 <template>
@@ -75,7 +79,7 @@ const saveStatus = computed(() => {
       </section>
 
       <template v-else>
-        <WorkoutPlan
+        <WorkoutPlanView
           v-if="view === 'plan'"
           :date="date"
           :today="today"
@@ -120,7 +124,7 @@ const saveStatus = computed(() => {
           :today="today"
           :busy="busy"
           @start="app.startPushups"
-          @add="app.addPushups"
+          @add="recordPushups"
           @undo="app.undoPushups"
           @target="app.setPushupTarget"
           @reset="app.resetPushups"

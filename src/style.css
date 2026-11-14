@@ -11,6 +11,8 @@
   --card: #13161b;
   --card-foreground: var(--foreground);
   --primary: #d4f53c;
+  --primary-wash: #d4f53c0d;
+  --primary-focus: #d4f53c33;
   --primary-foreground: #0a0c0f;
   --secondary: #1b1f26;
   --secondary-foreground: #c3c9d2;
@@ -381,52 +383,17 @@
   color: var(--primary-foreground);
 }
 
-[data-slot='card'] {
-  border-color: transparent;
-  box-shadow: var(--panel-shadow);
-}
-
-[data-slot='card'],
 .muscle-panel,
-.exercise-list,
-.set-form {
+.exercise-list {
   border-radius: 20px;
-}
-
-[data-slot='card-header'],
-[data-slot='card-content'] {
-  padding-inline: 20px;
 }
 
 .muscle-panel {
   box-shadow: var(--panel-shadow);
 }
 
-[data-slot='card-title'].section-heading,
 .muscle-panel .section-heading {
   font-size: 18px;
-}
-
-.set-form {
-  border-color: transparent;
-  box-shadow: var(--panel-shadow);
-  background: radial-gradient(90% 60% at 50% 0%, #d4f53c0d, transparent 70%), var(--card);
-}
-
-.set-form input {
-  min-height: 64px;
-  background: var(--background);
-  border-color: var(--border);
-  border-radius: 14px;
-  font-family: var(--font-display);
-  font-stretch: 75%;
-  font-size: 32px;
-  font-weight: 700;
-}
-
-.set-form input:focus-visible {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px #d4f53c33;
 }
 
 /* Scoreboard tiles for the session's target numbers. */

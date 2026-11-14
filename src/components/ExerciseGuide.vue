@@ -4,14 +4,16 @@ import { ArrowRightLeft, ChevronDown, ExternalLink, OctagonAlert, Scale } from '
 import type { Exercise } from '@/domain/programme-types';
 import { guides } from '@/domain/guides';
 import { demos } from '@/domain/demos';
+import { canonicalExerciseId } from '@/domain/exercise-identity';
 import BodyMap from './BodyMap.vue';
 import ExerciseDemo from './ExerciseDemo.vue';
 import ExerciseVideo from './ExerciseVideo.vue';
 
 const props = defineProps<{ exercise: Exercise; swappable?: boolean }>();
 const emit = defineEmits<{ swap: [] }>();
-const guide = computed(() => guides[props.exercise.id]);
-const demo = computed(() => demos[props.exercise.id]);
+const guide = computed(() => guides[canonicalExerciseId(props.exercise.id)]);
+const demo = computed(() => demos[canonicalExerciseId(props.exercise.id)]);
+const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
 </script>
 
 <template>
@@ -47,8 +49,8 @@ const demo = computed(() => demos[props.exercise.id]);
       <BodyMap :primary="exercise.primary" :supporting="exercise.supporting" />
       <div class="flex flex-col gap-2">
         <h4 class="text-muted-foreground text-xs font-semibold uppercase">Form check</h4>
-        <ol v-if="guide" class="flex flex-col gap-1.5">
-          <li v-for="(check, index) in guide.checks" :key="check" class="flex gap-2 leading-snug">
+        <ol class="flex flex-col gap-1.5">
+          <li v-for="(check, index) in checks" :key="check" class="flex gap-2 leading-snug">
             <span
               class="bg-primary text-primary-foreground flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
               >{{ index + 1 }}</span

@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TrainingApp from './TrainingApp.vue';
 import { finishSession, recordSet, startSession } from '../domain/sessions';
 import { emptyState, encodeBackup, type AppState } from '../domain/state';
+import { WorkoutDatabase } from '../storage/database';
 
 const wrappers: VueWrapper[] = [];
 const databaseName = 'steady-workout-v1';
@@ -240,6 +241,26 @@ describe('working app integration', () => {
     await button(wrapper, '+20').trigger('click');
     await vi.waitFor(() => expect(wrapper.text()).toContain('80 to go'));
     expect((await savedData()).pushups.entries[0]!.date).toBe('2026-11-02');
+  });
+
+  it('retains a custom push-up amount after a failed save and clears it after retrying', async () => {
+    const wrapper = await app();
+    await button(wrapper, 'Push-ups').trigger('click');
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.find('#pushup-date').exists()).toBe(true));
+    const input = wrapper.get<HTMLInputElement>('[aria-label="Custom number of push-ups"]');
+    await input.setValue('37');
+    const save = vi
+      .spyOn(WorkoutDatabase.prototype, 'save')
+      .mockRejectedValueOnce(new Error('Storage is full.'));
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Storage is full.'));
+    expect(input.element.value).toBe('37');
+    expect((await savedData()).pushups.entries).toHaveLength(0);
+    save.mockRestore();
+    await wrapper.get('form').trigger('submit');
+    await vi.waitFor(() => expect(input.element.value).toBe(''));
+    expect((await savedData()).pushups.entries[0]!.reps).toBe(37);
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {

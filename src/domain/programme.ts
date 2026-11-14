@@ -1,6 +1,11 @@
 import type { Exercise, Phase, Workout, WorkoutId } from './programme-types';
 
-type Movement = Omit<Exercise, 'sets' | 'min' | 'max'>;
+import { formatPrescription } from './prescriptions';
+import type { MovementPrescription } from './programme-types';
+
+type Movement = Omit<Exercise, 'sets' | 'min' | 'max' | 'alternative'> & {
+  alternative: { name: string; note: string; movement: MovementPrescription };
+};
 
 const rackSafety =
   'Set the half-rack safety arms just below your lowest point and test them with the empty bar. Training alone: safeties every set, and end the set before a grinding rep.';
@@ -31,7 +36,14 @@ const barbellBench: Movement = {
   ],
   alternative: {
     name: 'Smith flat bench press',
-    prescription: '5–8 reps',
+    movement: {
+      id: 'smith-flat-bench-press',
+      min: 5,
+      max: 8,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'smith',
+    },
     note: `Same sets, RIR and rest. ${smithSafety}`,
   },
 };
@@ -55,7 +67,14 @@ const pullUp: Movement = {
   ],
   alternative: {
     name: 'UNICA lat pulldown',
-    prescription: '8–12 reps',
+    movement: {
+      id: 'unica-lat-pulldown',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'machine',
+    },
     note: 'Use if five clean pull-ups are unavailable; same sets, RIR and rest. Lat bar on the high hook, thighs braced under the pads; pull to the upper chest without leaning back.',
   },
 };
@@ -79,7 +98,14 @@ const shoulderPress: Movement = {
   ],
   alternative: {
     name: 'One-arm standing cable press on an upward path',
-    prescription: '10–15 reps/side',
+    movement: {
+      id: 'one-arm-standing-cable-press',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. Set D-handle below shoulder level, face away in a staggered stance and press upward/forward without twisting. Reduce load if unstable or the cable contacts you.',
   },
 };
@@ -104,7 +130,14 @@ const lateralRaise: Movement = {
   ],
   alternative: {
     name: 'One-arm low-cable lateral raise',
-    prescription: '12–20 reps/side',
+    movement: {
+      id: 'one-arm-low-cable-lateral-raise',
+      min: 12,
+      max: 20,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. Low pulley, D-handle in outside hand, standing side-on; use a comfortable arc without leaning for momentum. Stop if the cable path is awkward.',
   },
 };
@@ -129,7 +162,14 @@ const dbCurl: Movement = {
   ],
   alternative: {
     name: 'One-arm low-cable curl',
-    prescription: '10–15 reps/side',
+    movement: {
+      id: 'one-arm-low-cable-curl',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. Face a low pulley with D-handle, elbow beside torso; curl without leaning backward. Stop when torso movement is needed.',
   },
 };
@@ -156,7 +196,14 @@ const cableOverheadExtension: Movement = {
   ],
   alternative: {
     name: 'One-DB two-hand overhead extension',
-    prescription: '10–15 reps',
+    movement: {
+      id: 'one-db-two-hand-overhead-triceps-extension',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest. Hold one DB securely in both hands overhead and extend from a deep, comfortable elbow bend.',
   },
 };
@@ -181,7 +228,14 @@ const armCurl: Movement = {
   ],
   alternative: {
     name: 'Standing DB curl',
-    prescription: '10–15 reps',
+    movement: {
+      id: 'standing-db-curl',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest. Upper arms still, no hip drive.',
   },
 };
@@ -206,7 +260,14 @@ const backSquat: Movement = {
   ],
   alternative: {
     name: 'Smith squat',
-    prescription: '5–8 reps',
+    movement: {
+      id: 'smith-squat',
+      min: 5,
+      max: 8,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'smith',
+    },
     note: `Same sets, RIR and rest. Adjust feet to the fixed path. ${smithSafety}`,
   },
 };
@@ -230,7 +291,14 @@ const pausedSquat: Movement = {
   ],
   alternative: {
     name: 'Paused Smith squat',
-    prescription: '5–6 reps',
+    movement: {
+      id: 'paused-smith-squat',
+      min: 5,
+      max: 6,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'smith',
+    },
     note: `Same sets, RIR, rest and 2 s pause. ${smithSafety}`,
   },
 };
@@ -256,7 +324,14 @@ const dbRdl: Movement = {
   cues: hingeCues,
   alternative: {
     name: 'Barbell RDL',
-    prescription: '6–10 reps',
+    movement: {
+      id: 'barbell-romanian-deadlift',
+      min: 6,
+      max: 10,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'barbell',
+    },
     note: 'Same sets, RIR and rest. Same controlled hinge with the Olympic bar from the rack; keep the bar against the thighs. Do not convert DB and barbell loads.',
   },
 };
@@ -281,7 +356,14 @@ const legExtension: Movement = {
   ],
   alternative: {
     name: 'UNICA leg extension',
-    prescription: '12–15 reps',
+    movement: {
+      id: 'unica-leg-extension',
+      min: 12,
+      max: 15,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'machine',
+    },
     note: 'Same sets, RIR and rest. Same setup on the UNICA leg lever; loads are not comparable between machines.',
   },
 };
@@ -306,7 +388,14 @@ const seatedLegCurl: Movement = {
   ],
   alternative: {
     name: 'Standing one-leg cable curl',
-    prescription: '10–15 reps/side',
+    movement: {
+      id: 'standing-one-leg-cable-curl',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. Ankle strap on the low pulley, face the column holding the frame; curl the heel up without the hip moving.',
   },
 };
@@ -331,7 +420,14 @@ const standingCalf: Movement = {
   ],
   alternative: {
     name: 'Supported bodyweight single-leg calf raise',
-    prescription: '15–25 reps/leg',
+    movement: {
+      id: 'supported-bodyweight-single-leg-calf-raise',
+      min: 15,
+      max: 25,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'bodyweight',
+    },
     note: 'Same sets, RIR and rest. Use the fixed upright lightly for balance and the floor, with controlled straight-knee movement; no added platform.',
   },
 };
@@ -355,7 +451,14 @@ const kneeRaise: Movement = {
   ],
   alternative: {
     name: 'Standing high-cable crunch',
-    prescription: '10–15 reps',
+    movement: {
+      id: 'standing-high-cable-crunch',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. High pulley, both hands on the D-handle beside your head; stand facing away and crunch ribs toward hips without pulling with the arms.',
   },
 };
@@ -379,7 +482,14 @@ const pausedBench: Movement = {
   ],
   alternative: {
     name: 'Low-incline DB bench press',
-    prescription: '8–12 reps',
+    movement: {
+      id: 'low-incline-db-bench-press',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest. 15–30° locked incline; bring DBs up from the thighs.',
   },
 };
@@ -404,7 +514,14 @@ const tBarRow: Movement = {
   ],
   alternative: {
     name: 'UNICA seated row',
-    prescription: '8–12 reps',
+    movement: {
+      id: 'unica-seated-row',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'machine',
+    },
     note: 'Same sets, RIR and rest. Chest against the pad, row the long bars to the stomach.',
   },
 };
@@ -428,7 +545,14 @@ const latPulldown: Movement = {
   ],
   alternative: {
     name: 'Fixed-handle pull-up',
-    prescription: '5–8 reps',
+    movement: {
+      id: 'fixed-handle-pull-up',
+      min: 5,
+      max: 8,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'bodyweight',
+    },
     note: 'Same sets and rest. Use if the UNICA is busy; controlled lowering, no kipping.',
   },
 };
@@ -452,7 +576,14 @@ const seatedRow: Movement = {
   ],
   alternative: {
     name: 'Bench-supported one-arm DB row',
-    prescription: '8–12 reps/side',
+    movement: {
+      id: 'bench-supported-one-arm-db-row',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest. One hand and knee on the bench; row toward the hip.',
   },
 };
@@ -476,7 +607,14 @@ const dips: Movement = {
   ],
   alternative: {
     name: 'UNICA chest press',
-    prescription: '8–12 reps',
+    movement: {
+      id: 'unica-chest-press',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'machine',
+    },
     note: 'Same sets, RIR and rest. Handles in line with mid-chest; press without locking out hard.',
   },
 };
@@ -501,7 +639,14 @@ const pecFly: Movement = {
   ],
   alternative: {
     name: 'One-arm standing cable fly',
-    prescription: '10–15 reps/side',
+    movement: {
+      id: 'one-arm-standing-cable-fly',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. Chest-height D-handle, staggered stance, slight elbow bend; sweep across chest and return without rotation. Stop if elbow angle or rotation control is lost.',
   },
 };
@@ -526,7 +671,14 @@ const reverseFly: Movement = {
   ],
   alternative: {
     name: 'Bent-over DB reverse fly',
-    prescription: '12–20 reps',
+    movement: {
+      id: 'bent-over-db-reverse-fly',
+      min: 12,
+      max: 20,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest. Hinge with light DBs and a braced trunk; move elbows outward with slight bend and lower under control. Prioritise the machine if lower back is limiting.',
   },
 };
@@ -551,7 +703,14 @@ const overheadExtension: Movement = {
   ],
   alternative: {
     name: 'One-arm high-cable pushdown',
-    prescription: '10–15 reps/side',
+    movement: {
+      id: 'one-arm-high-cable-pushdown',
+      min: 10,
+      max: 15,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'cable',
+    },
     note: 'Same sets, RIR and rest. High pulley, D-handle and upper arm beside torso; extend without rocking or forcing shoulder down. Return under control; stop when upper-arm/body movement takes over.',
   },
 };
@@ -575,7 +734,14 @@ const deadlift: Movement = {
   ],
   alternative: {
     name: 'Smith Romanian deadlift',
-    prescription: '6–8 reps',
+    movement: {
+      id: 'smith-romanian-deadlift',
+      min: 6,
+      max: 8,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'smith',
+    },
     note: `Same sets, RIR and rest. Controlled hinge, stops below the bottom position. ${smithSafety}`,
   },
 };
@@ -600,7 +766,14 @@ const splitSquat: Movement = {
   ],
   alternative: {
     name: 'Smith squat',
-    prescription: '8–12 reps',
+    movement: {
+      id: 'smith-squat',
+      min: 8,
+      max: 12,
+      unit: 'reps',
+      perSide: false,
+      loadKind: 'smith',
+    },
     note: 'Same sets, RIR and rest. Use plates and safeties, test hooks/stops and adjust feet to the fixed path; keep whole feet planted and trunk controlled. No rear-foot platform is needed.',
   },
 };
@@ -625,7 +798,14 @@ const seatedCalf: Movement = {
   ],
   alternative: {
     name: 'Supported single-leg standing DB calf raise',
-    prescription: '10–20 reps/leg',
+    movement: {
+      id: 'supported-single-leg-standing-db-calf-raise',
+      min: 10,
+      max: 20,
+      unit: 'reps',
+      perSide: true,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets, RIR and rest; not identical knee-angle emphasis. One DB, fixed upright for balance, floor; mostly straight knee, controlled rise and lowering without bouncing or a loose-plate platform.',
   },
 };
@@ -650,7 +830,14 @@ const antiRotationPress: Movement = {
   ],
   alternative: {
     name: 'DB suitcase hold',
-    prescription: '20–40 s/side',
+    movement: {
+      id: 'db-suitcase-hold',
+      min: 20,
+      max: 40,
+      unit: 'seconds',
+      perSide: true,
+      loadKind: 'dumbbell',
+    },
     note: 'Same sets and rest. Stand tall holding one heavy DB at your side without leaning toward it.',
   },
 };
@@ -666,7 +853,8 @@ function prescribe(movement: Movement, sets: number, min: number, max: number): 
     cues: [...movement.cues],
     alternative: {
       ...movement.alternative,
-      prescription: `${sets} × ${movement.alternative.prescription}`,
+      movement: { ...movement.alternative.movement },
+      prescription: formatPrescription(sets, movement.alternative.movement),
     },
   };
 }
@@ -752,6 +940,7 @@ export function getExercises(workoutId: WorkoutId, phase: Phase): Exercise[] {
     cues: [...exercise.cues],
     alternative: {
       ...exercise.alternative,
+      movement: exercise.alternative.movement ? { ...exercise.alternative.movement } : undefined,
       prescription:
         phase === 'intro'
           ? exercise.alternative.prescription.replace(/^\d+ × /, '2 × ')

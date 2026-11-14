@@ -2,6 +2,13 @@ import { getExercises } from './programme';
 import type { Phase, WorkoutId } from './programme-types';
 import type { Exercise } from './programme-types';
 import { sessionSchema, setSchema, type Session, type SetLog } from './state';
+import { canonicalExerciseId, LEGACY_ALTERNATIVE_SUFFIX } from './exercise-identity';
+import { formatPrescription } from './prescriptions';
+
+/** Safe to replace when switching workouts or changing the default phase. */
+export function isUntouchedSession(session: Session): boolean {
+  return session.status === 'active' && session.exercises.every((entry) => entry.logs.length === 0);
+}
 
 export function startSession(workoutId: WorkoutId, date: string, phase: Phase): Session {
   return sessionSchema.parse({
@@ -37,9 +44,8 @@ export function recordSet(session: Session, exerciseId: string, input: SetLog): 
   });
 }
 
-const ALT = '~alt';
-
-function loadKindOf(name: string): Exercise['loadKind'] {
+/** Compatibility only: older saved alternatives contain display text rather than typed fields. */
+function legacyLoadKind(name: string): Exercise['loadKind'] {
   if (/smith/i.test(name)) return 'smith';
   if (/unica|machine/i.test(name)) return 'machine';
   if (/cable/i.test(name)) return 'cable';
@@ -48,29 +54,61 @@ function loadKindOf(name: string): Exercise['loadKind'] {
   return 'bodyweight';
 }
 
-/** The programme's listed alternative as a loggable exercise, e.g. "2 × 10–15 reps/side". */
+/** New prescriptions are structured. Display-text parsing is confined to older saved sessions. */
 export function alternativeOf(exercise: Exercise): Exercise {
-  const { name, prescription, note } = exercise.alternative;
-  const match = /(\d+) × (\d+)–(\d+) (reps|s)(\/side|\/leg)?/.exec(prescription);
-  if (!match) throw new Error(`Unreadable alternative prescription: ${prescription}`);
-  const [, sets, min, max, unit, side] = match;
+  const { name, prescription, note, movement } = exercise.alternative;
+  const legacy = movement ? null : /(\d+) × (\d+)–(\d+) (reps|s)(\/side|\/leg)?/.exec(prescription);
+  if (!movement && !legacy) throw new Error(`Unreadable alternative prescription: ${prescription}`);
+  const details = movement ?? {
+    id: canonicalExerciseId(`${exercise.id}${LEGACY_ALTERNATIVE_SUFFIX}`),
+    min: Number(legacy![2]),
+    max: Number(legacy![3]),
+    unit: legacy![4] === 's' ? ('seconds' as const) : ('reps' as const),
+    perSide: !!legacy![5],
+    loadKind: legacyLoadKind(name),
+  };
   return {
     ...exercise,
-    id: `${exercise.id}${ALT}`,
+    ...details,
     name,
-    sets: Number(sets),
-    min: Number(min),
-    max: Number(max),
-    unit: unit === 's' ? 'seconds' : 'reps',
-    perSide: !!side,
-    loadKind: loadKindOf(name),
+    sets: legacy ? Number(legacy[1]) : exercise.sets,
     equipment: name,
     cues: [note],
     alternative: {
       name: exercise.name,
-      prescription: `${exercise.sets} × ${exercise.min}–${exercise.max} ${exercise.unit}`,
+      prescription: formatPrescription(exercise.sets, exercise),
       note: 'The programmed exercise.',
+      movement: {
+        id: exercise.id,
+        min: exercise.min,
+        max: exercise.max,
+        unit: exercise.unit,
+        perSide: exercise.perSide,
+        loadKind: exercise.loadKind,
+      },
     },
+  };
+}
+
+export function isSwappedExercise(entry: Session['exercises'][number]): boolean {
+  return !!entry.originalExercise || entry.exercise.id.endsWith(LEGACY_ALTERNATIVE_SUFFIX);
+}
+
+// The old reverse display string omitted /side even for these unilateral originals.
+// Keep this historical metadata separate from future programme changes.
+const legacyUnilateralOriginals = new Set([
+  'one-arm-cable-overhead-triceps-extension',
+  'supported-single-leg-standing-db-calf-raise',
+  'db-stationary-split-squat',
+  'cable-anti-rotation-press',
+]);
+
+function restoreLegacyOriginal(exercise: Exercise): Exercise {
+  const id = exercise.id.slice(0, -LEGACY_ALTERNATIVE_SUFFIX.length);
+  return {
+    ...alternativeOf(exercise),
+    id,
+    perSide: exercise.alternative.movement?.perSide ?? legacyUnilateralOriginals.has(id),
   };
 }
 
@@ -80,17 +118,17 @@ export function swapExercise(session: Session, exerciseId: string): Session {
   const entry = session.exercises.find((item) => item.exercise.id === exerciseId);
   if (!entry) throw new Error('Exercise is not part of this session.');
   if (entry.logs.length) throw new Error('Exercises with logged sets cannot be swapped.');
-  const original = exerciseId.endsWith(ALT)
-    ? getExercises(session.workoutId, session.phase).find(
-        (item) => item.id === exerciseId.slice(0, -ALT.length),
-      )
-    : undefined;
-  const next = original ?? alternativeOf(entry.exercise);
+  const legacySwap = exerciseId.endsWith(LEGACY_ALTERNATIVE_SUFFIX);
+  // Old swaps did not retain a full original. Recover their saved reverse prescription instead
+  // of replacing its sets/reps/RIR with the current template; new swaps restore an exact snapshot.
+  const original =
+    entry.originalExercise ?? (legacySwap ? restoreLegacyOriginal(entry.exercise) : undefined);
+  const next = original
+    ? { exercise: original, logs: [] }
+    : { exercise: alternativeOf(entry.exercise), originalExercise: entry.exercise, logs: [] };
   return sessionSchema.parse({
     ...session,
-    exercises: session.exercises.map((item) =>
-      item === entry ? { exercise: next, logs: [] } : item,
-    ),
+    exercises: session.exercises.map((item) => (item === entry ? next : item)),
   });
 }
 
@@ -106,9 +144,13 @@ export function finishSession(session: Session): Session {
 }
 
 /** Progress counts whole exercises: one is done once all its sets are logged. */
+export function isExerciseComplete(entry: Session['exercises'][number]): boolean {
+  return entry.logs.length >= entry.exercise.sets;
+}
+
 export function sessionProgress(session: Session): { done: number; total: number } {
   return {
-    done: session.exercises.filter((entry) => entry.logs.length >= entry.exercise.sets).length,
+    done: session.exercises.filter(isExerciseComplete).length,
     total: session.exercises.length,
   };
 }
@@ -127,7 +169,9 @@ function exposures(sessions: readonly Session[], session: Session, exerciseId: s
         second.date.localeCompare(first.date) || second.startedAt.localeCompare(first.startedAt),
     )
     .flatMap((candidate) => {
-      const entry = candidate.exercises.find((item) => item.exercise.id === exerciseId);
+      const entry = candidate.exercises.find(
+        (item) => canonicalExerciseId(item.exercise.id) === canonicalExerciseId(exerciseId),
+      );
       return entry?.logs.length
         ? [{ date: candidate.date, sets: entry.exercise.sets, logs: entry.logs }]
         : [];
@@ -188,7 +232,9 @@ export function nextTarget(sessions: readonly Session[], session: Session, exerc
   const top = bestSet(last.logs)!;
   // One RIR below target still counts: the plan takes isolation last sets to 0–1 RIR.
   const reserve = Number.parseFloat(exercise.targetRir) - 1;
+  const consistentLoad = last.logs.every((log) => log.load === top.load);
   const ready =
+    consistentLoad &&
     last.logs.length >= last.sets &&
     last.logs.every(
       (log) => log.reps >= goal && (exercise.unit === 'seconds' || log.effort >= reserve),
@@ -207,7 +253,9 @@ export function nextTarget(sessions: readonly Session[], session: Session, exerc
     load: ready && fixedJump && top.load !== null ? top.load + 2.5 : null,
     text: ready
       ? `${nextStep[exercise.loadKind]}${fixedJump && top.load !== null ? ` (${top.load + 2.5} kg)` : ''}. Every set reached ${goal} ${exercise.unit} last time, so expect about ${exercise.min} now.`
-      : `${top.load === null ? 'Beat' : `Same ${top.load} kg, beat`} ${reps} by one rep on any set.`,
+      : !consistentLoad
+        ? 'Last time used mixed loads. Keep the load steady across your working sets before increasing it.'
+        : `${top.load === null ? 'Beat' : `Same ${top.load} kg, beat`} ${reps} by one rep on any set.`,
   };
 }
 

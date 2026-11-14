@@ -1,5 +1,11 @@
 import { shiftDate, weekFor } from './dates';
 import type { AppState } from './state';
+import { MAX_PUSHUPS_PER_ENTRY } from './limits';
+
+export function validPushupCount(value: string | number): boolean {
+  const count = Number(value);
+  return Number.isInteger(count) && count >= 1 && count <= MAX_PUSHUPS_PER_ENTRY;
+}
 
 type Challenge = AppState['pushups'];
 type DayState = 'done' | 'partial' | 'missed' | 'today' | 'upcoming' | 'before';

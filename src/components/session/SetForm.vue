@@ -148,7 +148,7 @@ function submit() {
           :step="item.step"
           required
           placeholder="—"
-          class="h-12 px-1 text-center text-lg font-bold tabular-nums"
+          class="set-input h-12 px-1 text-center text-lg font-bold tabular-nums"
         />
       </div>
     </div>
@@ -162,3 +162,26 @@ function submit() {
     </Button>
   </form>
 </template>
+
+<style scoped>
+.set-form {
+  border-color: transparent;
+  border-radius: 20px;
+  box-shadow: var(--panel-shadow);
+  background: radial-gradient(90% 60% at 50% 0%, var(--primary-wash), transparent 70%), var(--card);
+}
+.set-input {
+  min-height: 64px;
+  background: var(--background);
+  border-color: var(--border);
+  border-radius: 14px;
+  font-family: var(--font-display);
+  font-stretch: 75%;
+  font-size: 32px;
+  font-weight: 700;
+}
+.set-input:focus-visible {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-focus);
+}
+</style>

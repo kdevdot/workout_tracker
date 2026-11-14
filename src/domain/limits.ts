@@ -1,0 +1,1 @@
+export const MAX_PUSHUPS_PER_ENTRY = 1000;

@@ -2,7 +2,9 @@
 
 ## Platform
 
-Phone-first web application. Static hosting on GitHub Pages, installable as a PWA.
+web
+
+Phone-first application hosted on GitHub Pages, installable as a PWA.
 
 ## User and purpose
 
@@ -10,13 +12,13 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 
 ## Confirmed constraints
 
-- Monday Upper A, Tuesday Lower A, Thursday Upper B, Friday Lower B; other days rest. If Friday is missed, Lower B moves to Saturday.
+- Monday Upper A, Tuesday Lower A, Thursday Upper B, Friday Lower B; other days rest. If Friday is missed, use the workout switcher to select Lower B on Saturday.
 - Preserve the researched exercise order, conditional equipment, introductory phase, and progression guidance.
 - Date-first interface; one session title; readable prescriptions and front/back target-region maps.
 - Device-local saving first, independent JSON backup/restore, Google Drive backup later.
 - Personal research, gym photos, logs, and supplement labels must not enter public source control by default.
 - Exact video variations and licences must be audited; no placeholder pretending to play a video.
-- Demonstrations must play inside the exercise guide without requiring an external search or another app. Three creator-hosted YouTube demos are a tap-to-load integration; other movements still use the existing local media or have no demo. Internet/provider restrictions remain explicit.
+- Demonstrations must play inside the exercise guide without requiring an external search or another app. Short, silent demonstrations cover 23 of 26 programme guide entries, with variation notes where required. YouTube is an optional detailed explanation. Missing clips remain explicit. Videos need internet and load only after a tap.
 
 ## Stack
 
@@ -30,7 +32,11 @@ Vue 3, TypeScript, Vite, Tailwind CSS v4 with shadcn-vue components (`src/compon
 - Failed or invalid storage never silently resets or reports successful saving.
 - Validated JSON export/restore protects the first real records.
 - All four workout tables match the research document and are covered by tests.
+- Session prescriptions remain stable when swapping exercises and restoring backups. Existing backup formats and exercise identities remain readable.
+- Progress counts each whole exercise once, after all its working sets are recorded.
+- Progression guidance uses previous performances of the same movement and does not suggest a load increase after mixed-load sets.
+- Daily push-ups support past-day entries and preserve custom amounts when saving fails.
 
 ## Deferred
 
-Google OAuth/Drive integration, automatic progression suggestions and offline demo videos. Product-label values remain user-supplied.
+Google OAuth/Drive integration and offline demo videos. Local double-progression suggestions are implemented; they do not automatically change the programme. Product-label values remain user-supplied.

@@ -1,34 +1,39 @@
-# Steady — reference-led light dashboard
+# Steady — night-gym interface
 
 ## Visual authority
 
-The user's uploaded dashboard screenshot is the visual reference. Replace the previous warm-paper, dark-green and citron theme. Match its calm, cool-grey canvas, white panels, restrained blue accents, subtle depth and conventional sans-serif hierarchy. Do not copy the screenshot's unrelated social features, invented activity metrics or personal data.
+The accepted live design uses dark graphite surfaces, a volt accent and coral highlights. Preserve this identity during maintenance. The earlier light-dashboard document was superseded by the approved dark design.
 
-## Tokens
+## Tokens and typography
 
-- Canvas: cool grey `#f3f4f6`; panels: white `#ffffff`.
-- Text: charcoal `#252a32`; secondary text: slate `#677184`.
-- Primary actions and selected dates/navigation: blue `#09638b`, with white text.
-- Secondary surfaces: `#edf1f6`; hover surfaces: pale blue `#eaf2f8`.
-- Dividers: `#e6e9ef`; inputs: `#b8c1cd`.
-- Panel depth: a subtle downward shadow, not a dark outline or coloured glow.
+- Canvas `#0a0c0f`; panels `#13161b`; secondary surfaces `#1b1f26`.
+- Text `#eef0ea`; muted text `#8b94a3`.
+- Primary action and completion `#d4f53c`, with dark foreground.
+- Coral `#ff7a59` identifies effort and primary muscle regions; errors use the destructive token.
+- Define shared colours, focus treatments and surfaces in `src/style.css`; reference tokens from components.
+- Geist Variable is the UI font. Bricolage Grotesque Variable carries headings and tabular training numbers. Both are self-hosted and OFL-licensed.
 
-## Typography and hierarchy
+## Layout and interaction
 
-Self-hosted Geist Variable for UI and body text; Bricolage Grotesque Variable for headings and large numbers (both OFL). Sentence case, regular/medium body copy, semibold headings and clear numeric prescriptions. No condensed display font, oversized uppercase workout titles or high-contrast dark hero. Page headings are 24–32px; workout titles 28–32px; section headings 18px; exercise names 14px. Long names wrap. Dates stay prominent; the workout is named once. Page headers share a 12px title-to-description gap.
+- Use one fluid, centred frame up to 480 px, with 20 px gutters and safe-area support.
+- Preserve the existing bottom navigation and consistent alignment between tabs.
+- Use generous touch targets for logging. Keep the selected date, exercise name and load convention clear.
+- Workout progress counts whole exercises. Plan and History show static segments; an active workout uses one tappable bar. Do not reintroduce a second row of progress controls.
+- Push-up logging has a visible date input, previous/next-day controls and Today/Yesterday shortcuts. The full selected date remains visible; late entries belong to the chosen day.
+- Unsubmitted custom push-up amounts clear only after a successful save. Midnight must not move a half-entered push-up set to another date.
 
-## Surfaces
+## Components and styling
 
-The selected workout is a white summary panel with a blue primary action. Exercise rows sit inside one white list with subtle dividers. Muscle maps sit in white panels with their existing semantic highlight colours. The navigation dock is white, with only the selected destination filled blue. Settings, supplement totals, recording forms and history use the same neutral panel system. No dark-green blocks, citron controls or beige/sage backgrounds remain.
+- `src/components/ui/` is owned shadcn-vue source. Put shared Card/Button/Input defaults in those components, rather than targeting their internal `data-slot` attributes with global CSS.
+- Native date inputs, selects and disclosures are intentional where they provide a useful phone/browser affordance.
+- Keep feature-specific styles with the feature. The set form owns its large numeric inputs; global CSS must not reach into those inputs.
+- Compose substantial session and push-up sections from their feature folders. Keep props and events typed and responsibilities focused.
+- Retain visible keyboard focus, disabled/error states and reduced-motion support.
 
-## Layout and behaviour
+## Media and data truth
 
-Every screen uses the same phone-first frame: fluid to 480px maximum, centred on larger displays, with 20px gutters at every viewport size. Do not expand into desktop columns or change width between tabs. Headers, panels and footer share alignment across Plan, active workouts, History, Supplements and Settings. Panels share 20px content padding and 12px corners. Main sections are separated by 20px. The muscle map stays compact and horizontal, not a desktop sidebar. Headings keep phone-sized typography on larger displays too.
-
-The workout summary includes a small geometric SVG weight plate, with concentric rings, dashed perimeter and light-blue accents. Rest days use a matching moon motif. These are decorative equipment/recovery illustrations, not measured progress rings. Keep patterns local to this graphic rather than introducing noisy backgrounds or hand-drawn exercise figures.
-
-Preserve real date navigation, safe areas and touch targets. Preserve reduced-motion support, focus/disabled/error states, draft logging, timer deadlines, local storage, backup/restore and supplement calculations. A visual change does not imply cloud sync.
-
-## Media and truth
-
-Retain the audited exercise thumbnails on neutral grey, a drawing for every exercise, and tap-to-load in-app YouTube demos. Keep credits and licences in Settings. Body maps show target regions, not measured activation, fatigue or recovery. No invented streaks, durations, calories burned or activity scores.
+- Short demos are tap-to-load, silent, looping videos. State source, licence and differences from the prescribed movement.
+- YouTube remains an optional detailed explanation, folded away by default. Provider and internet requirements stay explicit.
+- Reuse guides for the same movement, including legacy alternative IDs. When a dedicated guide is absent, show the session's stored setup cues.
+- Body maps show target regions, not measured activation, fatigue or recovery.
+- Preserve device-local storage, revision-conflict protection and JSON backup/restore. A UI update does not imply cloud sync.

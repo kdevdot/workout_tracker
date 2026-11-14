@@ -33,7 +33,6 @@ const nav = [
   { view: 'settings', label: 'Settings', icon: Settings2 },
 ] as const;
 const activeTab = computed<View>(() => (view.value === 'session' ? 'plan' : view.value));
-const activeIndex = computed(() => nav.findIndex((item) => item.view === activeTab.value));
 const saveStatus = computed(() => {
   if (busy.value) return 'Saving…';
   const savedAt = state.value.savedAt;
@@ -55,13 +54,11 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
       /></span>
       <span
         v-if="ready"
-        class="text-muted-foreground flex max-w-48 items-center gap-2 text-right text-[10px] leading-relaxed font-medium"
+        class="text-muted-foreground flex max-w-44 items-center gap-2 text-right text-xs leading-4"
         role="status"
       >
         <span
-          :class="
-            cn('size-1.5 rounded-full', busy ? 'bg-coral animate-pulse' : 'bg-primary live-dot')
-          "
+          :class="cn('size-1.5 shrink-0 rounded-full', busy ? 'bg-coral' : 'bg-muted-foreground')"
         />
         {{ saveStatus }}
       </span>
@@ -166,13 +163,7 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
     <UpdatePrompt :busy="busy" />
 
     <nav v-if="ready" class="app-nav" aria-label="Main navigation">
-      <div class="relative grid grid-cols-5">
-        <span
-          v-show="activeIndex >= 0"
-          class="nav-pill"
-          aria-hidden="true"
-          :style="{ transform: `translateX(${activeIndex * 100}%)` }"
-        />
+      <div class="app-nav-links relative grid grid-cols-5">
         <button
           v-for="item in nav"
           :key="item.view"
@@ -180,7 +171,7 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
           :disabled="busy"
           :class="
             cn(
-              'nav-item flex flex-col items-center justify-center text-[10px] font-semibold transition-colors',
+              'nav-item flex flex-col items-center justify-center font-medium',
               'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 focus-visible:ring-inset',
             )
           "

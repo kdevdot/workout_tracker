@@ -37,7 +37,7 @@ const entries = computed(() =>
 </script>
 
 <template>
-  <header class="page-header screen-enter">
+  <header class="page-header">
     <h1 class="page-heading">Training history</h1>
   </header>
 
@@ -53,15 +53,14 @@ const entries = computed(() =>
   </div>
 
   <details
-    v-for="({ session, progress, status, tops }, index) in entries"
+    v-for="{ session, progress, status, tops } in entries"
     :key="session.id"
-    class="group bg-card screen-enter rounded-[20px] shadow-(--panel-shadow)"
-    :style="{ animationDelay: `${Math.min(index, 8) * 45 + 60}ms` }"
+    class="group bg-card rounded-2xl"
   >
     <summary class="flex flex-col gap-3 p-4">
       <div class="flex items-start justify-between gap-3">
-        <div class="flex flex-col">
-          <strong class="font-display condensed text-2xl font-bold uppercase">{{
+        <div class="flex min-w-0 flex-col gap-1">
+          <strong class="font-display text-xl font-semibold">{{
             workouts[session.workoutId].name
           }}</strong>
           <small class="text-muted-foreground text-xs">{{
@@ -74,9 +73,7 @@ const entries = computed(() =>
           }}</small>
         </div>
         <div class="flex items-center gap-2">
-          <Badge :variant="session.status === 'active' ? 'default' : 'secondary'">{{
-            status
-          }}</Badge>
+          <Badge variant="secondary">{{ status }}</Badge>
           <ChevronDown class="size-4 transition-transform group-open:rotate-180" />
         </div>
       </div>

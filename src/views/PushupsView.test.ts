@@ -13,6 +13,54 @@ function tracker() {
 }
 
 describe('push-up date selection', () => {
+  it('shows the selected date immediately and keeps quick date choices in sync', async () => {
+    const wrapper = tracker();
+    const picker = wrapper.get<HTMLInputElement>('#pushup-date');
+    expect(picker.element.value).toBe('2026-11-03');
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text() === 'Yesterday')!
+      .trigger('click');
+    expect(picker.element.value).toBe('2026-11-02');
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text() === 'Today')!
+      .trigger('click');
+    expect(picker.element.value).toBe('2026-11-03');
+    await wrapper.get('[aria-label="Previous month"]').trigger('click');
+    expect(wrapper.text()).toContain('October 2026');
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text() === 'Today')!
+      .trigger('click');
+    expect(wrapper.text()).toContain('November 2026');
+    wrapper.unmount();
+  });
+
+  it('browses months without changing the logging date until a day is chosen', async () => {
+    const wrapper = tracker();
+    const picker = wrapper.get<HTMLInputElement>('#pushup-date');
+    const previous = wrapper.get('[aria-label="Previous month"]');
+    const next = wrapper.get('[aria-label="Next month"]');
+    expect(next.attributes('disabled')).toBeDefined();
+    await previous.trigger('click');
+    expect(wrapper.text()).toContain('October 2026');
+    expect(picker.element.value).toBe('2026-11-03');
+    await wrapper.get('[aria-label="Sat 31 Oct: 0 of 100 push-ups"]').trigger('click');
+    expect(picker.element.value).toBe('2026-10-31');
+    await wrapper.get('[aria-label="Custom number of push-ups"]').setValue('25');
+    await wrapper.get('form').trigger('submit');
+    expect(wrapper.emitted('add')![0]!.slice(0, 2)).toEqual(['2026-10-31', 25]);
+    await previous.trigger('click');
+    await previous.trigger('click');
+    expect(wrapper.text()).toContain('August 2026');
+    expect(previous.attributes('disabled')).toBeDefined();
+    await wrapper.setProps({ busy: true });
+    expect(next.attributes('disabled')).toBeDefined();
+    expect(wrapper.findAll('[aria-label="Push-up days"] button:not(:disabled)')).toHaveLength(0);
+    wrapper.unmount();
+  });
+
   it('keeps a custom amount until the parent confirms it was saved', async () => {
     const wrapper = tracker();
     const input = wrapper.get<HTMLInputElement>('[aria-label="Custom number of push-ups"]');

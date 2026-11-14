@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calendarWeeks, challengeDays, challengeStats } from './pushups';
+import { calendarMonth, calendarWeeks, challengeDays, challengeStats } from './pushups';
 import { emptyState, encodeBackup, parseBackup } from './state';
 
 const entry = (date: string, reps: number) => ({
@@ -61,5 +61,18 @@ describe('daily push-ups', () => {
       dailyTarget: 100,
       entries: [],
     });
+  });
+
+  it('lays out full months including adjacent days and preserves each day’s totals and limits', () => {
+    const days = calendarMonth(challenge([entry('2026-11-02', 100)]), '2026-11-04', '2026-11-01');
+    expect(days).toHaveLength(42);
+    expect(days[0]).toMatchObject({ date: '2026-10-26', state: 'before' });
+    expect(days.at(-1)).toMatchObject({ date: '2026-12-06', state: 'upcoming' });
+    expect(days.find((day) => day.date === '2026-11-02')).toMatchObject({
+      reps: 100,
+      state: 'done',
+    });
+    expect(days.find((day) => day.date === '2026-11-03')?.state).toBe('missed');
+    expect(days.find((day) => day.date === '2026-11-04')?.state).toBe('today');
   });
 });

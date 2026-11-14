@@ -22,8 +22,6 @@ const props = defineProps<{
   history: Session[];
   restMinutes: number | null;
   busy: boolean;
-  position: number;
-  total: number;
 }>();
 const emit = defineEmits<{
   record: [exerciseId: string, log: SetLog];
@@ -53,22 +51,22 @@ const nextIndex = computed(() => {
 const loadHint = computed(
   () =>
     ({
-      barbell: 'Total weight: bar plus plates on both sides.',
-      smith: 'Total added plates, both sides; excludes the Smith bar.',
-      dumbbell: 'Kilograms per dumbbell. If one DB is used, record that one DB.',
-      cable: 'Record the selected stack setting in kg; pulley ratios vary.',
-      machine: 'Record the selected stack setting in kg.',
-      bodyweight: 'Bodyweight: no load to log.',
+      barbell: 'Total bar + plates, in kg.',
+      smith: 'Added plates on both sides, in kg. Exclude the Smith bar.',
+      dumbbell: 'kg per dumbbell.',
+      cable: 'Stack setting in kg; pulley ratios vary.',
+      machine: 'Stack setting in kg.',
+      bodyweight: 'Bodyweight; no load to enter.',
     })[exercise.value.loadKind],
 );
 const stats = computed(() => [
   {
-    value: `${exercise.value.min}–${exercise.value.max}`,
+    value: `${exercise.value.sets} × ${exercise.value.min}–${exercise.value.max}`,
     label: `${exercise.value.unit}${exercise.value.perSide ? '/side' : ''}`,
   },
   {
     value: exercise.value.targetRir,
-    label: exercise.value.unit === 'seconds' ? 'form reserve' : 'target RIR',
+    label: exercise.value.unit === 'seconds' ? 'form reserve' : 'RIR',
   },
   { value: restFor(exercise.value, props.restMinutes).label, label: 'rest' },
 ]);
@@ -83,145 +81,117 @@ watch(
 </script>
 
 <template>
-  <section :key="exercise.id" class="screen-enter flex flex-col gap-2">
-    <span class="eyebrow">Exercise {{ position }} of {{ total }}</span>
-    <h1 class="page-heading">{{ exercise.name }}</h1>
-    <p class="text-muted-foreground text-sm leading-6">
-      {{ loadHint
-      }}{{ exercise.perSide ? ' One set = left and right. Log each side; aim to match them.' : '' }}
+  <section class="flex flex-col gap-4">
+    <header class="flex flex-col gap-2">
+      <h1 class="page-heading">{{ exercise.name }}</h1>
+      <p class="text-muted-foreground text-sm leading-5">
+        {{ loadHint }}{{ exercise.perSide ? ' Log both sides for each set.' : '' }}
+      </p>
+    </header>
+
+    <dl class="flex flex-wrap gap-x-6 gap-y-2">
+      <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse gap-0.5">
+        <dt class="text-muted-foreground text-xs">{{ stat.label }}</dt>
+        <dd class="text-base font-semibold tabular-nums">{{ stat.value }}</dd>
+      </div>
+    </dl>
+
+    <SetForm
+      v-if="nextIndex !== null"
+      :key="`${exercise.id}:${nextIndex}:${entry.logs.length}:${editing?.index ?? 'new'}`"
+      :exercise="exercise"
+      :index="nextIndex"
+      :initial="editing"
+      :defaults="defaults"
+      :busy="busy"
+      @submit="emit('record', exercise.id, $event)"
+      @cancel="editing = null"
+    />
+    <p
+      v-else
+      class="bg-success-soft text-success flex items-center gap-2 rounded-xl p-4 text-sm font-medium"
+    >
+      <Check class="size-4" />All planned sets for this exercise are saved.
+    </p>
+
+    <slot name="rest-timer" />
+
+    <section class="flex gap-2.5 py-1 text-sm">
+      <History class="text-muted-foreground mt-0.5 size-4 shrink-0" />
+      <div class="flex min-w-0 flex-col gap-1">
+        <h2 class="font-medium">Previous session</h2>
+        <p v-if="previous" class="text-muted-foreground">
+          {{ formatDate(previous.date, { day: 'numeric', month: 'short' }) }} ·
+          {{ previousSummary }}
+        </p>
+        <p v-else class="text-muted-foreground">No previous completed entries for this movement.</p>
+        <div v-if="target" class="mt-1 flex items-start gap-1.5">
+          <TrendingUp
+            :class="
+              cn('mt-0.5 size-4 shrink-0', target.stalled ? 'text-coral' : 'text-muted-foreground')
+            "
+          />
+          <div class="flex flex-col gap-1">
+            <p class="text-secondary-foreground">
+              <span class="font-medium">Today's target:</span> {{ target.text }}
+            </p>
+            <p v-if="target.stalled" class="text-muted-foreground">
+              No progress in 3 sessions. Check sleep, food and rest times first. Still stuck: drop
+              5–10% and build back up.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <ul v-if="entry.logs.length" class="flex flex-col gap-2" aria-label="Saved sets">
+      <li
+        v-for="log in entry.logs"
+        :key="log.index"
+        class="bg-card flex items-center gap-3 rounded-xl py-1 pr-1 pl-3 text-sm"
+      >
+        <span class="text-muted-foreground shrink-0 text-xs">Set {{ log.index }}</span>
+        <span class="flex-1 tabular-nums">{{ formatSet(log, exercise) }}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          :disabled="busy"
+          :aria-label="`Edit set ${log.index}`"
+          @click="editing = log"
+          ><Pencil />Edit</Button
+        >
+      </li>
+    </ul>
+
+    <details class="group border-y">
+      <summary class="flex min-h-12 items-center gap-2 text-sm font-medium">
+        How to do it · video & form check
+        <ChevronDown class="ml-auto size-4 shrink-0 transition-transform group-open:rotate-180" />
+      </summary>
+      <div class="pb-4">
+        <ExerciseGuide :exercise="exercise" />
+      </div>
+    </details>
+
+    <button
+      v-if="!entry.logs.length"
+      type="button"
+      :disabled="busy"
+      :class="
+        cn(
+          'flex min-h-12 items-center gap-3 rounded-lg px-2 py-2 text-left text-sm transition-colors hover:bg-secondary',
+          'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 disabled:opacity-50',
+          swapped ? 'text-coral' : 'text-secondary-foreground',
+        )
+      "
+      @click="emit('swap', exercise.id)"
+    >
+      <ArrowRightLeft class="size-4 shrink-0" />
+      <span>{{ swapped ? 'Back to' : 'Swap to' }} {{ exercise.alternative.name }}</span>
+    </button>
+
+    <p class="text-muted-foreground text-xs leading-5">
+      RIR = clean repetitions you could still perform. Record actual results, not just the target.
     </p>
   </section>
-
-  <button
-    v-if="!entry.logs.length"
-    type="button"
-    :disabled="busy"
-    :class="
-      cn(
-        'flex min-h-12 items-center gap-3 rounded-[18px] px-4 py-2.5 text-left text-sm ring-1 transition-colors',
-        'focus-visible:ring-ring/60 outline-none focus-visible:ring-2 disabled:opacity-50',
-        swapped ? 'bg-coral-soft ring-coral/30' : 'bg-card ring-white/5 hover:bg-secondary',
-      )
-    "
-    @click="emit('swap', exercise.id)"
-  >
-    <ArrowRightLeft :class="cn('size-4 shrink-0', swapped ? 'text-coral' : 'text-primary')" />
-    <span class="flex flex-col">
-      <span class="text-muted-foreground text-xs">{{
-        swapped ? 'Swapped for this workout' : "Can't do it today?"
-      }}</span>
-      <span class="font-semibold"
-        >{{ swapped ? 'Back to' : 'Swap to' }} {{ exercise.alternative.name }}</span
-      >
-    </span>
-  </button>
-
-  <dl class="grid grid-cols-3 gap-2">
-    <div
-      v-for="stat in stats"
-      :key="stat.label"
-      class="stat-tile flex flex-col-reverse items-center gap-1.5 px-2 py-4 text-center"
-    >
-      <dt class="eyebrow">{{ stat.label }}</dt>
-      <dd class="font-display condensed text-[32px] leading-none font-bold tabular-nums">
-        {{ stat.value }}
-      </dd>
-    </div>
-  </dl>
-
-  <section class="bg-card flex gap-3 rounded-[18px] p-4 shadow-(--panel-shadow)">
-    <History class="text-muted-foreground mt-0.5 size-4 shrink-0" />
-    <div class="flex flex-col gap-0.5 text-sm">
-      <h3 class="font-semibold">Previous session</h3>
-      <p v-if="previous" class="text-secondary-foreground">
-        {{ formatDate(previous.date, { day: 'numeric', month: 'short' }) }} ·
-        {{ previousSummary }}
-      </p>
-      <p v-else class="text-muted-foreground">No previous completed entries for this movement.</p>
-    </div>
-  </section>
-
-  <section
-    v-if="target"
-    :class="
-      cn(
-        'relative flex gap-3 overflow-hidden rounded-[18px] p-4 ring-1',
-        target.stalled
-          ? 'bg-coral-soft ring-coral/30'
-          : target.ready
-            ? 'bg-success-soft ring-primary/40'
-            : 'bg-card ring-white/5',
-      )
-    "
-  >
-    <TrendingUp
-      :class="cn('mt-0.5 size-4 shrink-0', target.stalled ? 'text-coral' : 'text-primary')"
-    />
-    <div class="flex flex-col gap-0.5 text-sm">
-      <h3 class="font-semibold">Today's target</h3>
-      <p class="text-secondary-foreground">{{ target.text }}</p>
-      <p v-if="target.stalled" class="text-secondary-foreground">
-        No progress in 3 sessions. Check sleep, food and rest times first. Still stuck: drop 5–10%
-        and build back up.
-      </p>
-    </div>
-  </section>
-
-  <ul v-if="entry.logs.length" class="flex flex-col gap-2">
-    <li
-      v-for="log in entry.logs"
-      :key="log.index"
-      class="bg-card pop-in flex items-center gap-3 rounded-2xl py-2 pr-2 pl-3 text-sm shadow-(--panel-shadow)"
-    >
-      <span
-        class="bg-primary text-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-        >{{ log.index }}</span
-      >
-      <span class="flex-1 tabular-nums">{{ formatSet(log, exercise) }}</span>
-      <Button
-        variant="ghost"
-        size="sm"
-        :disabled="busy"
-        :aria-label="`Edit set ${log.index}`"
-        @click="editing = log"
-        ><Pencil />Edit</Button
-      >
-    </li>
-  </ul>
-
-  <SetForm
-    v-if="nextIndex !== null"
-    :key="`${exercise.id}:${nextIndex}:${entry.logs.length}:${editing?.index ?? 'new'}`"
-    :exercise="exercise"
-    :index="nextIndex"
-    :initial="editing"
-    :defaults="defaults"
-    :busy="busy"
-    @submit="emit('record', exercise.id, $event)"
-    @cancel="editing = null"
-  />
-  <p
-    v-else
-    class="bg-success-soft text-success pop-in flex items-center gap-2 rounded-[18px] p-4 text-sm font-semibold ring-1 ring-primary/30"
-  >
-    <Check class="size-4 stroke-3" />All planned sets for this exercise are saved.
-  </p>
-
-  <details class="group bg-card rounded-[18px] px-4 shadow-(--panel-shadow)">
-    <summary class="flex min-h-12 items-center text-sm font-semibold">
-      How to do it · video & form check
-      <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
-    </summary>
-    <div class="pb-4">
-      <ExerciseGuide
-        :exercise="exercise"
-        :swappable="!entry.logs.length && !busy"
-        @swap="emit('swap', exercise.id)"
-      />
-    </div>
-  </details>
-
-  <p class="text-muted-foreground text-xs leading-5">
-    RIR = clean repetitions you could still perform. Record actual results, not just the target.
-  </p>
 </template>

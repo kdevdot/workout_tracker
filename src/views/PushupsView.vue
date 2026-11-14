@@ -20,6 +20,11 @@ const emit = defineEmits<{
 
 const customReps = shallowRef<string | number>('');
 const selected = shallowRef(props.today);
+const month = shallowRef(`${props.today.slice(0, 7)}-01`);
+function showMonth(date: string) {
+  month.value = `${date.slice(0, 7)}-01`;
+}
+watch(selected, showMonth);
 watch(
   () => props.today,
   (today, previous) => {
@@ -31,6 +36,7 @@ watch(
   () => props.challenge.startDate,
   (startDate) => {
     if (startDate && selected.value < startDate) selected.value = props.today;
+    showMonth(selected.value);
   },
 );
 
@@ -47,7 +53,7 @@ const statTiles = computed(() => [
 </script>
 
 <template>
-  <header class="page-header screen-enter">
+  <header class="page-header">
     <h1 class="page-heading">Daily push-ups</h1>
     <p class="text-muted-foreground text-sm">
       Choose a date, then add the push-ups you did that day. You can log missed days later.
@@ -80,6 +86,7 @@ const statTiles = computed(() => [
         :start-date="challenge.startDate"
         :today="today"
         :busy="busy"
+        @choose="showMonth"
       />
       <PushupLogger
         v-model:draft="customReps"
@@ -93,22 +100,30 @@ const statTiles = computed(() => [
       />
     </section>
 
-    <dl class="grid grid-cols-4 gap-2">
+    <dl class="grid grid-cols-4 gap-2 border-y py-4">
       <div
         v-for="stat in statTiles"
         :key="stat.label"
-        class="bg-card flex flex-col-reverse items-center gap-1 rounded-xl px-1 py-3 text-center shadow-[var(--panel-shadow)]"
+        class="flex flex-col-reverse items-center gap-1 text-center"
       >
-        <dt class="text-muted-foreground text-[11px]">{{ stat.label }}</dt>
+        <dt class="text-muted-foreground text-xs">{{ stat.label }}</dt>
         <dd
-          class="font-display flex items-center gap-1 text-2xl leading-none font-semibold tabular-nums"
+          class="flex flex-wrap items-center justify-center gap-1 text-lg leading-none font-semibold tabular-nums"
         >
-          <component :is="stat.icon" v-if="stat.icon" class="text-primary size-4" />{{ stat.value }}
+          <component :is="stat.icon" v-if="stat.icon" class="text-muted-foreground size-3.5" />{{
+            stat.value
+          }}
         </dd>
       </div>
     </dl>
 
-    <PushupCalendar v-model="selected" :challenge="challenge" :today="today" :busy="busy" />
+    <PushupCalendar
+      v-model="selected"
+      v-model:month="month"
+      :challenge="challenge"
+      :today="today"
+      :busy="busy"
+    />
     <PushupSettings
       :target="challenge.dailyTarget"
       :busy="busy"

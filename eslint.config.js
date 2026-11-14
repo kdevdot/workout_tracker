@@ -6,7 +6,14 @@ import globals from 'globals';
 import ts from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['dist/**', 'node_modules/**', 'public/**', 'Machines/**', 'coverage/**']),
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+    'public/**',
+    'Machines/**',
+    'coverage/**',
+    'work/**',
+  ]),
   {
     files: ['src/**/*.{ts,vue}', '*.config.{ts,js}'],
     extends: [js.configs.recommended, ts.configs.recommended, vue.configs['flat/recommended']],

@@ -24,7 +24,7 @@ const days = computed(() =>
 </script>
 
 <template>
-  <section class="screen-enter flex flex-col gap-4">
+  <section class="flex flex-col gap-4">
     <div class="flex items-end justify-between gap-3">
       <!-- The title is the date picker: a transparent native input sits on top of it. -->
       <div
@@ -32,7 +32,7 @@ const days = computed(() =>
       >
         <h1 class="page-heading flex items-center">
           {{ formatDate(date, { weekday: 'short' })
-          }}<span class="text-primary mx-2 font-normal">/</span
+          }}<span class="text-muted-foreground mx-2 font-normal">/</span
           >{{ formatDate(date, { day: 'numeric', month: 'short' }) }}
           <ChevronDown class="text-muted-foreground ml-1 size-5" aria-hidden="true" />
         </h1>
@@ -64,10 +64,7 @@ const days = computed(() =>
       </div>
     </div>
 
-    <div
-      class="bg-card grid grid-cols-7 gap-1 rounded-[22px] p-1.5 shadow-(--panel-shadow)"
-      aria-label="Week dates"
-    >
+    <div class="bg-card grid grid-cols-7 gap-1 rounded-xl p-1.5" aria-label="Week dates">
       <button
         v-for="item in days"
         :key="item.day"
@@ -75,38 +72,27 @@ const days = computed(() =>
         :aria-label="`${formatDate(item.day, { weekday: 'long', day: 'numeric', month: 'long' })}${item.workout ? `, ${item.workout}` : ', rest day'}${item.done ? ', completed' : ''}`"
         :class="
           cn(
-            'flex min-h-[4.5rem] flex-col items-center justify-center gap-1 rounded-2xl border border-transparent text-xs transition-all duration-300',
+            'flex min-h-16 flex-col items-center justify-center gap-1 rounded-lg border border-transparent text-xs transition-colors',
             'focus-visible:ring-ring/60 outline-none focus-visible:ring-2',
             item.selected
-              ? 'bg-primary text-primary-foreground shadow-[0_8px_24px_-8px_#d4f53c99]'
+              ? 'bg-secondary text-primary'
               : 'hover:bg-secondary text-muted-foreground',
             item.today && !item.selected && 'border-primary/50 text-foreground',
           )
         "
         @click="emit('date', item.day)"
       >
-        <span class="text-[10px] font-medium">{{
-          formatDate(item.day, { weekday: 'short' })
-        }}</span>
-        <strong class="font-display condensed text-[28px] leading-none font-bold tabular-nums">{{
+        <span class="text-xs">{{ formatDate(item.day, { weekday: 'short' }) }}</span>
+        <strong class="font-display text-[22px] leading-none font-semibold tabular-nums">{{
           Number(item.day.slice(-2))
         }}</strong>
-        <Check
-          v-if="item.done"
-          :class="
-            cn('size-3.5 stroke-3', item.selected ? 'text-primary-foreground' : 'text-success')
-          "
-        />
+        <Check v-if="item.done" class="text-success size-3.5" />
         <span
           v-else
           :class="
             cn(
               'size-1.5 rounded-full',
-              item.workout
-                ? item.selected
-                  ? 'bg-primary-foreground'
-                  : 'bg-primary/70'
-                : 'bg-transparent',
+              item.workout ? (item.selected ? 'bg-primary' : 'bg-primary/70') : 'bg-transparent',
             )
           "
         />

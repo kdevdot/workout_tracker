@@ -61,6 +61,15 @@ export function calendarWeeks(challenge: Challenge, today: string, count = 12): 
   );
 }
 
+/** Six Monday-first weeks keep month navigation stable, including adjacent dates. */
+export function calendarMonth(challenge: Challenge, today: string, month: string): ChallengeDay[] {
+  const totals = repsByDate(challenge.entries);
+  const first = weekFor(`${month.slice(0, 7)}-01`)[0]!;
+  return Array.from({ length: 42 }, (_, index) =>
+    dayFor(challenge, totals, shiftDate(first, index), today),
+  );
+}
+
 export function challengeStats(days: ChallengeDay[], today: string) {
   let best = 0;
   let run = 0;

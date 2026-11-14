@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Plus, Undo2 } from '@lucide/vue';
+import { Check, Plus, Undo2 } from '@lucide/vue';
 import { validPushupCount, type ChallengeDay } from '@/domain/pushups';
 import { MAX_PUSHUPS_PER_ENTRY } from '@/domain/limits';
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,7 @@ function addCustom() {
 
 <template>
   <div class="flex items-center gap-5">
-    <div class="relative size-32 shrink-0">
+    <div class="relative size-24 shrink-0">
       <svg viewBox="0 0 120 120" class="size-full -rotate-90 overflow-visible" aria-hidden="true">
         <circle
           cx="60"
@@ -66,31 +66,35 @@ function addCustom() {
           :stroke-dashoffset="ring.offset"
           :class="
             cn(
-              'drop-shadow-[0_0_8px_#d4f53c80] transition-[stroke-dashoffset] duration-700 ease-out',
+              'transition-[stroke-dashoffset] duration-200 ease-out',
               reps >= target ? 'stroke-success' : 'stroke-primary',
             )
           "
         />
       </svg>
       <div class="absolute inset-0 flex flex-col items-center justify-center">
-        <strong class="font-display condensed text-[44px] leading-none font-bold tabular-nums">{{
+        <strong class="font-display text-[30px] leading-none font-semibold tabular-nums">{{
           reps
         }}</strong>
         <span class="text-muted-foreground text-xs tabular-nums">of {{ target }}</span>
       </div>
     </div>
     <div class="flex min-w-0 flex-col gap-1">
-      <h2 class="font-display text-xl font-semibold">
+      <h2 class="text-base font-medium">
         <template v-if="day">Day {{ dayNumber }}</template>
         <template v-else>Before you started</template>
       </h2>
       <p
         v-if="day"
         :class="
-          cn('text-sm', reps >= target ? 'text-success font-semibold' : 'text-muted-foreground')
+          cn(
+            'flex items-center gap-1.5 text-sm',
+            reps >= target ? 'text-success font-semibold' : 'text-muted-foreground',
+          )
         "
       >
-        {{ reps >= target ? 'Target hit ✓' : `${target - reps} to go` }}
+        <Check v-if="reps >= target" class="size-3.5" />
+        {{ reps >= target ? 'Target hit' : `${target - reps} to go` }}
       </p>
     </div>
   </div>
@@ -102,7 +106,7 @@ function addCustom() {
         :key="amount"
         variant="outline"
         size="lg"
-        class="border-primary/40 text-primary font-bold tabular-nums"
+        class="font-semibold tabular-nums"
         :disabled="busy"
         @click="emit('add', date, amount)"
         >+{{ amount }}</Button
@@ -117,7 +121,7 @@ function addCustom() {
         :max="MAX_PUSHUPS_PER_ENTRY"
         step="1"
         inputmode="numeric"
-        placeholder="Other amount"
+        placeholder="Reps"
         class="h-11"
       />
       <Button type="submit" size="lg" class="h-11" :disabled="busy || !validCustom"

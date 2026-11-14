@@ -8,10 +8,10 @@ Live: https://kdevdot.github.io/workout_tracker/
 
 - Shows the scheduled workout for each day and lets you move through the week.
 - Logs working sets (load, reps or seconds, reps in reserve) and shows your previous performance for each exercise.
-- Runs a rest timer that survives reloads and backgrounding. Rest follows the programme per exercise, or a fixed time you pick in Settings.
+- Runs a rest timer below the set form, with adjustment and dismissal controls. It survives reloads and backgrounding. Rest follows the programme per exercise, or a fixed time you pick in Settings.
 - Shows short, looping demos for audited movements, plus muscle maps and form checks. YouTube tutorials remain optional detailed explanations; unmatched movements are clearly labelled.
 - Tracks whey and creatine intake.
-- Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a 12-week calendar.
+- Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a month calendar. Use the date field, calendar or Yesterday shortcut to record a missed day.
 - Exports and restores all data as a JSON backup.
 
 ## Code organisation
@@ -20,6 +20,7 @@ Live: https://kdevdot.github.io/workout_tracker/
 - `src/components/plan/` renders the ordered exercise list.
 - `src/components/session/` owns exercise logging, the rest-timer UI and shared exercise progress.
 - `src/components/pushups/` owns date selection, logging, calendar and target settings.
+- `src/components/supplements/` renders recorded whey nutrition separately from the logging forms.
 - `src/components/ui/` contains owned shadcn-vue primitives. Defaults belong here; feature-specific styling belongs with the feature.
 - `src/composables/` separates workout writes, supplements, push-ups, timer state and storage. `useTrainingApp` wires these into navigation.
 - `src/domain/` owns prescriptions, validation, exercise identity, completion and progression rules; it does not depend on Vue.

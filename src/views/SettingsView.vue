@@ -64,7 +64,7 @@ function save() {
 </script>
 
 <template>
-  <header class="page-header screen-enter">
+  <header class="page-header">
     <h1 class="page-heading">Settings & data</h1>
     <p class="text-muted-foreground text-sm">
       Local-first storage, with an independent backup you control.
@@ -114,7 +114,7 @@ function save() {
           <Label for="whey-name">Exact whey product / flavour</Label>
           <Input id="whey-name" v-model="name" maxlength="250" required class="h-11" />
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,6rem),1fr))] gap-3">
           <div class="flex flex-col gap-1.5">
             <Label for="whey-kcal">kcal per serving</Label>
             <Input

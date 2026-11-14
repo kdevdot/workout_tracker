@@ -73,10 +73,12 @@ const fields = computed(() => {
       step: 0.5,
     },
   ];
+  // With four fields, pair load/RIR on the first row and left/right on the next.
+  if (weighted.value && sided.value) list.splice(1, 0, list.pop()!);
   return list;
 });
 const columns = computed(
-  () => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-4' })[fields.value.length],
+  () => ({ 2: 'grid-cols-2', 3: 'grid-cols-3', 4: 'grid-cols-2' })[fields.value.length],
 );
 
 const count = (value: string | number) => {
@@ -122,18 +124,22 @@ function submit() {
 
 <template>
   <form
-    class="set-form bg-card flex flex-col gap-5 rounded-xl border p-5"
+    class="set-form bg-card flex flex-col gap-4 rounded-xl p-4"
+    :class="{
+      'set-form--three-fields': fields.length === 3,
+      'set-form--four-fields': fields.length === 4,
+    }"
     novalidate
     @submit.prevent="submit"
   >
     <div class="flex items-baseline justify-between gap-2">
-      <h3 class="section-heading">
+      <h2 class="section-heading">
         {{ initial ? 'Edit' : 'Record' }} set {{ index }}
         <span v-if="sided" class="text-muted-foreground text-sm font-normal">· both sides</span>
-      </h3>
-      <span class="text-muted-foreground text-xs font-medium">of {{ exercise.sets }}</span>
+      </h2>
+      <span class="text-muted-foreground text-sm">of {{ exercise.sets }}</span>
     </div>
-    <div :class="cn('set-fields grid gap-2.5', columns)">
+    <div :class="cn('set-fields grid items-end gap-2.5', columns)">
       <div v-for="item in fields" :key="item.key" class="flex flex-col gap-1.5">
         <Label :for="`${item.key}-${index}`" class="text-muted-foreground text-xs">{{
           item.label
@@ -165,23 +171,33 @@ function submit() {
 
 <style scoped>
 .set-form {
-  border-color: transparent;
-  border-radius: 20px;
-  box-shadow: var(--panel-shadow);
-  background: radial-gradient(90% 60% at 50% 0%, var(--primary-wash), transparent 70%), var(--card);
+  border-radius: 16px;
 }
 .set-input {
-  min-height: 64px;
+  min-height: 4rem;
   background: var(--background);
-  border-color: var(--border);
-  border-radius: 14px;
+  border-color: var(--input);
+  border-radius: 8px;
   font-family: var(--font-display);
   font-stretch: 75%;
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 1.875rem;
+  font-weight: 600;
 }
 .set-input:focus-visible {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--primary-focus);
+}
+.set-form--four-fields {
+  gap: 12px;
+  padding: 12px;
+}
+.set-form--four-fields .set-input {
+  min-height: 3.5rem;
+}
+@media (max-width: 360px) {
+  .set-form--three-fields .set-input {
+    font-size: 1.5rem;
+    padding-inline: 0;
+  }
 }
 </style>

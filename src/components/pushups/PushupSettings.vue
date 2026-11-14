@@ -13,7 +13,7 @@ function reset() {
 </script>
 
 <template>
-  <details class="group bg-card rounded-xl px-4 shadow-[var(--panel-shadow)]">
+  <details class="group bg-card rounded-xl px-4">
     <summary class="flex min-h-12 items-center text-sm font-semibold">Tracker settings</summary>
     <div class="flex flex-col gap-3 pb-4">
       <PushupTargetForm

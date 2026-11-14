@@ -14,6 +14,13 @@ export function shiftDate(value: string, days: number): string {
   return localDate(date);
 }
 
+/** The first day of an adjacent month, without end-of-month overflow. */
+export function shiftMonth(value: string, months: number): string {
+  const date = new Date(`${value.slice(0, 7)}-01T12:00:00`);
+  date.setMonth(date.getMonth() + months);
+  return localDate(date);
+}
+
 export function weekFor(value: string): string[] {
   const weekday = new Date(`${value}T12:00:00`).getDay();
   const monday = shiftDate(value, -((weekday + 6) % 7));

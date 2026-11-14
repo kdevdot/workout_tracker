@@ -6,7 +6,6 @@ import type { Phase, WorkoutId } from '@/domain/programme-types';
 import type { Session } from '@/domain/state';
 import { restFor, sessionProgress } from '@/domain/sessions';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import ExerciseProgress from '@/components/session/ExerciseProgress.vue';
 import WorkoutExerciseList from '@/components/plan/WorkoutExerciseList.vue';
 import MuscleMap from '@/components/MuscleMap.vue';
@@ -79,53 +78,32 @@ function chooseWorkout(event: Event) {
 <template>
   <WeekStrip :date="date" :today="today" :done-dates="doneDates" @date="emit('date', $event)" />
 
-  <section class="workout-hero screen-enter">
-    <span class="hero-watermark" aria-hidden="true">{{
-      workout ? workout.name.slice(-1) : 'Zz'
-    }}</span>
+  <section class="workout-hero">
     <div class="flex flex-col gap-3">
-      <div class="flex min-h-7 items-center justify-between gap-3">
-        <p class="eyebrow flex items-center gap-2">
-          <span :class="cn('size-1.5 rounded-full', workout ? 'bg-primary' : 'bg-coral')" />
-          {{
-            !workout
-              ? 'Recovery'
-              : activePhase === 'intro'
-                ? 'Introduction · 2 sets, 3 RIR'
-                : 'Full baseline · exercise-specific RIR'
-          }}
-        </p>
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
         <p
           v-if="done && progress"
-          class="bg-success-soft text-success pop-in flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold"
+          class="text-success flex items-center gap-1.5 text-xs font-medium"
         >
           <CircleCheck class="size-4" />{{
             progress.done < progress.total ? 'Completed · partial' : 'Completed'
           }}
         </p>
       </div>
-      <h2 class="workout-title">{{ workout?.name ?? 'Rest day' }}</h2>
-      <p v-if="workout" class="flex gap-5 text-xs font-medium">
-        <span class="text-muted-foreground"
-          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold">{{
-            exercises.length
-          }}</strong>
-          exercises</span
-        >
-        <span class="text-muted-foreground"
-          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold">{{
-            totalSets
-          }}</strong>
-          working sets</span
-        >
-        <span class="text-muted-foreground"
-          ><strong class="font-display condensed text-foreground mr-1 text-2xl font-bold"
-            >~{{ minutes }}</strong
-          >
-          min</span
-        >
-      </p>
-      <p v-else class="text-muted-foreground max-w-[26ch] text-sm leading-6">
+      <template v-if="workout">
+        <p class="text-muted-foreground text-sm">
+          {{ exercises.length }} exercises · {{ totalSets }} working sets · ~{{ minutes }} min
+        </p>
+        <p class="text-muted-foreground text-xs">
+          {{
+            activePhase === 'intro'
+              ? 'Introduction · 2 sets, 3 RIR'
+              : 'Full baseline · exercise-specific RIR'
+          }}
+        </p>
+      </template>
+      <p v-else class="text-muted-foreground text-sm leading-6">
         Recovery is part of your programme. Supplements stay on track, even today.
       </p>
     </div>
@@ -205,14 +183,10 @@ function chooseWorkout(event: Event) {
     </div>
   </section>
 
-  <div class="workout-layout">
-    <aside class="workout-sidebar flex min-w-0 flex-col gap-5">
-      <MuscleMap :primary="workout?.primary ?? []" :supporting="workout?.supporting ?? []" />
-    </aside>
-
-    <div v-if="workout" class="workout-content flex min-w-0 flex-col gap-6">
-      <details class="group bg-card rounded-[20px] px-4 shadow-(--panel-shadow)">
-        <summary class="flex min-h-14 items-center gap-3 text-sm font-semibold">
+  <div v-if="workout" class="workout-layout">
+    <div class="workout-content flex min-w-0 flex-col gap-5">
+      <details class="group border-y">
+        <summary class="flex min-h-12 items-center gap-3 text-sm font-medium">
           <Flame class="text-coral size-4" />Warm-up & preparation
           <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
         </summary>
@@ -232,6 +206,16 @@ function chooseWorkout(event: Event) {
         :swappable-ids="swappableIds"
         @swap="emit('swap', $event)"
       />
+
+      <details class="group bg-card rounded-2xl px-4">
+        <summary class="flex min-h-12 items-center text-sm font-medium">
+          Muscle focus
+          <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
+        </summary>
+        <div class="pb-4">
+          <MuscleMap :primary="workout.primary" :supporting="workout.supporting" />
+        </div>
+      </details>
     </div>
   </div>
 </template>

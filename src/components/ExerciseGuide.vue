@@ -45,10 +45,10 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
       </div>
     </details>
 
-    <div class="grid grid-cols-[7.5rem_1fr] items-start gap-4">
+    <div class="grid grid-cols-[minmax(5rem,7.5rem)_minmax(0,1fr)] items-start gap-4">
       <BodyMap :primary="exercise.primary" :supporting="exercise.supporting" />
       <div class="flex flex-col gap-2">
-        <h4 class="text-muted-foreground text-xs font-semibold uppercase">Form check</h4>
+        <h4 class="text-muted-foreground text-sm font-medium">Form check</h4>
         <ol class="flex flex-col gap-1.5">
           <li v-for="(check, index) in checks" :key="check" class="flex gap-2 leading-snug">
             <span

@@ -41,15 +41,17 @@ const progress = computed(() => sessionProgress(props.session));
   <div class="flex flex-col gap-3">
     <div class="flex items-center justify-between gap-2">
       <Button variant="ghost" class="-ml-3" @click="emit('back')"><ArrowLeft />Back to plan</Button>
-      <span class="text-muted-foreground text-xs font-medium">
+      <span class="text-muted-foreground text-right text-xs">
         {{ formatDate(session.date, { weekday: 'short', day: 'numeric', month: 'short' }) }} ·
         {{ workouts[session.workoutId].name }}
       </span>
     </div>
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline justify-between">
-        <span class="eyebrow">Workout progress</span>
-        <span class="text-sm font-bold whitespace-nowrap tabular-nums"
+        <span class="text-muted-foreground text-xs"
+          >Exercise {{ selected + 1 }} of {{ session.exercises.length }}</span
+        >
+        <span class="text-xs font-medium whitespace-nowrap tabular-nums"
           >{{ progress.done }}/{{ progress.total }} exercises done</span
         >
       </div>
@@ -68,11 +70,21 @@ const progress = computed(() => sessionProgress(props.session));
     :history="history"
     :rest-minutes="restMinutes"
     :busy="busy"
-    :position="selected + 1"
-    :total="session.exercises.length"
     @record="(exerciseId, log) => emit('record', exerciseId, log)"
     @swap="emit('swap', $event)"
-  />
+  >
+    <template #rest-timer>
+      <RestTimer
+        v-if="timerVisible"
+        :display="timerDisplay"
+        :done="timerDone"
+        :busy="busy"
+        :fraction="timerFraction"
+        @dismiss="emit('stopTimer')"
+        @adjust="emit('adjustTimer', $event)"
+      />
+    </template>
+  </SessionExercise>
 
   <div class="grid grid-cols-2 gap-2">
     <Button variant="outline" size="lg" :disabled="selected === 0" @click="selected--"
@@ -97,10 +109,7 @@ const progress = computed(() => sessionProgress(props.session));
     >
       Finish workout
     </Button>
-    <div
-      v-if="confirmingFinish"
-      class="bg-card pop-in flex flex-col gap-3 rounded-[20px] p-4 shadow-(--panel-shadow)"
-    >
+    <div v-if="confirmingFinish" class="bg-card flex flex-col gap-3 rounded-2xl p-4">
       <p class="text-sm leading-6">
         {{ progress.done }} of {{ progress.total }} exercises done.
         {{
@@ -113,16 +122,4 @@ const progress = computed(() => sessionProgress(props.session));
       <Button variant="ghost" @click="confirmingFinish = false">Keep training</Button>
     </div>
   </section>
-
-  <!-- Room to scroll the form above the floating timer. -->
-  <div v-if="timerVisible" class="h-14 shrink-0" aria-hidden="true" />
-  <RestTimer
-    v-if="timerVisible"
-    :display="timerDisplay"
-    :done="timerDone"
-    :busy="busy"
-    :fraction="timerFraction"
-    @dismiss="emit('stopTimer')"
-    @adjust="emit('adjustTimer', $event)"
-  />
 </template>

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef } from 'vue';
-import { Check, Info, Trash2 } from '@lucide/vue';
+import { Check, Trash2 } from '@lucide/vue';
 import { CREATINE, type Intake } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import SupplementNutrition from '@/components/supplements/SupplementNutrition.vue';
 
 type Kind = Intake['kind'];
 const props = defineProps<{
@@ -27,25 +28,12 @@ const amounts = ref<Record<Kind, string | number>>({ whey: '1', creatine: '3.4' 
 const error = shallowRef('');
 const future = computed(() => props.date > props.today);
 const entries = computed(() => props.intakes.filter((entry) => entry.date === props.date));
-const wheyEntries = computed(() => entries.value.filter((entry) => entry.kind === 'whey'));
 // Amount already logged per product on this date, so a done supplement reads as done.
 const taken = computed(() => {
   const sums: Record<Kind, number> = { whey: 0, creatine: 0 };
   for (const entry of entries.value) sums[entry.kind] += entry.amount;
   return sums;
 });
-const labelMissing = computed(() =>
-  wheyEntries.value.some((entry) => entry.calories === null || entry.protein === null),
-);
-const totals = computed(() =>
-  wheyEntries.value.reduce(
-    (sum, entry) => ({
-      calories: sum.calories + (entry.calories ?? 0),
-      protein: sum.protein + (entry.protein ?? 0),
-    }),
-    { calories: 0, protein: 0 },
-  ),
-);
 const products = [
   {
     kind: 'whey',
@@ -80,7 +68,7 @@ function remove(id: string) {
 </script>
 
 <template>
-  <header class="page-header screen-enter">
+  <header class="page-header">
     <h1 class="page-heading">Daily supplements</h1>
     <p class="text-muted-foreground text-sm">
       Whey and creatine, on training and rest days. No food diary.
@@ -98,46 +86,17 @@ function remove(id: string) {
       type="date"
       :value="date"
       :max="today"
-      class="border-input bg-card focus-visible:ring-ring/50 h-10 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
+      class="border-input bg-card focus-visible:ring-ring/50 h-11 min-w-0 rounded-lg border px-3 text-base outline-none focus-visible:ring-3"
       @change="emit('date', ($event.target as HTMLInputElement).value)"
     />
   </label>
 
-  <section class="muscle-panel bg-card text-foreground flex flex-col gap-3 rounded-xl p-5">
-    <h2 class="text-sm font-semibold opacity-80">Recorded whey nutrition</h2>
-    <p v-if="!wheyEntries.length" class="text-lg font-bold">No whey entries for this date.</p>
-    <p v-else class="flex items-baseline gap-4">
-      <span
-        ><strong class="font-display text-5xl leading-none font-semibold tabular-nums">{{
-          Math.round(totals.calories)
-        }}</strong>
-        kcal</span
-      >
-      <span
-        ><strong class="font-display text-5xl leading-none font-semibold tabular-nums">{{
-          Math.round(totals.protein * 10) / 10
-        }}</strong>
-        g protein</span
-      >
-      <span v-if="labelMissing" class="text-xs opacity-80">· partial totals</span>
-    </p>
-    <p v-if="labelMissing" class="text-xs leading-5 opacity-80">
-      Some entries had no configured label. Their nutrition is unknown, not zero. Updating your
-      label does not rewrite historical entries.
-    </p>
-    <p class="text-xs leading-5 opacity-70">Whey only, not your whole day.</p>
-    <Button
-      v-if="!hasLabel"
-      variant="secondary"
-      size="sm"
-      class="mt-2 w-fit"
-      @click="emit('settings')"
-      ><Info />Configure your product label</Button
-    >
-  </section>
+  <p v-if="future" class="text-muted-foreground text-sm">
+    Choose today or an earlier date to record an intake.
+  </p>
 
-  <Card v-for="product in products" :key="product.kind" class="gap-4 py-5">
-    <CardHeader class="px-5">
+  <Card v-for="product in products" :key="product.kind" class="gap-3 py-4">
+    <CardHeader class="px-4">
       <CardTitle class="flex items-center justify-between gap-2"
         >{{ product.title }}
         <span
@@ -149,7 +108,7 @@ function remove(id: string) {
       >
       <CardDescription>{{ product.description }}</CardDescription>
     </CardHeader>
-    <CardContent class="px-5">
+    <CardContent class="px-4">
       <form class="flex items-end gap-2" @submit.prevent="add(product.kind)">
         <div class="flex flex-1 flex-col gap-1.5">
           <Label :for="`amount-${product.kind}`">{{ product.label }}</Label>
@@ -177,6 +136,8 @@ function remove(id: string) {
     </CardContent>
   </Card>
   <p v-if="error" role="alert" class="text-destructive text-sm font-medium">{{ error }}</p>
+
+  <SupplementNutrition :entries="entries" :has-label="hasLabel" @settings="emit('settings')" />
 
   <section class="flex flex-col gap-2">
     <h2 class="section-heading">Entries for this date</h2>

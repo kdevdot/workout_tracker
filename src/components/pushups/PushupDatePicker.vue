@@ -3,19 +3,21 @@ import { computed } from 'vue';
 import { ChevronLeft, ChevronRight } from '@lucide/vue';
 import { formatDate, shiftDate, validDate } from '@/domain/dates';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const date = defineModel<string>({ required: true });
 const props = defineProps<{ startDate: string; today: string; busy: boolean }>();
+const emit = defineEmits<{ choose: [date: string] }>();
 const yesterday = computed(() => shiftDate(props.today, -1));
 const dateLabel = computed(() =>
   formatDate(date.value, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
 );
 
 function chooseDate(value: string) {
-  if (!props.busy && validDate(value) && value >= props.startDate && value <= props.today)
+  if (!props.busy && validDate(value) && value >= props.startDate && value <= props.today) {
     date.value = value;
+    emit('choose', value);
+  }
 }
 function changeDate(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -57,7 +59,7 @@ function changeDate(event: Event) {
         @click="chooseDate(shiftDate(date, -1))"
         ><ChevronLeft
       /></Button>
-      <Input
+      <input
         id="pushup-date"
         type="date"
         :value="date"
@@ -65,7 +67,7 @@ function changeDate(event: Event) {
         :max="today"
         :disabled="busy"
         aria-describedby="pushup-date-label"
-        class="h-11 flex-1"
+        class="border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 h-11 min-w-0 flex-1 rounded-lg border px-3 text-base outline-none focus-visible:ring-3 disabled:opacity-50"
         @change="changeDate"
       />
       <Button

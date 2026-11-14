@@ -15,8 +15,8 @@ const circumference = 2 * Math.PI * 20;
     aria-label="Rest timer"
     :class="
       cn(
-        'pop-in fixed inset-x-0 bottom-[calc(6.25rem+env(safe-area-inset-bottom))] z-20 mx-auto flex w-[calc(100%-2.5rem)] max-w-[28rem] items-center gap-3 rounded-[22px] py-2 pr-2 pl-2 shadow-[0_16px_40px_-12px_#000000d9] ring-1 backdrop-blur-xl',
-        done ? 'bg-coral text-primary-foreground ring-coral' : 'bg-card/90 ring-white/10',
+        'flex items-center gap-2 rounded-xl py-2 pr-1 pl-2',
+        done ? 'bg-coral-soft text-coral' : 'bg-card',
       )
     "
   >
@@ -45,13 +45,15 @@ const circumference = 2 * Math.PI * 20;
           class="transition-[stroke-dashoffset] duration-300 ease-linear"
         />
       </svg>
-      <BellRing v-if="done" class="size-5 animate-bounce" />
+      <BellRing v-if="done" class="size-5" />
     </span>
     <div class="flex flex-1 flex-col">
-      <strong class="font-display condensed text-[28px] leading-none font-bold tabular-nums">{{
-        done ? 'Go' : display
+      <strong class="font-display text-2xl leading-none font-semibold tabular-nums">{{
+        done ? 'Ready' : display
       }}</strong>
-      <span class="text-[11px] font-medium opacity-70">{{ done ? 'Rest complete' : 'rest' }}</span>
+      <span class="text-muted-foreground text-xs" :class="done && 'text-coral'">{{
+        done ? 'Rest complete' : 'Rest'
+      }}</span>
     </div>
     <template v-if="!done">
       <Button
@@ -75,8 +77,8 @@ const circumference = 2 * Math.PI * 20;
     </template>
     <Button
       variant="ghost"
-      size="icon"
-      class="size-10 rounded-xl hover:bg-white/15 hover:text-current"
+      size="icon-lg"
+      class="rounded-lg hover:text-current"
       aria-label="Dismiss rest timer"
       :disabled="busy"
       @click="emit('dismiss')"

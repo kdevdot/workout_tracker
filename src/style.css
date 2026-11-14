@@ -6,30 +6,27 @@
 
 :root {
   --radius: 0.875rem;
-  --background: #0a0c0f;
+  --background: #101215;
   --foreground: #eef0ea;
-  --card: #13161b;
+  --card: #191c21;
   --card-foreground: var(--foreground);
   --primary: #d4f53c;
-  --primary-wash: #d4f53c0d;
   --primary-focus: #d4f53c33;
   --primary-foreground: #0a0c0f;
-  --secondary: #1b1f26;
+  --secondary: #22262d;
   --secondary-foreground: #c3c9d2;
-  --muted: #171a20;
-  --muted-foreground: #8b94a3;
-  --accent: #1f2430;
-  --accent-foreground: #d4f53c;
+  --muted: #1c2026;
+  --muted-foreground: #a0a7b3;
+  --accent: #292e37;
+  --accent-foreground: var(--foreground);
   --coral: #ff7a59;
   --coral-soft: #ff7a5920;
   --destructive: #ff5a52;
   --success: #d4f53c;
   --success-soft: #d4f53c1c;
-  --border: #242932;
-  --input: #333a46;
+  --border: #30353e;
+  --input: #3b424d;
   --ring: #d4f53c;
-  --glow: #d4f53c;
-  --panel-shadow: inset 0 1px 0 #ffffff0a, 0 12px 32px -16px #000000b3;
 }
 
 @theme inline {
@@ -68,32 +65,12 @@
   html {
     color-scheme: dark;
     -webkit-tap-highlight-color: transparent;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 4.5rem;
+    scroll-padding-bottom: 7rem;
+    scrollbar-color: var(--input) var(--background);
   }
   body {
     @apply bg-background text-foreground min-w-[320px] font-sans antialiased;
-  }
-  /* Atmosphere: a soft volt glow up top, a coral ember below, and fine grain over everything. */
-  body::before,
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-  body::before {
-    background:
-      radial-gradient(60% 40% at 15% -5%, #d4f53c1f, transparent 70%),
-      radial-gradient(50% 35% at 110% 105%, #ff7a591a, transparent 70%);
-  }
-  body::after {
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  #app {
-    position: relative;
-    z-index: 1;
   }
   button,
   summary {
@@ -141,26 +118,24 @@
 }
 
 .app-header {
-  min-height: 64px;
-  padding-top: max(env(safe-area-inset-top), 14px);
-  background: #0a0c0fd9;
-  box-shadow: 0 1px 0 #ffffff0d;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  min-height: 56px;
+  padding-top: max(env(safe-area-inset-top), 12px);
+  background: var(--background);
+  padding-inline: 20px;
 }
 
 .app-main {
+  padding-inline: 20px;
   padding-top: 12px;
-  padding-bottom: calc(128px + env(safe-area-inset-bottom));
+  padding-bottom: calc(108px + env(safe-area-inset-bottom));
 }
 
 .page-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-/* Condensed display: scoreboard numbers and big titles. */
 .font-display,
 .wordmark,
 .page-heading,
@@ -170,135 +145,72 @@
 }
 
 .condensed {
-  font-stretch: 75%;
+  font-stretch: 80%;
 }
 
 .wordmark {
-  font-size: 24px;
-  font-weight: 800;
-  font-stretch: 80%;
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-stretch: 85%;
   line-height: 1;
   letter-spacing: -0.02em;
 }
 
-.page-heading {
-  font-size: 34px;
-  font-weight: 700;
-  font-stretch: 80%;
-  line-height: 1.05;
+.page-heading,
+.workout-title {
+  font-weight: 650;
+  font-stretch: 85%;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
+.page-heading {
+  font-size: 1.75rem;
+}
+
+.workout-title {
+  font-size: 1.875rem;
+}
+
 .section-heading {
-  font-weight: 650;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 1.125rem;
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
 
-.eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-}
-
-/* The hero: a lit panel with a volt edge and a giant watermark letter. */
 .workout-hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background:
-    radial-gradient(120% 80% at 100% 0%, #d4f53c14, transparent 60%),
-    linear-gradient(160deg, #191d24, var(--card) 55%);
-  border-radius: 22px;
-  box-shadow: var(--panel-shadow);
-  padding: 22px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
   display: grid;
-  gap: 20px;
-}
-
-.workout-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(140deg, #d4f53c66, #ffffff10 35%, transparent 60%, #ff7a5933);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.hero-watermark {
-  position: absolute;
-  z-index: -1;
-  right: -12px;
-  top: -34px;
-  font-family: var(--font-display);
-  font-size: 220px;
-  font-weight: 800;
-  font-stretch: 75%;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px #ffffff17;
-  pointer-events: none;
-  user-select: none;
-}
-
-.workout-title {
-  font-weight: 800;
-  font-size: 52px;
-  font-stretch: 75%;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
+  gap: 16px;
 }
 
 .hero-action {
-  position: relative;
   background: var(--primary);
   color: var(--primary-foreground);
-  min-height: 56px;
-  border-radius: 16px;
-  box-shadow:
-    0 0 0 1px #d4f53c,
-    0 10px 30px -8px #d4f53c80;
-  transition:
-    transform 160ms ease,
-    box-shadow 200ms ease;
+  min-height: 50px;
+  border-radius: 8px;
+  transition: background-color 160ms ease;
 }
 
 .hero-action.is-done {
   background: var(--secondary);
   color: var(--foreground);
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-.hero-action:not(:disabled) svg {
-  transition: transform 200ms ease;
 }
 
 @media (hover: hover) {
   .hero-action:hover:not(:disabled) {
     background: #defa66;
-    box-shadow:
-      0 0 0 1px #defa66,
-      0 14px 36px -8px #d4f53ca6;
-  }
-  .hero-action:hover:not(:disabled) svg {
-    transform: translateX(3px);
   }
   .hero-action.is-done:hover:not(:disabled) {
     background: var(--accent);
-    box-shadow: inset 0 0 0 1px var(--input);
   }
   .nav-item:hover:not([aria-current='page']):not(:disabled) {
     color: var(--foreground);
+    background: var(--secondary);
   }
 }
 
@@ -310,37 +222,33 @@
 .exercise-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  background: var(--card);
+  border-radius: 16px;
+  padding-inline: 12px;
 }
 
-.exercise-list > details {
-  background: var(--card);
-  border-radius: 18px;
-  box-shadow: var(--panel-shadow);
-  padding-inline: 12px;
-  transition: background 200ms ease;
+.exercise-list > details + details {
+  border-top: 1px solid var(--border);
 }
 
 .exercise-list > details[open] {
-  background: #161a20;
-  padding-bottom: 12px;
+  padding-bottom: 16px;
 }
 
 .exercise-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 84px;
+  gap: 10px;
+  min-height: 80px;
   padding: 12px 0;
 }
 
 .exercise-row [data-exercise-icon] {
-  background: linear-gradient(150deg, #22272f, #181c22);
-  border-radius: 14px;
-  box-shadow: inset 0 0 0 1px #ffffff0d;
+  background: var(--secondary);
+  border-radius: 8px;
 }
 
-/* Floating glass navigation with a sliding volt pill. */
+/* An opaque, quiet dock leaves lime for the logging action. */
 .app-nav {
   position: fixed;
   z-index: 30;
@@ -348,62 +256,43 @@
   left: 50%;
   transform: translateX(-50%);
   width: min(calc(100% - 24px), 448px);
-  background: #13161bcc;
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  background: var(--card);
   color: var(--foreground);
-  border-radius: 24px;
-  padding: 6px;
-  box-shadow:
-    inset 0 0 0 1px #ffffff12,
-    0 16px 40px -12px #000000d9;
-}
-
-.nav-pill {
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 20%;
-  border-radius: 18px;
-  background: var(--primary);
-  box-shadow: 0 6px 20px -6px #d4f53c99;
-  transition: transform 420ms cubic-bezier(0.34, 1.4, 0.5, 1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 4px;
 }
 
 .nav-item {
   position: relative;
-  min-height: 58px;
+  min-width: 0;
+  min-height: 56px;
   gap: 4px;
   color: var(--muted-foreground);
-  border-radius: 18px;
-  transition: color 250ms ease;
+  border-radius: 10px;
+  font-size: clamp(0.625rem, 2.8vw, 0.75rem);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
 }
 
 .nav-item[aria-current='page'] {
-  color: var(--primary-foreground);
+  color: var(--primary);
+  background: var(--secondary);
 }
 
-.muscle-panel,
-.exercise-list {
-  border-radius: 20px;
+@media (max-width: 360px) {
+  .app-nav {
+    width: calc(100% - 12px);
+  }
+  .app-nav-links {
+    grid-template-columns: 1fr 1fr 1fr 1.2fr 1fr;
+  }
 }
 
-.muscle-panel {
-  box-shadow: var(--panel-shadow);
-}
-
-.muscle-panel .section-heading {
-  font-size: 18px;
-}
-
-/* Scoreboard tiles for the session's target numbers. */
-.stat-tile {
-  background: var(--card);
-  border-radius: 16px;
-  box-shadow: var(--panel-shadow);
-}
-
-/* One segment per exercise: fills volt when every set of it is logged. */
+/* Each segment fills only after every working set of that exercise is saved. */
 .segments {
   display: grid;
   grid-auto-flow: column;
@@ -424,10 +313,10 @@
   inset: 0;
   background: var(--primary);
   transform-origin: left;
-  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 180ms ease-out;
 }
 
-/* Workout screen: one tappable piece per exercise. Thin bar, thumb-sized hit area. */
+/* Thin progress bar, with a 44 px target for each exercise. */
 .step-bar {
   display: grid;
   grid-auto-flow: column;
@@ -445,7 +334,7 @@
 }
 
 .step-bar > button:focus-visible {
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--ring) 60%, transparent);
+  box-shadow: 0 0 0 2px var(--ring);
 }
 
 .step-bar > button > span {
@@ -453,7 +342,7 @@
   height: 6px;
   border-radius: 999px;
   background: var(--secondary);
-  transition: background-color 300ms ease;
+  transition: background-color 180ms ease;
 }
 
 .step-bar > button.is-current > span {
@@ -462,56 +351,6 @@
 
 .step-bar > button.is-done > span {
   background: var(--primary);
-}
-
-/* Motion */
-.screen-enter {
-  animation: screen-enter 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.stagger > * {
-  animation: screen-enter 550ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i, 0) * 45ms + 80ms);
-}
-
-.pop-in {
-  animation: pop-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-.live-dot {
-  animation: live 2.4s ease-in-out infinite;
-}
-
-@keyframes screen-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes live {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 #d4f53c80;
-  }
-  50% {
-    box-shadow: 0 0 0 5px #d4f53c00;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

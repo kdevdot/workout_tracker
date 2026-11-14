@@ -10,14 +10,14 @@ const emit = defineEmits<{ dismiss: [] }>();
     <div
       v-if="message"
       role="status"
-      class="bg-secondary/90 text-foreground fixed backdrop-blur-xl ring-1 ring-white/10 inset-x-5 top-[calc(env(safe-area-inset-top)+0.75rem)] z-40 mx-auto flex max-w-md items-center gap-2.5 rounded-xl py-2 pr-1 pl-3.5 text-sm font-medium shadow-lg"
+      class="bg-secondary text-foreground fixed inset-x-5 top-[calc(env(safe-area-inset-top)+0.75rem)] z-40 mx-auto flex max-w-md items-center gap-2.5 rounded-xl py-1 pr-1 pl-3.5 text-sm font-medium shadow-lg"
     >
       <CircleCheck class="text-primary size-4 shrink-0" />
       <span class="flex-1">{{ message }}</span>
       <button
         type="button"
         aria-label="Dismiss message"
-        class="focus-visible:ring-ring/60 flex size-9 items-center justify-center rounded-lg opacity-70 outline-none focus-visible:ring-2"
+        class="text-muted-foreground focus-visible:ring-ring/60 flex size-11 shrink-0 items-center justify-center rounded-lg outline-none focus-visible:ring-2"
         @click="emit('dismiss')"
       >
         <X class="size-4" />

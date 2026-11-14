@@ -4,11 +4,7 @@ defineProps<{ primary: string[]; supporting: string[] }>();
 </script>
 
 <template>
-  <section
-    class="muscle-panel bg-card rounded-xl p-5"
-    role="region"
-    aria-labelledby="muscle-heading"
-  >
+  <section class="flex flex-col" role="region" aria-labelledby="muscle-heading">
     <div class="flex items-center justify-between gap-2">
       <h3 id="muscle-heading" class="section-heading">Muscle focus</h3>
       <div class="text-muted-foreground flex gap-3 text-[10px] font-medium">

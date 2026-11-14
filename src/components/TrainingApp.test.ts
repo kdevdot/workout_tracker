@@ -163,7 +163,7 @@ describe('working app integration', () => {
     await wrapper.get('#pushup-target').setValue('50');
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() =>
-      expect(wrapper.findAll('[aria-label="Push-up days"] button')).toHaveLength(84),
+      expect(wrapper.findAll('[aria-label="Push-up days"] button')).toHaveLength(42),
     );
     expect(wrapper.text()).toContain('Day 1');
 
@@ -401,7 +401,7 @@ describe('working app integration', () => {
     await wrapper.get('input[type="date"]').setValue('2026-11-01');
     const forms = wrapper.findAll('form');
     await forms[0]!.trigger('submit');
-    await vi.waitFor(() => expect(wrapper.text()).toContain('partial totals'));
+    await vi.waitFor(() => expect(wrapper.text()).toMatch(/partial totals/i));
     await forms[1]!.trigger('submit');
     await vi.waitFor(async () => expect((await savedData()).intakes).toHaveLength(2));
     const entries = (await savedData()).intakes;

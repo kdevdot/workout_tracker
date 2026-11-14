@@ -1,5 +1,7 @@
 # Exercise illustration audit
 
+Current video coverage and player decisions are recorded in [the non-YouTube video audit](SHORT-DEMO-AUDIT.md). That revision supersedes the earlier video choices below; illustration provenance remains applicable.
+
 Reviewed: 3 November 2026. This is a selection audit, not an app integration or a change to the training programme.
 
 ## Source and method

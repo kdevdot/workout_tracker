@@ -26,3 +26,11 @@ The approved four-day plan has 18 shared movement definitions and target session
 Do not repoint the old split-squat ID to the supported one-DB variation. The new supported-db-stationary-split-squat deliberately has its own history. Existing canonical aliases still share matching barbell-RDL history. Retired guides/demos remain for old snapshots. Sources and qualifications live outside persisted data in research.ts and guides.ts; ExerciseEvidence.vue renders them without storage effects.
 
 Progression uses the displayed upper rep bound and reserve, requires the current full set count, and never assumes a plate/pin increment. There is no hidden +3-rep threshold or forced 0–1 RIR cue in new workouts. The private Obsidian document remains ignored; the public prescription and research reference is docs/PROGRAMME.md.
+
+## Non-YouTube media revision — 14 November 2026
+
+The catalogue covers 41 movement IDs: every current primary and swap, plus retained historical guides. It selects 18 native clips, four verified Vimeo clips and 16 original movement models. Local file/poster names are paired by the catalogue helper; Vimeo IDs retain owner-published poster, author, title and duration metadata. Diagrams share one model between preview and playback. Never substitute a different exercise or generic illustration as a video poster.
+
+ExerciseDemo composes playback, retry, close/focus return and previews; ExerciseMotion owns animation timing and controls. exercise-motion.ts contains pure movement geometry with explicit side/overhead views. Preserve the labelled illustrative scope; these are not motion capture or machine calibration. Model edits need a visual start/finish check as well as geometry tests. Animations stop when hidden/offscreen and offer discrete positions in reduced-motion mode.
+
+The former YouTube player and guide video fields were removed. Tests cover complete coverage, source/preview pairing, retry, unload and preserving entered weights for native/Vimeo playback. No programme, storage schema or session records changed. Rejected blocked embeds are not shipped as available demonstrations.

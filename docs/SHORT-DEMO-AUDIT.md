@@ -1,104 +1,91 @@
-# Short exercise demonstration audit
+# Non-YouTube demonstrations and preview audit
 
-Original audit: 10 November 2026, extended 12 November 2026. The original coverage table below records the 26 pre-revision guide entries. Those entries remain available for saved sessions.
+Updated: 14 November 2026. The user approved real footage or movement animations. This revision replaces the former short-demo/YouTube arrangement. Workout prescriptions, movement identities and session data are unchanged.
 
-## Programme revision — 14 November 2026
+## Coverage
 
-The approved programme now has 18 distinct primary movements, with 31 guide entries including retained historical movements. There are 26 short-demo mappings backed by 22 distinct clips: eight remote Your Move clips and fourteen bundled Goulart / wger adaptations. Fifteen of the eighteen current primary movements have a short reference, with equipment/support differences labelled before playback.
+All 18 primary exercises, 14 additional current swaps and 9 additional historical guide movements have an in-app demonstration: 41 movement IDs. There are 18 distinct local clips, 4 verified creator-hosted Vimeo clips and 16 original movement diagrams. No YouTube player or tutorial IDs remain in the app. Two older unused calf clips remain attributed for rollback.
 
-| New primary movement                | Short-demo decision | Source / limit                                                                                                                                                      |
-| ----------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Barbell Romanian deadlift           | Related             | Existing audited DB-RDL clip; barbell/equipment difference explicit. Candidate wger 507 / 2 also showed DBs and was not accepted as an exact barbell demonstration. |
-| Low-incline DB bench press          | Movement            | Goulart / wger 537 / 24, trimmed to 6–21 s; confirmed incline DB pressing in sampled frames.                                                                        |
-| Incline DB curl                     | Gap                 | Verified optional Renaissance Periodization explanation; no matching freely licensed short clip added.                                                              |
-| Supported DB stationary split squat | Related             | Existing unsupported two-DB clip; upright support, one DB and floor rear-foot position stated.                                                                      |
-| Floor reverse crunch                | Gap                 | Verified PureGym explanation; no matching freely licensed short clip added.                                                                                         |
+Every preview is tied to the selected demonstration. Native posters are frames from that exact MP4. Vimeo posters are the owner-published thumbnail for that exact video ID (which may be an owner-selected title card). Movement previews render the same diagram at its starting position, without running its timeline. Decorative exercise-list SVGs are never substituted for video posters. A failed poster leaves the named play action available.
 
-The hanging knee raise remains a current quick-demo gap. Retired landmine-row and Pallof-press gaps also remain explicit. Optional YouTube IDs were checked against creator-hosted search results and the official PureGym reverse-crunch page. Four attributed frame-one thumbnails were added from the pinned Workout Guide revision.
+## Current primary exercises
 
-The new incline adaptation was inspected in sampled contact frames and decoded with FFmpeg: H.264, one video stream, 1280 × 720, 30 fps, exactly 15 seconds, no audio. No new browser-playback or physical-iPhone validation is claimed by this addition. Existing component tests cover disclosure, variation notices, failure/retry and preserving entered workout values.
+| Exercise                                    | Demonstration                                                                                                 | Qualification                                                                                              |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Barbell bench press                         | [Exercise video by Your Move](https://ymove.app)                                                              | Selected movement                                                                                          |
+| UNICA lat pulldown                          | Original movement diagram · pulldown                                                                          | Illustrated lat-bar path. Use the UNICA high hook and its own seat/thigh setup.                            |
+| UNICA supported seated row                  | Original movement diagram · supported-row                                                                     | Illustrated chest-supported row. Use the UNICA long bars and its support setup.                            |
+| Machine pec fly                             | Original movement diagram · pec-fly                                                                           | Selected movement                                                                                          |
+| DB lateral raise                            | [Exercise video by Your Move](https://ymove.app)                                                              | Selected movement                                                                                          |
+| Machine reverse fly                         | Original movement diagram · reverse-fly                                                                       | Selected movement                                                                                          |
+| UNICA supported arm curl                    | [Goulart / wger · adapted](https://wger.de/media/exercise-video/465/5d2339a4-815f-46ba-aa19-8a763cfdeba0.MOV) | Another preacher-curl machine is shown. Set the UNICA pad and bar as in your cues.                         |
+| One-arm cable overhead triceps extension    | [Goulart / wger · adapted](https://wger.de/media/exercise-video/803/99e0001f-217a-4b11-823c-014d24a5415e.MOV) | Selected movement                                                                                          |
+| Barbell back squat                          | [Exercise video by Your Move](https://ymove.app)                                                              | Selected movement                                                                                          |
+| Barbell Romanian deadlift                   | [ActionJax Strength & Performance · Barbell Romanian Deadlift](https://vimeo.com/1000189819)                  | Selected movement                                                                                          |
+| Seated leg curl                             | [Goulart / wger · adapted](https://wger.de/media/exercise-video/366/43df4b79-d4c3-4fbf-bcb5-e0d825b84120.MOV) | Another seated leg-curl machine is shown. Use your machine’s pad and pivot setup.                          |
+| Leg extension                               | Original movement diagram · leg-extension                                                                     | Illustrated knee-extension path. Use your Selection machine’s knee-pivot and pad settings.                 |
+| Supported single-leg standing DB calf raise | Original movement diagram · standing-calf                                                                     | Selected movement                                                                                          |
+| Hanging knee raise with pelvic curl         | [ActionJax Strength & Performance · Hanging Knee Raise](https://vimeo.com/1130705496)                         | A fixed straight bar is shown. Use your fixed handles, curl the pelvis toward the ribs and avoid swinging. |
+| Low-incline DB bench press                  | [Goulart / wger · adapted](https://wger.de/media/exercise-video/537/b9c937e9-daeb-42a9-be8e-7a77e368478c.MOV) | Selected movement                                                                                          |
+| Incline DB curl                             | Original movement diagram · incline-curl                                                                      | Selected movement                                                                                          |
+| Supported DB stationary split squat         | Original movement diagram · split-squat                                                                       | Selected movement                                                                                          |
+| Floor reverse crunch                        | Original movement diagram · reverse-crunch                                                                    | Selected movement                                                                                          |
 
-## Implementation decision
+## Additional current swaps
 
-- Prefer an actual short demonstration over a long tutorial: native inline, muted, looping video with pause/replay controls.
-- Eight Your Move files stream remotely. No subscription, API key, backend, downloaded Your Move media or new paid supplier is introduced.
-- Thirteen Goulart / wger clips are bundled as adapted CC BY-SA 4.0 files; source licence, author, source intervals and output checksums are in `public/demos/ATTRIBUTION.md`.
-- Twenty-one distinct clips cover 23 of 26 guide entries. Two clips are reused for paused variants only with an explicit warning before playback.
-- Missing short demos remain honest gaps. The existing YouTube reference is an optional, initially collapsed detailed explanation, not a substitute advertised as a short clip.
-- Supplier licences are separate from source-code licences. Do not import OpenGym/Gym Visual media under a repository's code licence.
+| Exercise                                   | Demonstration                                                                                                 | Qualification                                                                          |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Smith flat bench press                     | [Anthony Matlock · Tutorial: Smith Machine Bench Press](https://vimeo.com/223935810)                          | Selected movement                                                                      |
+| Fixed-handle pull-up                       | [Goulart / wger · adapted](https://wger.de/media/exercise-video/475/83067ffe-ccb9-4e22-8507-5131b211ce74.MOV) | Overhand bar pull-ups shown from behind; your fixed handles and grip may differ.       |
+| Bench-supported one-arm DB row             | [Strong Body Strong Mind · Single Arm Dumbbell Row](https://vimeo.com/363596447)                              | Selected movement                                                                      |
+| One-arm standing cable fly                 | Original movement diagram · cable-fly                                                                         | Selected movement                                                                      |
+| One-arm low-cable lateral raise            | [Goulart / wger · adapted](https://wger.de/media/exercise-video/349/9896d82e-d8b6-48af-bdd5-b8545dc523e9.MOV) | Selected movement                                                                      |
+| Bent-over DB reverse fly                   | [Goulart / wger · adapted](https://wger.de/media/exercise-video/82/ebf1e6d2-df48-44b8-a791-97f77e801bf3.MOV)  | Selected movement                                                                      |
+| Standing DB curl                           | [Goulart / wger · adapted](https://wger.de/media/exercise-video/92/8bfb917c-3d0d-49b9-8073-5d7e01c1b894.MOV)  | Selected movement                                                                      |
+| One-DB two-hand overhead extension         | [Goulart / wger · adapted](https://wger.de/media/exercise-video/211/85f6eb25-a76c-409e-9af9-497794ac0dfb.MOV) | Selected movement                                                                      |
+| Smith squat                                | [Goulart / wger · adapted](https://wger.de/media/exercise-video/341/0cbfeace-dda9-4166-8424-f51358e88a4f.MOV) | Selected movement                                                                      |
+| DB Romanian deadlift                       | [Goulart / wger · adapted](https://wger.de/media/exercise-video/507/6b6054b5-9236-4a63-8392-6ea7a9010ca6.MOV) | Selected movement                                                                      |
+| Supine heel walkout                        | Original movement diagram · heel-walkout                                                                      | Selected movement                                                                      |
+| UNICA leg extension                        | Original movement diagram · leg-extension                                                                     | Illustrated knee-extension path. Use the UNICA leg-extension setup in your saved cues. |
+| Supported bodyweight single-leg calf raise | Original movement diagram · bodyweight-calf                                                                   | Selected movement                                                                      |
+| Low-incline Smith press                    | Original movement diagram · smith-incline                                                                     | Selected movement                                                                      |
 
-## Component boundaries
+## Additional historical guide movements
 
-- `ExerciseGuide.vue` composes the selected short demo, optional detailed tutorial, muscle map, existing cues and swap action. It does not own playback or training data.
-- `ExerciseDemo.vue` owns native-video playback, failure/retry, close/focus return, credit and variation notices. Props are the media record and exercise identity; it has no persistence responsibility.
-- `ExerciseVideo.vue` remains the tap-to-load YouTube player, now inside the optional tutorial disclosure. Closing any ancestor disclosure unloads it.
-- `src/domain/demos.ts` is the audited media catalogue; it does not alter the programme or persisted sessions.
+| Exercise                   | Demonstration                                                                                                 | Qualification                                                                 |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| paused barbell bench press | [Exercise video by Your Move](https://ymove.app)                                                              | Pause not shown. Hold the bar still on your chest for 1–2 seconds each rep.   |
+| landmine t bar row         | Original movement diagram · landmine-row                                                                      | Selected movement                                                             |
+| dips                       | [Goulart / wger · adapted](https://wger.de/media/exercise-video/194/d039ec90-474d-47a9-a3ad-bf0b00828c82.MP4) | Selected movement                                                             |
+| paused barbell squat       | [Exercise video by Your Move](https://ymove.app)                                                              | Pause not shown. Stay braced and hold the bottom for 2 seconds each rep.      |
+| barbell deadlift           | [Exercise video by Your Move](https://ymove.app)                                                              | Continuous reps shown. Reset on the floor and brace before each of your reps. |
+| seated db shoulder press   | [Goulart / wger · adapted](https://wger.de/media/exercise-video/567/64f33c19-1d96-4b7c-af17-6c6a4941c614.MOV) | A reclined backrest is shown. Set your bench nearly upright as prescribed.    |
+| db stationary split squat  | [Goulart / wger · adapted](https://wger.de/media/exercise-video/205/4cd5dc48-897f-4e0c-8c5a-639a4098ceb1.MOV) | Selected movement                                                             |
+| seated db calf raise       | Original movement diagram · seated-calf                                                                       | Selected movement                                                             |
+| cable anti rotation press  | Original movement diagram · pallof                                                                            | Selected movement                                                             |
 
-## Review method and limits
+## Original movement diagrams
 
-Downloaded candidate footage to temporary scratch storage; checked metadata and sampled contact sheets for movement, equipment, grip, camera angle and changes of setup. Reviewed the selected trimmed intervals separately. This is not a professional in-person technique assessment or proof that every repetition is ideal. A looping demo illustrates a movement, not safe load selection, spotting, machine adjustment or rack-safety setup. Keep the programme's form checks and stop cues.
+exercise-motion.ts contains explicit side-view or overhead geometry for 16 movement patterns. ExerciseMotion renders the figure, supports, handles and load with the existing theme. The preview and playback use exactly the same model. Diagrams show movement direction and contact/support points; their proportions and machine outlines are illustrative, not motion capture or measurements of a particular person/machine. Machine-specific setup stays in the saved form cues. A five-second loop is an illustration, not a prescribed repetition tempo.
 
-The free Your Move bench endpoint answered a byte-range request with HTTP 206, `video/mp4`, and no forced attachment. All five selected endpoints were checked again during integration. These are public free endpoints, not expiring signed URLs, but the provider may change or remove them. Never assume permanent availability. No cross-origin canvas access is needed for native playback.
+The diagrams include an upright incline-curl upper arm, pelvic curl with a consistent knee bend, machine fly/reverse-fly arm paths, supported rowing, pulldowns, knee extension around a fixed knee, floor split squats with one DB and hand support, floor calf raises, Smith incline pressing, single-arm cable flies, alternating heel walkouts, anchored landmine rows and anti-rotation pressing. The supported split squat shows both feet on the floor; calf diagrams do not invent a platform.
 
-## Coverage decisions
+Animation runs only after Play. Pause/resume and restart are explicit. It pauses when offscreen or the document is hidden, and unmounting cancels the timeline. Reduced-motion mode offers a Next position control instead of a continuous loop. Diagram playback needs no external media connection; the code is part of the PWA bundle.
 
-“Movement” means the movement is represented, not that the equipment, person, individual mobility or camera angle is identical. Related references display the stated difference before playback.
+## Components and persistence
 
-| Exercise ID                                   | Decision | Source / qualification                                                                         |
-| --------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `barbell-bench-press`                         | Movement | Your Move, flat barbell bench; setup and safety arms remain in cues                            |
-| `paused-barbell-bench-press`                  | Related  | Same clip; **pause not shown**, retain 1–2 s chest pause                                       |
-| `landmine-t-bar-row`                          | Gap      | No approved exact landmine demonstration in the reviewed set                                   |
-| `unica-lat-pulldown`                          | Related  | Your Move cable lat pulldown with a close handle; use the UNICA lat bar                        |
-| `unica-seated-row`                            | Related  | Your Move V-handle cable row; same pull, UNICA long bars differ                                |
-| `dips`                                        | Movement | wger 194 / 64; parallel bars, forward lean, side view                                          |
-| `unica-arm-curl`                              | Related  | wger 465 / 54, side-on preacher-curl machine; set UNICA pad and bar per cues                   |
-| `one-arm-cable-overhead-triceps-extension`    | Movement | wger 803 / 58, facing away from the pulley, D-handle behind head                               |
-| `barbell-back-squat`                          | Movement | Your Move, high-bar back squat; rack-safety setup is not demonstrated                          |
-| `paused-barbell-squat`                        | Related  | Same clip; **pause not shown**, retain 2 s bottom pause                                        |
-| `selection-leg-extension`                     | Related  | Your Move, plate-loaded machine rather than Selection stack                                    |
-| `seated-leg-curl`                             | Related  | wger 366 / 37, different machine; follow programme pad/pivot setup                             |
-| `barbell-deadlift`                            | Related  | Your Move, continuous reps; reset and brace on floor for prescribed reps                       |
-| `fixed-handle-pull-up`                        | Related  | wger 475 / 71, rear view and overhand bar rather than fixed handles; grip may differ           |
-| `seated-db-shoulder-press`                    | Related  | wger 567 / 12, reclined backrest; retain prescribed nearly upright bench                       |
-| `db-lateral-raise`                            | Movement | Your Move, standing dumbbell raise                                                             |
-| `standing-db-curl`                            | Movement | wger 92 / 48, standing dumbbell curl                                                           |
-| `db-romanian-deadlift`                        | Movement | wger 507 / 3, side view, DB pair hinge; trimmed to 0–12 s                                      |
-| `supported-single-leg-standing-db-calf-raise` | Related  | wger 622 / 15, raise on a step without a DB; perform on floor, DB in hand, holding the upright |
-| `hanging-knee-raise`                          | Gap      | No approved exact clip in the reviewed set                                                     |
-| `machine-pec-fly`                             | Related  | Your Move mid cable crossover; same fly arm path, machine is seated and guided                 |
-| `machine-reverse-fly`                         | Related  | wger 82 / 8, seated bent-over DB rear-delt raise; same arm sweep                               |
-| `one-db-two-hand-overhead-triceps-extension`  | Movement | wger 211 / 57, trimmed to 9–21 s, two hands on one DB                                          |
-| `db-stationary-split-squat`                   | Movement | wger 205 / 32, stationary DB split stance, side view; trimmed to 0–9 s to exclude a passer-by  |
-| `seated-db-calf-raise`                        | Related  | wger 590 / 13, plate-loaded seated calf machine; use DBs on thighs, never kneecaps             |
-| `cable-anti-rotation-press`                   | Gap      | Rotating woodchops are not an anti-rotation Pallof press                                       |
+ExerciseGuide composes the demonstration, form checks, evidence and swap action. ExerciseDemo handles native/Vimeo playback, close/focus return, retry, matching previews and diagram composition. ExerciseMotion owns only its diagram timeline and controls; exercise-motion.ts is pure geometry. demos.ts owns source selection and licence metadata, and vimeo-sources.json keeps the four owner-published video/poster records paired. The former ExerciseVideo component and guide video fields were removed.
 
-## Playback, privacy and deployment
+No schema, session records, logged loads, programme phases or exercise prescriptions are changed. Legacy aliases continue to resolve their historical movement.
 
-- No YouTube iframe or remote video/thumbnail request before an explicit play action. Local wger poster images may load with the guide. Your Move uses the existing local illustration as its pre-play poster.
-- `playsinline`, muted autoplay after a tap, looping and native controls; preserve full frame with `object-contain` and a bounded height rather than forcing portrait footage into a cropped landscape box.
-- Network/codec failures show an in-app retry and point to the unchanged form checks and optional tutorial. Never launch an external video app automatically.
-- Close and exercise changes unload playback. Nested YouTube tutorials also stop when their outer guide closes.
-- Local paths use Vite's base URL, including under `/workout_tracker/` on GitHub Pages. MP4 and JPEG media are deliberately excluded from Workbox precaching, so offline demo playback is not promised.
-- Adapted wger assets total about 15.4 MB of MP4s, fetched individually on demand rather than during installation. No HEVC originals, audio tracks, private gym photos or user records are included.
+## Sources and delivery
 
-## Validation record
+Four Your Move free clips and sixteen Goulart/wger adaptations (including two retained unused references) are bundled with source attribution. Their MP4/JPEG files are fetched individually rather than precached. Vimeo footage/posters are served by Vimeo, never copied into the repository; the published oEmbed API supplied their metadata and embed markup. Original diagrams are authored in this app's source, with no third-party motion footage or AI-generated body video. See public/demos/ATTRIBUTION.md.
 
-- `npm run check`: formatting, **120 tests**, TypeScript checking and production build passed on Node 24.
-- Real Chrome playback from the production build: all 11 distinct videos decoded and playback time advanced. Confirmed muted, inline, looping portrait playback and bundled landscape playback inside the exercise guide.
-- Browser interaction: no remote requests before playing the first demo; forced network failure displayed the retry state and recovered in place; closing a guide unloaded both native video and a nested YouTube player; the entered workout load remained unchanged after opening/closing the demo.
-- No horizontal overflow at 320, 390, 480 or 1024 CSS pixels. Inspected phone-sized portrait and landscape player screenshots.
-- All eight Your Move endpoints returned HTTP 206 for byte-range requests with `video/mp4` and no attachment disposition.
-- Production artifact contains only the thirteen credited wger MP4s, their posters and attribution notice. No demo media appear in the service-worker precache.
-- Independent implementation review found no actionable material issues. Actual physical iPhone/Safari playback and the deployed GitHub Pages version are not verified by these local checks.
+Local posters can load with a guide. Vimeo posters contact its image CDN when displayed; the iframe is created only after Play and uses inline, muted, looping, do-not-track parameters. Native videos preserve full framing. Closing a guide or switching exercise removes playback. Native and Vimeo clips require internet; installed movement diagrams do not.
 
-## Sources
+## Verification
 
-- [Your Move free collection and usage terms](https://ymove.app/free-exercise-videos)
-- [wger video metadata](https://wger.de/api/v2/video/?limit=100)
-- [wger licence identifiers](https://wger.de/api/v2/license/)
-- [CC BY-SA 4.0 deed](https://creativecommons.org/licenses/by-sa/4.0/)
-- [Native HTML video reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video)
-- [OpenGym third-party media notice](https://raw.githubusercontent.com/DuarteSantos8/openGym/main/NOTICE.md)
+The six new local files were fully decoded with FFmpeg: one H.264 video stream, no audio, multiple distinct motion frames, fast-start containers. Each poster is generated from one second into its output file. In isolated local Chrome checks, all 18 distinct native clips and all four selected Vimeo clips decoded and playback time advanced. Candidate Vimeo and Dailymotion embeds that displayed connection restrictions were rejected. No user profile or stored workout data was used in this check.
 
-Individual source video URLs and adaptation commands are in the bundled attribution notice. Future coverage improvements require the same per-exercise visual and rights review; this audit does not authorise a bulk import or an offline cache of supplier media.
+All 16 diagram models were inspected at start/finish positions. Browser checks verified timeline advancement, pause and reduced-motion stepping; a background-tab suspension was rechecked with the tab visible. Geometry tests check viewport bounds, cyclic poses and fixed segment lengths/knee pivot behaviour. Regression tests cover every primary/swap/history demonstration, source/preview pairing, no YouTube rendering, tap-to-load, retry, close/focus return and preserving an unfinished set form with native/Vimeo playback. No physical-iPhone validation is claimed.

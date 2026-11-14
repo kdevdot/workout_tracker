@@ -40,8 +40,8 @@ The accepted design uses dark graphite surfaces, a volt accent and coral highlig
 
 ## Media and data truth
 
-- Short demos are tap-to-load, silent, looping videos. State source, licence and differences from the prescribed movement.
-- YouTube remains an optional detailed explanation, folded away by default. Provider and internet requirements stay explicit.
+- Demonstrations use real footage or explicitly labelled movement diagrams, as approved by the user. Keep previews paired with their actual clip or diagram model. State source rights and relevant setup differences.
+- No YouTube player. Native/Vimeo footage starts after a tap and needs internet. Diagrams use the same starting position for preview and playback, with pause/restart controls, offscreen/background suspension and reduced-motion stepping. Diagram colours follow existing tokens; they illustrate movement, not measured activation.
 - Reuse guides for the same movement, including legacy alternative IDs. When a dedicated guide is absent, show the session's stored setup cues.
 - Body maps show target regions, not measured activation, fatigue or recovery.
 - Preserve device-local storage, revision-conflict protection and JSON backup/restore. A UI update does not imply cloud sync.

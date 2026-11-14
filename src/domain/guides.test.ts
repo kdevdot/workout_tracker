@@ -40,14 +40,6 @@ describe('exercise guides', () => {
     expect(musclesFor(['Chest', 'Front delts', 'Side delts'])).toEqual([4, 2]);
   });
 
-  it('give every exercise a valid YouTube demo with credit', () => {
-    for (const guide of Object.values(guides)) {
-      expect(guide.video?.id).toMatch(/^[A-Za-z0-9_-]{11}$/);
-      expect(guide.video?.author).not.toBe('');
-      expect(guide.video?.title).not.toBe('');
-    }
-  });
-
   it('keep form checks short enough to read between sets', () => {
     for (const guide of Object.values(guides)) {
       expect(guide.checks.length).toBeLessThanOrEqual(3);

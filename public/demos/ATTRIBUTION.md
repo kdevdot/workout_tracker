@@ -1,26 +1,38 @@
-# Quick demonstration credits
+# Exercise demonstration credits
 
-Audited on 10 November 2026. The application's source-code licence does not replace these media licences.
+Revised 14 November 2026. Source-code rights do not replace the rights attached to external media.
 
-## Your Move: remotely hosted, not bundled
+## Your Move: four bundled app demonstrations
 
-Exercise video by [Your Move](https://ymove.app).
+Videos by [Your Move](https://ymove.app), used under the [published free collection terms](https://github.com/ymove-app/exercise-api/blob/main/free-videos/README.md). Those terms permit app/website use and downloading, including commercial use, without signup. Attribution is appreciated; resale or redistribution as a standalone video library is prohibited. These four clips are incorporated into this workout app. No Creative Commons licence is asserted.
 
-The [free collection's published terms](https://ymove.app/free-exercise-videos) permit embedding in apps and websites with attribution, but prohibit redistribution as a standalone library. This app streams eight unchanged clips from the provider's public free-video endpoints. Their files and thumbnails are not included in this repository or the deployment artifact. No ownership, Creative Commons licence, offline caching permission or unrestricted redistribution right is asserted for these assets.
+Adaptations: H.264, 720-pixel coded height, 30 fps, original framing, no audio/extra streams, fast-start MP4. Bench/squat retain approximately 14.8/14 seconds. Deadlift/lateral raise use the first 20 seconds. Every JPEG poster is taken from one second into its output clip.
 
-The selected videos are Barbell Bench Press, Barbell Back Squat, Barbell Deadlift, Dumbbell Lateral Raise, Leg Extension, Lat Pulldown, Seated Cable Row close V bar and Cable Crossover (Mid). The last three stand in for machine exercises and are labelled as related references in the app. Exact endpoint identifiers are recorded in `src/domain/demos.ts`. Bench and squat clips are also used as explicitly labelled related references for the paused exercises; the footage does not demonstrate the prescribed pause.
+| File (and matching .jpg poster) | Original                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| barbell-bench-press.mp4         | [Source](https://ymove.app/api/free/dd7e706c-2086-4f4b-867f-d7fece2f720d) |
+| barbell-back-squat.mp4          | [Source](https://ymove.app/api/free/fd0eaa34-d14b-4421-b41c-1669f93253b3) |
+| barbell-deadlift.mp4            | [Source](https://ymove.app/api/free/b59952ca-1551-4c07-835d-ab78bfe9953c) |
+| dumbbell-lateral-raise.mp4      | [Source](https://ymove.app/api/free/a16f0235-20eb-4306-b9cc-c01ae51b3b9b) |
 
-Each player displays the required linked credit. Streaming depends on the provider continuing to serve these endpoints. Recheck the terms and availability before changing the distribution model or adding caching.
+SHA-256 of adapted MP4s:
+
+```text
+d3c67eabe173a37c143d5c6fb9386163edaab6afbecaa175f88647eca94434ad  barbell-bench-press.mp4
+aefd336ba13bb77c1e6001339bf80fcdd3199a0da9af38d4133ac0fd5a6156cd  barbell-back-squat.mp4
+2e30c08bed48bd7b1f452cbec847ce5f3d0fe334bf9faf10c7760a25a931bf26  barbell-deadlift.mp4
+f6c5807252503277ff9ef05c173ef3a9207ff6c6fe1353c369087b02a19e2210  dumbbell-lateral-raise.mp4
+```
 
 ## Goulart / wger: bundled adaptations, CC BY-SA 4.0
 
-The fourteen MP4 files and fourteen JPEG posters in this directory are adapted from exercise videos attributed by the [wger API](https://wger.de/api/v2/video/?limit=100) to **Goulart**. Each selected source's licence is ID 2, identified by the [licence API](https://wger.de/api/v2/license/) as **Creative Commons Attribution-ShareAlike 4.0**. Author URL and source-title fields were blank; titles below identify the movements rather than inventing creator-supplied titles.
+The sixteen MP4 files and sixteen JPEG posters in this directory are adapted from exercise videos attributed by the [wger API](https://wger.de/api/v2/video/?limit=100) to **Goulart**. Each selected source's licence is ID 2, identified by the [licence API](https://wger.de/api/v2/license/) as **Creative Commons Attribution-ShareAlike 4.0**. Author URL and source-title fields were blank; titles below identify the movements rather than inventing creator-supplied titles.
 
 These modified videos and posters are provided under the same [CC BY-SA 4.0 licence](https://creativecommons.org/licenses/by-sa/4.0/). You may share and adapt them, including commercially, subject to that licence's attribution and ShareAlike conditions. No endorsement by Goulart or wger is implied. The licence does not necessarily grant other rights, such as personality or privacy rights.
 
 ### Sources and modifications
 
-All clips: one video stream, H.264, 1280 × 720, 30 fps, yuv420p, fast-start MP4. Audio, extra streams and container metadata are removed. Source framing is retained; there is no body/technique retouching, speed change or synthetic animation. JPEG posters are still frames from one second into each adapted clip, resized to 640 × 360. Durations can differ slightly after frame-rate conversion.
+All clips: one video stream, H.264, 1280 × 720, 30 fps, yuv420p, fast-start MP4. Audio, extra streams and container metadata are removed. Source framing is retained; there is no body/technique retouching, speed change or synthetic animation. JPEG posters are still frames from one second into each adapted clip, resized to 640 × 360 (480 × 270 for the two newest clips). Durations can differ slightly after frame-rate conversion.
 
 | Output file (and same-name `.jpg` poster) | wger exercise / video ID | Source interval                    | Original file                                                                                 |
 | ----------------------------------------- | ------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -38,6 +50,8 @@ All clips: one video stream, H.264, 1280 × 720, 30 fps, yuv420p, fast-start MP4
 | `standing-calf-raise.mp4`                 | 622 / 15                 | 0–12 s                             | [Original](https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV) |
 | `seated-calf-raise.mp4`                   | 590 / 13                 | 0–12 s                             | [Original](https://wger.de/media/exercise-video/590/a325ae2e-686b-4a1f-aff2-ba37fa3fa157.MOV) |
 | `incline-dumbbell-press.mp4`              | 537 / 24                 | 6–21 s                             | [Original](https://wger.de/media/exercise-video/537/b9c937e9-daeb-42a9-be8e-7a77e368478c.MOV) |
+| `smith-squat.mp4`                         | 341 / 42                 | Full clip, approximately 12 s      | [Original](https://wger.de/media/exercise-video/341/0cbfeace-dda9-4166-8424-f51358e88a4f.MOV) |
+| `one-arm-cable-lateral-raise.mp4`         | 349 / 5                  | Full clip, approximately 13.2 s    | [Original](https://wger.de/media/exercise-video/349/9896d82e-d8b6-48af-bdd5-b8545dc523e9.MOV) |
 
 Reproduction command, with the interval from the table:
 
@@ -65,12 +79,25 @@ b701c23b9d3eff830ba7a1a784e7aa928abc24a3eb3523a8796c9c4f96cab7c5  seated-calf-ra
 ec80d1563ed0d7b1a208dfbfa5a4b9fd3be8b730f9ded32e5bd80f55f7f08fac  split-squat.mp4
 0bae8635c4d87e82c0f70c66ed6fd53544c75ecd6a2783e29cabe08fd25fd070  standing-calf-raise.mp4
 e3e5af4983a9c32d2f4c7c2e66f3356bfe86c5d73e5c6fcfd5afe57ba8450f30  incline-dumbbell-press.mp4
+e40d723d9570bf01e02fb2a54a4ee1202d1a451e164ac8702ea3d32aa70866e7  smith-squat.mp4
+454776314c110f733cd1f53ad53bf5202e8839c078f3da00bba65fbb0f70703f  one-arm-cable-lateral-raise.mp4
 ```
 
-## YouTube: optional detailed explanations
+## Creator-hosted Vimeo embeds
 
-Creator-hosted tutorials remain available separately through the privacy-enhanced YouTube player. They are not downloaded, bundled or covered by either media licence above. Creator names and video IDs remain in `src/domain/guides.ts`. YouTube may show ads or restrict playback.
+The following four videos and their owner-published posters are served by Vimeo, not copied into this repository or deployment artifact. The [oEmbed API](https://developer.vimeo.com/api/oembed/videos) supplied public embed markup and matching title/author/poster metadata. Each iframe was checked for actual playback in isolated local Chrome. Embedding does not transfer ownership or a Creative Commons licence. Credits link to the original source. Creator-hosted availability and Vimeo privacy rules apply.
 
-## Programme revision — 14 November 2026
+| Creator                          | Video                               | Source                                   |
+| -------------------------------- | ----------------------------------- | ---------------------------------------- |
+| Anthony Matlock                  | Tutorial: Smith Machine Bench Press | [Original](https://vimeo.com/223935810)  |
+| Strong Body Strong Mind          | Single Arm Dumbbell Row             | [Original](https://vimeo.com/363596447)  |
+| ActionJax Strength & Performance | Barbell Romanian Deadlift           | [Original](https://vimeo.com/1000189819) |
+| ActionJax Strength & Performance | Hanging Knee Raise                  | [Original](https://vimeo.com/1130705496) |
 
-The barbell-RDL entry reuses the audited dumbbell-RDL clip as an explicitly labelled related reference; the supported split squat similarly reuses the unsupported two-DB clip with the support/one-DB difference stated before playback. Candidate wger 507 / 2 was visually rejected as an exact barbell reference because it also shows dumbbells. No new rights are asserted for reused media. The incline DB curl and floor reverse crunch retain honest quick-demo gaps and verified, in-app YouTube explanations; YouTube footage is not downloaded or bundled.
+## Original movement diagrams
+
+The labelled vector movement diagrams are original app source in src/domain/exercise-motion.ts and src/components/ExerciseMotion.vue. No external footage, third-party animation library or generated photoreal body video is used. The same model provides the preview and animated/step-through positions. Diagrams illustrate direction and support points, with machine-specific settings left to the exercise's form cues. They do not claim to be motion capture, exact anatomical measurements or a prescribed repetition tempo.
+
+## Selection notes
+
+The barbell RDL uses a barbell reference. Machine flies, supported split squats, incline curls, floor reverse crunches and other gaps use movement-specific diagrams. Retained clips preserve explicit missing-pause, machine-model and setup qualifications. Two older unused calf clips stay attributed for rollback. Training prescriptions and saved history are unchanged.

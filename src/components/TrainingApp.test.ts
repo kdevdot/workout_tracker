@@ -37,8 +37,8 @@ async function savedData(): Promise<AppState> {
   database.close();
   return data;
 }
-async function begin(wrapper: VueWrapper) {
-  await wrapper.get('input[type="date"]').setValue('2026-11-02');
+async function begin(wrapper: VueWrapper, date = '2026-11-02') {
+  await wrapper.get('input[type="date"]').setValue(date);
   await button(wrapper, 'Start workout').trigger('click');
   await vi.waitFor(() => expect(wrapper.find('form.set-form').exists()).toBe(true));
 }
@@ -95,9 +95,13 @@ describe('working app integration', () => {
     expect(summaries[0]!.text()).toContain('2 × 5–8');
   });
 
-  it('keeps an unfinished workout form in place while opening and closing an inline demo', async () => {
+  it.each([
+    ['2026-11-02', 'video'],
+    ['2026-11-06', 'iframe'],
+  ])('keeps the %s workout form in place while playing its %s demo', async (date, player) => {
+    vi.setSystemTime(new Date(2026, 10, 14, 9));
     const wrapper = await app();
-    await begin(wrapper);
+    await begin(wrapper, date);
     const load = wrapper.get('.set-fields input');
     await load.setValue('20');
     const disclosure = wrapper
@@ -106,8 +110,12 @@ describe('working app integration', () => {
     (disclosure.element as HTMLDetailsElement).open = true;
     await disclosure.trigger('toggle');
     await wrapper.get('[data-quick-demo]').trigger('click');
-    expect(wrapper.get('video').attributes('src')).toContain('https://ymove.app/api/free/');
-    expect(wrapper.find('iframe').exists()).toBe(false);
+    expect(wrapper.get(player).attributes('src')).toContain(
+      player === 'video'
+        ? 'demos/barbell-bench-press.mp4'
+        : 'https://player.vimeo.com/video/1000189819',
+    );
+    expect(wrapper.html()).not.toMatch(/youtube|ytimg/i);
     await button(wrapper, 'Close demo').trigger('click');
     expect(wrapper.find('video').exists()).toBe(false);
     expect(wrapper.find('iframe').exists()).toBe(false);

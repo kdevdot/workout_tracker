@@ -188,18 +188,18 @@ function save() {
           highlight colours changed. Modified files are shared under the same licence.
         </p>
         <p class="mt-2">
-          Quick demos use Your Move streams and adapted Goulart / wger videos (CC BY-SA 4.0). Each
-          demo shows its credit, licence and any variation note. Videos load after you tap Play and
-          need internet; they are not included in the offline cache.
+          Demonstrations use licensed Your Move and Goulart / wger videos, plus creator-hosted Vimeo
+          embeds. Each preview belongs to its selected video. Source credits and any setup
+          differences appear beside the player.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}demos/ATTRIBUTION.md`">
-          Quick demo credits and modifications
+          Video credits and modifications
         </a>
         <p class="mt-2">
-          YouTube tutorials remain optional detailed explanations. Only tapping Watch loads the
-          YouTube player, which needs internet and may show ads. Your Move or YouTube receives the
-          connection when its player loads; the provider’s privacy rules apply. YouTube streams are
-          not bundled or covered by the wger licence.
+          Vimeo receives a connection when its poster loads and when you start its player; its
+          privacy rules apply. Videos need internet, start only after a tap and are not saved for
+          offline playback. Creator-hosted embeds retain their own rights; the wger licence does not
+          apply to them.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}muscles/LICENSE.txt`"
           >Read the licence notice</a

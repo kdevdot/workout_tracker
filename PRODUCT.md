@@ -18,7 +18,7 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 - Device-local saving first, independent JSON backup/restore, Google Drive backup later.
 - Personal research, gym photos, logs, and supplement labels must not enter public source control by default.
 - Exact video variations and licences must be audited; no placeholder pretending to play a video.
-- Demonstrations must play inside the exercise guide without requiring an external search or another app. Short, silent demonstrations cover 26 of 31 current/retained guide entries, with variation notes where required. YouTube is an optional detailed explanation. Missing clips remain explicit. Videos need internet and load only after a tap.
+- Demonstrations play inside the exercise guide using licensed local videos, verified creator-hosted Vimeo embeds or original movement animations approved by the user. Every primary exercise, current swap and retained historical guide has a demonstration. Previews use that exact clip or the same animation model. Equipment differences stay explicit. Media starts after a tap; diagrams pause when hidden and support reduced-motion stepping. Footage requires internet; installed diagrams do not. No YouTube player is used.
 
 ## Stack
 

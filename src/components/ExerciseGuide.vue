@@ -7,7 +7,6 @@ import { demos } from '@/domain/demos';
 import { canonicalExerciseId } from '@/domain/exercise-identity';
 import BodyMap from './BodyMap.vue';
 import ExerciseDemo from './ExerciseDemo.vue';
-import ExerciseVideo from './ExerciseVideo.vue';
 import ExerciseEvidence from './ExerciseEvidence.vue';
 
 const props = defineProps<{ exercise: Exercise; swappable?: boolean }>();
@@ -26,25 +25,8 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
       :exercise-name="exercise.name"
     />
     <p v-else class="text-muted-foreground bg-muted rounded-lg px-3 py-2 text-xs">
-      A matching quick demo is not available yet. Use the form checks or the optional detailed
-      explanation below.
+      A matching video is not available for this saved variation. Follow its form checks below.
     </p>
-
-    <details v-if="guide?.video" class="group/tutorial rounded-xl border border-border px-3">
-      <summary class="flex min-h-11 items-center gap-2 text-xs font-semibold">
-        Detailed explanation · YouTube
-        <ChevronDown
-          class="ml-auto size-4 shrink-0 transition-transform group-open/tutorial:rotate-180"
-        />
-      </summary>
-      <div class="pb-3">
-        <ExerciseVideo
-          :video="guide.video"
-          :exercise-id="exercise.id"
-          :exercise-name="exercise.name"
-        />
-      </div>
-    </details>
 
     <div class="grid grid-cols-[minmax(5rem,7.5rem)_minmax(0,1fr)] items-start gap-4">
       <BodyMap :primary="exercise.primary" :supporting="exercise.supporting" />

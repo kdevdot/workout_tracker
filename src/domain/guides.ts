@@ -1,12 +1,5 @@
 import { researchSources, type GuideEvidence } from './research';
 
-export interface Video {
-  id: string;
-  title: string;
-  author: string;
-  variant?: string;
-}
-
 interface Comparison {
   topic: string;
   reel: string;
@@ -19,7 +12,6 @@ interface Comparison {
 export interface Guide {
   /** Drawing file in public/exercises, without the .svg extension. */
   illustration: string;
-  video?: Video;
   checks: string[];
   stop: string[];
   comparison?: Comparison;
@@ -37,11 +29,6 @@ const rackStop = 'Safety arms just below your lowest point, every set.';
 const exerciseGuides: Record<string, Guide> = {
   'barbell-bench-press': {
     illustration: 'bench-press',
-    video: {
-      id: 'A0NBCkpYatQ',
-      title: 'Bench Press for Maximum Muscle Growth',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Bar to mid/lower chest, forearms vertical',
       'Feet planted, shoulder blades set',
@@ -51,21 +38,11 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'paused-barbell-bench-press': {
     illustration: 'bench-press',
-    video: {
-      id: 'K4BIkKGKy9k',
-      title: 'Paused Bench Press: Gym Shorts (How To)',
-      author: 'Barbell Logic',
-    },
     checks: ['Lighter than heavy day', 'Bar still on chest 1–2 s', 'Stay tight, then press'],
     stop: [rackStop],
   },
   'landmine-t-bar-row': {
     illustration: 't-bar-row',
-    video: {
-      id: 'EyA_ym9Ksaw',
-      title: 'Landmine T-Bar Row (How To & Coaching Points)',
-      author: 'Horton Barbell',
-    },
     checks: ['Bar end anchored, cannot slide', 'Flat back, chest up', 'Row to lower chest'],
     stop: ['Stop when the torso jerks up to move the weight.'],
     comparison: {
@@ -80,44 +57,21 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'unica-lat-pulldown': {
     illustration: 'lat-pulldown',
-    video: {
-      id: 'EUIri47Epcg',
-      title: 'Normal Grip Pulldown',
-      author: 'Renaissance Periodization',
-      variant: 'Dedicated machine shown; the UNICA lat bar works the same way.',
-    },
     checks: ['Thighs locked under pads', 'Pull to upper chest', 'Arms fully straight at top'],
     stop: ['Stop when you lean back or yank the bar.'],
   },
   'unica-seated-row': {
     illustration: 'machine-row',
-    video: {
-      id: '_FrrYQxA6kc',
-      title: 'Machine Chest Supported Row',
-      author: 'Renaissance Periodization',
-      variant: 'Another machine shown; use the UNICA long bars.',
-    },
     checks: ['Chest on pad', 'Row to stomach, squeeze', 'Release slowly, shoulders reach'],
     stop: ['Stop when the torso rocks back.'],
   },
   dips: {
     illustration: 'chest-dip',
-    video: {
-      id: '4LA1kF7yCGo',
-      title: 'Dip',
-      author: 'Renaissance Periodization',
-    },
     checks: ['Lean forward for chest', 'Shoulders just below elbows', 'Press up under control'],
     stop: ['Stop for shoulder pain at the bottom.'],
   },
   'unica-arm-curl': {
     illustration: 'preacher-curl',
-    video: {
-      id: 'Ja6ZlIDONac',
-      title: 'Machine Preacher Curl',
-      author: 'Renaissance Periodization',
-      variant: 'Another machine shown; use the UNICA arm-curl pad.',
-    },
     checks: [
       'Upper arms stay on the pad',
       'Comfortable near-straight elbow',
@@ -127,11 +81,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'one-arm-cable-overhead-triceps-extension': {
     illustration: 'overhead-tricep-extension',
-    video: {
-      id: 'w3iAESGWK6M',
-      title: 'Single Arm Cable Overhead Tricep Extension',
-      author: 'Travis Tarrant',
-    },
     checks: [
       'Face away, upper arm mostly overhead',
       'Comfortable elbow bend and extension',
@@ -141,11 +90,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'barbell-back-squat': {
     illustration: 'squat',
-    video: {
-      id: 'i7J5h7BJ07g',
-      title: 'High Bar Squat',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Bar on upper back, not neck',
       'Whole foot planted, knees over toes',
@@ -155,31 +99,16 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'paused-barbell-squat': {
     illustration: 'squat',
-    video: {
-      id: 'nknf16JJTZo',
-      title: 'The Paused Squat: Gym Shorts (How To)',
-      author: 'Barbell Logic',
-    },
     checks: ['Lighter than heavy day', 'Hold the bottom 2 s, braced', 'Drive up, no bounce'],
     stop: [rackStop],
   },
   'selection-leg-extension': {
     illustration: 'leg-extension',
-    video: {
-      id: 'm0FOpMEgero',
-      title: 'Leg Extension',
-      author: 'Renaissance Periodization',
-    },
     checks: ['Knee lined up with the pivot', 'Pad on lower shin', 'Extend without kicking'],
     stop: ['Stop for knee pain or hips lifting.'],
   },
   'seated-leg-curl': {
     illustration: 'seated-leg-curl',
-    video: {
-      id: 'Orxowest56U',
-      title: 'Seated Leg Curl',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Knee at pivot, thigh pad secure',
       'Keep the pelvis supported and stable',
@@ -189,23 +118,12 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'barbell-deadlift': {
     illustration: 'deadlift',
-    video: {
-      id: 'GxsLrTzyGUU',
-      title: 'How to Do A Conventional Deadlift Correctly',
-      author: 'PureGym',
-    },
     checks: ['Bar over mid-foot', 'Brace, slack out, push the floor', 'Bar drags up the legs'],
     stop: ['Stop if the lower back rounds or the bar drifts forward.'],
   },
 
   'fixed-handle-pull-up': {
     illustration: 'pull-up',
-    video: {
-      id: 'iWpoegdfgtc',
-      title: 'Normal Grip Pullup',
-      author: 'Renaissance Periodization',
-      variant: 'Bar pull-up shown; your fixed handles work the same way.',
-    },
     checks: [
       'Fixed handles, comfortable grip',
       'Pull elbows toward ribs',
@@ -225,11 +143,6 @@ const exerciseGuides: Record<string, Guide> = {
 
   'seated-db-shoulder-press': {
     illustration: 'seated-dumbbell-press',
-    video: {
-      id: 'HzIiNhHhhtA',
-      title: 'Seated Dumbbell Shoulder Press',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Backrest near upright, ribs down',
       'Press along a natural arc',
@@ -248,11 +161,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'db-lateral-raise': {
     illustration: 'lateral-raise',
-    video: {
-      id: 'OuG1smZTsQQ',
-      title: 'Lateral Raise',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Soft elbows, raise slightly forward of the sides',
       'Up to about shoulder height',
@@ -271,24 +179,12 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'standing-db-curl': {
     illustration: 'bicep-curl',
-    video: {
-      id: 'iixND1P2lik',
-      title: 'Alternating Dumbbell Curl',
-      author: 'Renaissance Periodization',
-      variant: 'Alternating arms shown; both-arm curls are fine too.',
-    },
     checks: ['Upper arms stay still', 'No hip drive', 'Lower to a comfortable straight elbow'],
     stop: ['Stop when swinging replaces clean elbow bending.'],
   },
 
   'db-romanian-deadlift': {
     illustration: 'dumbbell-romanian-deadlift',
-    video: {
-      id: 'cYKYGwcg0U8',
-      title: 'Dumbbell Stiff Legged Deadlift',
-      author: 'Renaissance Periodization',
-      variant: 'Same hip hinge as the RDL; keep knees soft.',
-    },
     checks: [
       'DBs close to thighs, knees soft',
       'Push hips back, spine neutral',
@@ -307,12 +203,6 @@ const exerciseGuides: Record<string, Guide> = {
 
   'supported-single-leg-standing-db-calf-raise': {
     illustration: 'single-leg-calf-raise',
-    video: {
-      id: '_gEx2ijsmNM',
-      title: 'Single Leg Stair Calves',
-      author: 'Renaissance Periodization',
-      variant: 'On a stair shown; floor range is smaller without a step.',
-    },
     checks: [
       'Light hand on a fixed upright',
       'Knee mostly straight',
@@ -322,12 +212,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'hanging-knee-raise': {
     illustration: 'hanging-knee-raise',
-    video: {
-      id: 'O7iDA3ory-w',
-      title: 'How To Do Hanging Knee Raises',
-      author: 'PureGym',
-      variant: 'Bar shown; your fixed handles work the same way.',
-    },
     checks: [
       'Shoulders controlled, no swing',
       'Curl the pelvis toward the ribs',
@@ -338,11 +222,6 @@ const exerciseGuides: Record<string, Guide> = {
 
   'machine-pec-fly': {
     illustration: 'pec-deck',
-    video: {
-      id: 'FDay9wFe5uE',
-      title: 'Machine Flye',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Handles at chest height, back on the pad',
       'Soft elbows',
@@ -352,11 +231,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'machine-reverse-fly': {
     illustration: 'reverse-pec-deck',
-    video: {
-      id: '5YK4bgzXDp0',
-      title: 'Machine Reverse Flye',
-      author: 'Renaissance Periodization',
-    },
     checks: ['Chest on the pad', 'Handles near shoulder height', 'Arms out wide, elbows soft'],
     stop: ['Stop when shrugging or jerking takes over.'],
     comparison: {
@@ -371,11 +245,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'one-db-two-hand-overhead-triceps-extension': {
     illustration: 'dumbbell-overhead-tricep-extension',
-    video: {
-      id: 'MPmeelJOmN8',
-      title: 'Dumbbell Two Hand Overhead Tricep Extension',
-      author: 'Bodhi Bodies',
-    },
     checks: [
       'One DB held securely in both hands',
       'Brace, bend elbows to a comfortable depth',
@@ -386,11 +255,6 @@ const exerciseGuides: Record<string, Guide> = {
 
   'db-stationary-split-squat': {
     illustration: 'split-squat',
-    video: {
-      id: 'jNihW0WDIL4',
-      title: 'Split Squat',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Both feet planted, hip-width stagger',
       'Drop straight down',
@@ -400,11 +264,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'seated-db-calf-raise': {
     illustration: 'seated-calf-raise',
-    video: {
-      id: 'UnBXxegoaCI',
-      title: 'Dumbbell Seated Calf Raise',
-      author: 'Josh Evans',
-    },
     checks: [
       'Knees about 90°',
       'DBs on thighs above the knee, never on kneecaps',
@@ -414,22 +273,11 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'cable-anti-rotation-press': {
     illustration: 'pallof-press',
-    video: {
-      id: 'xeFp4MXad98',
-      title: 'Cable Pallof Press',
-      author: 'FIT.nl',
-    },
     checks: ['Side-on, handle at sternum', 'Press out, torso stays square', 'Both sides = one set'],
     stop: ['Stop if the cable turns your torso.'],
   },
   'barbell-romanian-deadlift': {
     illustration: 'romanian-deadlift',
-    video: {
-      id: 'aHEg-DDo4fY',
-      title: 'The Great Deadlift Showdown: SLDL vs RDL',
-      author: 'Renaissance Periodization',
-      variant: 'Comparison tutorial shows both versions; follow the RDL cues with soft knees.',
-    },
     checks: [
       'Soft knees, bar close to the legs',
       'Hips back; stop at controlled hinge depth',
@@ -439,11 +287,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'low-incline-db-bench-press': {
     illustration: 'incline-dumbbell-press',
-    video: {
-      id: 'B09ZkYsnKko',
-      title: 'Low Incline Dumbbell Press',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Start around 30 degrees, bench locked',
       'Wrists over elbows, comfortable chest range',
@@ -453,11 +296,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'incline-db-curl': {
     illustration: 'incline-dumbbell-curl',
-    video: {
-      id: 'aTYlqC_JacQ',
-      title: 'Incline Dumbbell Curl',
-      author: 'Renaissance Periodization',
-    },
     checks: [
       'Back supported, arms hang naturally',
       'Keep upper-arm position consistent',
@@ -467,13 +305,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'supported-db-stationary-split-squat': {
     illustration: 'split-squat',
-    video: {
-      id: 'jNihW0WDIL4',
-      title: 'Split Squat',
-      author: 'Renaissance Periodization',
-      variant:
-        'Unsupported version shown. Use one hand on a fixed upright and one DB; rear foot stays on the floor.',
-    },
     checks: [
       'Rear foot on floor, stable staggered stance',
       'Light hand support; one DB in the other hand',
@@ -483,11 +314,6 @@ const exerciseGuides: Record<string, Guide> = {
   },
   'floor-reverse-crunch': {
     illustration: 'reverse-crunch',
-    video: {
-      id: 'XY8KzdDcMFg',
-      title: 'How To Do Reverse Crunches',
-      author: 'PureGym',
-    },
     checks: [
       'Lie on the floor with a consistent knee bend',
       'Curl the pelvis toward the ribs',

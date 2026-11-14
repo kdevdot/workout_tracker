@@ -38,7 +38,7 @@ const squat: ExerciseDemo = {
   match: 'movement',
 };
 
-export const demos: Readonly<Partial<Record<string, ExerciseDemo>>> = {
+const legacyDemos: Readonly<Partial<Record<string, ExerciseDemo>>> = {
   'barbell-bench-press': bench,
   'paused-barbell-bench-press': {
     ...bench,
@@ -208,5 +208,29 @@ export const demos: Readonly<Partial<Record<string, ExerciseDemo>>> = {
     creditUrl: 'https://wger.de/media/exercise-video/211/85f6eb25-a76c-409e-9af9-497794ac0dfb.MOV',
     durationSeconds: 12,
     match: 'movement',
+  },
+};
+
+export const demos: Readonly<Partial<Record<string, ExerciseDemo>>> = {
+  ...legacyDemos,
+  'barbell-romanian-deadlift': {
+    ...legacyDemos['db-romanian-deadlift']!,
+    match: 'related',
+    difference:
+      'Dumbbell RDL shown. Use the Olympic bar from the rack, keep it close to the legs and follow the barbell cues.',
+  },
+  'low-incline-db-bench-press': {
+    ...wger,
+    src: 'demos/incline-dumbbell-press.mp4',
+    poster: 'demos/incline-dumbbell-press.jpg',
+    creditUrl: 'https://wger.de/media/exercise-video/537/b9c937e9-daeb-42a9-be8e-7a77e368478c.MOV',
+    durationSeconds: 15,
+    match: 'movement',
+  },
+  'supported-db-stationary-split-squat': {
+    ...legacyDemos['db-stationary-split-squat']!,
+    match: 'related',
+    difference:
+      'Unsupported two-DB split squat shown. Use one hand lightly on a fixed upright and hold one DB; keep the rear foot on the floor.',
   },
 };

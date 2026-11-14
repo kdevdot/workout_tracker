@@ -1,3 +1,5 @@
+import { researchSources, type GuideEvidence } from './research';
+
 export interface Video {
   id: string;
   title: string;
@@ -21,6 +23,7 @@ export interface Guide {
   checks: string[];
   stop: string[];
   comparison?: Comparison;
+  evidence?: GuideEvidence;
 }
 
 const reels = {
@@ -30,7 +33,8 @@ const reels = {
 
 const rackStop = 'Safety arms just below your lowest point, every set.';
 
-export const guides: Record<string, Guide> = {
+// Retired movements remain available for saved sessions and historical alternatives.
+const exerciseGuides: Record<string, Guide> = {
   'barbell-bench-press': {
     illustration: 'bench-press',
     video: {
@@ -114,7 +118,11 @@ export const guides: Record<string, Guide> = {
       author: 'Renaissance Periodization',
       variant: 'Another machine shown; use the UNICA arm-curl pad.',
     },
-    checks: ['Elbows stay on the pad', 'Arms fully straight at bottom', 'Superset with triceps'],
+    checks: [
+      'Upper arms stay on the pad',
+      'Comfortable near-straight elbow',
+      'Curl without torso drive',
+    ],
     stop: ['Stop when the elbows lift off the pad.'],
   },
   'one-arm-cable-overhead-triceps-extension': {
@@ -124,7 +132,11 @@ export const guides: Record<string, Guide> = {
       title: 'Single Arm Cable Overhead Tricep Extension',
       author: 'Travis Tarrant',
     },
-    checks: ['Face away, elbow points up', 'Full stretch behind the head', 'Upper arm stays still'],
+    checks: [
+      'Face away, upper arm mostly overhead',
+      'Comfortable elbow bend and extension',
+      'Keep the torso stable',
+    ],
     stop: ['Stop for elbow or shoulder pain.'],
   },
   'barbell-back-squat': {
@@ -168,7 +180,11 @@ export const guides: Record<string, Guide> = {
       title: 'Seated Leg Curl',
       author: 'Renaissance Periodization',
     },
-    checks: ['Thigh pad snug, lean forward', 'Curl fully', 'Slow back to straight legs'],
+    checks: [
+      'Knee at pivot, thigh pad secure',
+      'Keep the pelvis supported and stable',
+      'Curl and return under control',
+    ],
     stop: ['Stop for cramping or hips lifting.'],
   },
   'barbell-deadlift': {
@@ -312,7 +328,11 @@ export const guides: Record<string, Guide> = {
       author: 'PureGym',
       variant: 'Bar shown; your fixed handles work the same way.',
     },
-    checks: ['Shoulders set, no swing', 'Curl pelvis up, knees to chest', 'Lower slowly'],
+    checks: [
+      'Shoulders controlled, no swing',
+      'Curl the pelvis toward the ribs',
+      'Use reverse crunch if grip limits you',
+    ],
     stop: ['Stop when swinging or grip takes over.'],
   },
 
@@ -402,7 +422,215 @@ export const guides: Record<string, Guide> = {
     checks: ['Side-on, handle at sternum', 'Press out, torso stays square', 'Both sides = one set'],
     stop: ['Stop if the cable turns your torso.'],
   },
+  'barbell-romanian-deadlift': {
+    illustration: 'romanian-deadlift',
+    video: {
+      id: 'aHEg-DDo4fY',
+      title: 'The Great Deadlift Showdown: SLDL vs RDL',
+      author: 'Renaissance Periodization',
+      variant: 'Comparison tutorial shows both versions; follow the RDL cues with soft knees.',
+    },
+    checks: [
+      'Soft knees, bar close to the legs',
+      'Hips back; stop at controlled hinge depth',
+      'Stand without leaning backward',
+    ],
+    stop: ['End the set before losing torso control. Note if grip is the limiting factor.'],
+  },
+  'low-incline-db-bench-press': {
+    illustration: 'incline-dumbbell-press',
+    video: {
+      id: 'B09ZkYsnKko',
+      title: 'Low Incline Dumbbell Press',
+      author: 'Renaissance Periodization',
+    },
+    checks: [
+      'Start around 30 degrees, bench locked',
+      'Wrists over elbows, comfortable chest range',
+      'Lower and return the DBs under control',
+    ],
+    stop: ['Stop for shoulder discomfort or losing control of the DBs.'],
+  },
+  'incline-db-curl': {
+    illustration: 'incline-dumbbell-curl',
+    video: {
+      id: 'aTYlqC_JacQ',
+      title: 'Incline Dumbbell Curl',
+      author: 'Renaissance Periodization',
+    },
+    checks: [
+      'Back supported, arms hang naturally',
+      'Keep upper-arm position consistent',
+      'Comfortable elbow extension; no swinging',
+    ],
+    stop: ['Do not force an extreme shoulder stretch or lift the arms forward to finish.'],
+  },
+  'supported-db-stationary-split-squat': {
+    illustration: 'split-squat',
+    video: {
+      id: 'jNihW0WDIL4',
+      title: 'Split Squat',
+      author: 'Renaissance Periodization',
+      variant:
+        'Unsupported version shown. Use one hand on a fixed upright and one DB; rear foot stays on the floor.',
+    },
+    checks: [
+      'Rear foot on floor, stable staggered stance',
+      'Light hand support; one DB in the other hand',
+      'Drive through the front leg, not the hand',
+    ],
+    stop: ['Support is for balance. Stop before pulling yourself up or losing the stance.'],
+  },
+  'floor-reverse-crunch': {
+    illustration: 'reverse-crunch',
+    video: {
+      id: 'XY8KzdDcMFg',
+      title: 'How To Do Reverse Crunches',
+      author: 'PureGym',
+    },
+    checks: [
+      'Lie on the floor with a consistent knee bend',
+      'Curl the pelvis toward the ribs',
+      'Lower slowly without swinging the legs',
+    ],
+    stop: ['End the set when pelvic control or the repeatable range is lost.'],
+  },
 };
+
+const evidence: Record<string, GuideEvidence> = {
+  'barbell-bench-press': {
+    selection:
+      'The flat bench is a measurable pressing-strength anchor. Incline pressing and pec fly provide the other chest work in the week.',
+    qualification:
+      'Heavier practice supports strength in the lift trained. A free bar does not have a proven universal hypertrophy advantage over machines.',
+    sources: [researchSources.prescription, researchSources.machines],
+  },
+  'low-incline-db-bench-press': {
+    selection:
+      'An incline exposure adds another chest-press angle alongside flat bench, supporting balanced chest development.',
+    qualification:
+      'One controlled study favoured incline pressing at an upper-chest measurement site. It does not prove that 30 degrees or this exact DB setup is optimal for everyone.',
+    sources: [researchSources.chest],
+  },
+  'machine-pec-fly': {
+    selection:
+      'Direct chest work adds a controlled arm-adduction movement without relying on another demanding elbow-extension exercise.',
+    qualification:
+      'Selecting this machine for repeatable setup and loading is a coaching choice. No trial certifies it as 90–95% effective or superior to every press.',
+    sources: [researchSources.machines, researchSources.prescription],
+  },
+  'unica-lat-pulldown': {
+    selection:
+      'Adjustable resistance makes it easier to match the rep range and reserve than an unassisted bodyweight pull.',
+    qualification:
+      'The UNICA choice is based on loadability and repeatable execution, not proof that it grows more lats than every pull-up or grip.',
+    sources: [researchSources.prescription, researchSources.machines],
+  },
+  'unica-seated-row': {
+    selection:
+      'Torso support helps make horizontal pulling repeatable alongside the vertical pulldown, with fewer demands on maintaining a bent-over stance.',
+    qualification:
+      'This is a practical selection; no comparative growth trial establishes this exact UNICA row as the best back exercise.',
+    sources: [researchSources.machines],
+  },
+  'db-lateral-raise': {
+    selection:
+      'Direct side-delt work is repeated on both upper days. DBs allow both arms to work without occupying the single cable column.',
+    qualification:
+      'An eight-week trial in 24 trained participants found similar lateral-delt growth with DB and cable raises over the tested ranges.',
+    sources: [researchSources.lateralRaises],
+  },
+  'machine-reverse-fly': {
+    selection:
+      'Direct rear-delt work is repeated twice weekly while torso support makes the arm movement easier to reproduce.',
+    qualification:
+      'The supported-machine choice uses anatomy and practical loading. It is not a proven growth winner over every cable or DB variation.',
+    sources: [researchSources.machines, researchSources.prescription],
+  },
+  'unica-arm-curl': {
+    selection:
+      'The supported curl is paired across the week with an incline curl for complementary elbow-flexor work.',
+    qualification:
+      'A 12-week MRI trial found different muscle-specific responses to DB preacher and incline curls, with no clear total elbow-flexor winner. Your UNICA is a practical translation, not the tested DB setup.',
+    sources: [researchSources.curls],
+  },
+  'incline-db-curl': {
+    selection:
+      'Incline curls provide a supported shoulder-extended curling position alongside the other day’s preacher-style curl.',
+    qualification:
+      'In one small trial, incline curls favoured biceps-brachii growth and preacher curls favoured other elbow flexors. The combination itself was not tested as superior.',
+    sources: [researchSources.curls],
+  },
+  'one-arm-cable-overhead-triceps-extension': {
+    selection:
+      'The overhead arm position has direct comparative support for triceps growth, so it is repeated on both upper days.',
+    qualification:
+      'A 12-week study in 21 adults found greater growth overhead than with the arm beside the torso. Its percentages do not predict your results.',
+    sources: [researchSources.triceps],
+  },
+  'barbell-back-squat': {
+    selection:
+      'The squat remains the lower-body strength anchor, sharing quadriceps and glute work with split squats and leg extensions.',
+    qualification:
+      'Use a comfortable depth you can control. Squats do not produce the same growth in every thigh muscle; extensions and curls supply different functions.',
+    sources: [researchSources.squatDepth, researchSources.quads],
+  },
+  'barbell-romanian-deadlift': {
+    selection:
+      'The RDL gives controlled hip-extension work alongside the knee-flexion work from seated curls.',
+    qualification:
+      'RDL training has evidence of hamstring adaptations. Replacing conventional deadlifts here is a goal-specific coaching choice, not a demonstrated head-to-head growth victory.',
+    sources: [researchSources.rdl],
+  },
+  'seated-leg-curl': {
+    selection:
+      'Loaded knee flexion complements the RDL. Seated curls are retained on both lower days.',
+    qualification:
+      'A 12-week study found greater whole-hamstring growth seated than prone, particularly in the two-joint hamstrings. The study does not prove your exact machine or set count is optimal.',
+    sources: [researchSources.hamstrings],
+  },
+  'selection-leg-extension': {
+    selection:
+      'Direct knee extension complements squats and split squats, including work for the rectus femoris.',
+    qualification:
+      'An eight-week trial in untrained women found different regional quadriceps responses to Smith squats and extensions. It supports complementary selection, not a universal targeting percentage.',
+    sources: [researchSources.quads],
+  },
+  'supported-db-stationary-split-squat': {
+    selection:
+      'Unilateral quadriceps and glute work adds a different leg task. Light hand support helps balance avoid ending the set first.',
+    qualification:
+      'Support is a practical programming choice, not a proven hypertrophy advantage. Single-DB supported loads must be tracked separately from older unsupported two-DB split squats.',
+    sources: [researchSources.prescription],
+  },
+  'supported-single-leg-standing-db-calf-raise': {
+    selection: 'Straight-knee calf work is used on both lower days for overall calf development.',
+    qualification:
+      'A small 12-week MRI trial favoured standing over seated raises for gastrocnemius growth, with similar soleus growth. Its machine setup differs from your supported floor/DB version.',
+    sources: [researchSources.calves],
+  },
+  'hanging-knee-raise': {
+    selection:
+      'The intended abdominal work comes from curling the pelvis toward the ribs, with controlled lowering.',
+    qualification:
+      'This is a movement-function selection, not a comparative growth winner. Use the reverse crunch if grip or swinging prevents the intended work.',
+    sources: [researchSources.prescription],
+  },
+  'floor-reverse-crunch': {
+    selection:
+      'A floor-based pelvic curl makes the second abdominal exposure explicit without a hanging-grip requirement.',
+    qualification:
+      'This is a practical abdominal-flexion choice. A trial has not shown it to outperform every abdominal exercise.',
+    sources: [researchSources.prescription],
+  },
+};
+
+export const guides: Record<string, Guide> = Object.fromEntries(
+  Object.entries(exerciseGuides).map(([id, guide]) => [
+    id,
+    { ...guide, ...(evidence[id] ? { evidence: evidence[id] } : {}) },
+  ]),
+);
 
 const muscleIds: Record<string, number[]> = {
   Chest: [4],

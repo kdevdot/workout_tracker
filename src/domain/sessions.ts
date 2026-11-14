@@ -187,17 +187,20 @@ export function previousPerformance(
 }
 
 const nextStep: Record<Exercise['loadKind'], string> = {
-  barbell: 'Add 2.5 kg',
-  smith: 'Add 2.5 kg',
-  dumbbell: 'Move to the next dumbbell',
-  cable: 'Move one pin heavier',
-  machine: 'Move one pin heavier',
-  bodyweight: 'Keep adding reps or slow the lowering',
+  barbell: 'Try the smallest available plate increase',
+  smith: 'Try the smallest available plate increase',
+  dumbbell: 'Try the next dumbbell',
+  cable: 'Try the next pin',
+  machine: 'Try the next pin',
+  bodyweight: 'Keep the controlled movement, or use a slightly harder version',
 };
 
-// Hard for this lifter: start at the lightest setting and add up to 3 reps above the range
-// before the next (relatively big) dumbbell or pin, as the research plan suggests.
-const buildSlowly = new Set(['db-lateral-raise', 'one-arm-cable-overhead-triceps-extension']);
+export interface ProgressionTarget {
+  ready: boolean;
+  stalled: boolean;
+  load: number | null;
+  text: string;
+}
 
 /** Top load, then total reps at that load: higher means better. */
 function score(logs: SetLog[]): [number, number] {
@@ -211,52 +214,89 @@ const beats = (a: [number, number], b: [number, number]) =>
   a[0] > b[0] || (a[0] === b[0] && a[1] > b[1]);
 
 /**
- * Double progression from the research plan: keep the load until every set reaches the top of
- * the range at about the target RIR, then add the smallest jump. Flags a stall when the last two
- * exposures did not beat the one before them.
+ * Progress at the displayed upper rep bound and reserve, after completing the current
+ * working-set prescription. Adding sets during a phase change comes before a heavier load.
+ * Equipment increments are user-selected, never inferred from body weight or a machine pin.
  */
-export function nextTarget(sessions: readonly Session[], session: Session, exercise: Exercise) {
+export function nextTarget(
+  sessions: readonly Session[],
+  session: Session,
+  exercise: Exercise,
+): ProgressionTarget {
   const [last, middle, oldest] = exposures(sessions, session, exercise.id);
-  const slow = buildSlowly.has(exercise.id);
+  const unit = exercise.unit === 'seconds' ? 'seconds' : exercise.unit;
+  const reserveLabel =
+    exercise.targetRir + (exercise.unit === 'seconds' ? ' seconds in reserve' : ' RIR');
   if (!last) {
-    return slow
-      ? {
-          ready: false,
-          stalled: false,
-          load: null,
-          text: `Start with the ${exercise.loadKind === 'dumbbell' ? 'lightest dumbbells' : 'lowest pin'}, even if it feels easy. Clean reps first; weight comes later.`,
-        }
-      : null;
+    return {
+      ready: false,
+      stalled: false,
+      load: null,
+      text:
+        (exercise.loadKind === 'bodyweight'
+          ? 'Use a controlled version for '
+          : 'Choose a load for ') +
+        exercise.min +
+        '–' +
+        exercise.max +
+        ' ' +
+        unit +
+        ' with about ' +
+        reserveLabel +
+        '.',
+    };
   }
-  const goal = slow ? exercise.max + 3 : exercise.max;
+  const goal = exercise.max;
   const top = bestSet(last.logs)!;
-  // One RIR below target still counts: the plan takes isolation last sets to 0–1 RIR.
-  const reserve = Number.parseFloat(exercise.targetRir) - 1;
+  const reserve = Number.parseFloat(exercise.targetRir);
   const consistentLoad = last.logs.every((log) => log.load === top.load);
+  const reserveMet = last.logs.every((log) => exercise.unit === 'seconds' || log.effort >= reserve);
+  const complete = last.logs.length >= Math.max(last.sets, exercise.sets);
   const ready =
-    consistentLoad &&
-    last.logs.length >= last.sets &&
-    last.logs.every(
-      (log) => log.reps >= goal && (exercise.unit === 'seconds' || log.effort >= reserve),
-    );
+    consistentLoad && complete && reserveMet && last.logs.every((log) => log.reps >= goal);
   const reps = last.logs.map((log) => log.reps).join(' / ');
   const stalled =
     !ready &&
     !!oldest &&
     !beats(score(last.logs), score(oldest.logs)) &&
     !beats(score(middle!.logs), score(oldest.logs));
-  const fixedJump = exercise.loadKind === 'barbell' || exercise.loadKind === 'smith';
-  return {
-    ready,
-    stalled,
-    // Pre-fill the heavier load where the jump is known; other kinds depend on the gym's steps.
-    load: ready && fixedJump && top.load !== null ? top.load + 2.5 : null,
-    text: ready
-      ? `${nextStep[exercise.loadKind]}${fixedJump && top.load !== null ? ` (${top.load + 2.5} kg)` : ''}. Every set reached ${goal} ${exercise.unit} last time, so expect about ${exercise.min} now.`
-      : !consistentLoad
-        ? 'Last time used mixed loads. Keep the load steady across your working sets before increasing it.'
-        : `${top.load === null ? 'Beat' : `Same ${top.load} kg, beat`} ${reps} by one rep on any set.`,
-  };
+  let text: string;
+  if (ready) {
+    text =
+      nextStep[exercise.loadKind] +
+      '. Every set reached ' +
+      goal +
+      ' ' +
+      unit +
+      '. Keep the increase only if you can still reach ' +
+      exercise.min +
+      ' with ' +
+      reserveLabel +
+      '.';
+  } else if (!reserveMet) {
+    text =
+      'Prioritise ' +
+      reserveLabel +
+      '. Reduce the load if needed before adding reps or resistance.';
+  } else if (!consistentLoad) {
+    text =
+      'Last time used mixed loads. Build the working sets at a consistent load before increasing it.';
+  } else if (!complete) {
+    text =
+      'Keep the previous load and complete all ' +
+      exercise.sets +
+      ' working sets at ' +
+      reserveLabel +
+      ' before increasing resistance.';
+  } else {
+    text =
+      (top.load === null ? 'Beat ' : 'Same ' + top.load + ' kg, beat ') +
+      reps +
+      ' by one clean rep while keeping ' +
+      reserveLabel +
+      '.';
+  }
+  return { ready, stalled, load: null, text };
 }
 
 /** Top set: heaviest load, then most reps. Bodyweight sets compare on reps alone. */

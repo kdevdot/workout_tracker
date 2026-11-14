@@ -8,6 +8,7 @@ import { canonicalExerciseId } from '@/domain/exercise-identity';
 import BodyMap from './BodyMap.vue';
 import ExerciseDemo from './ExerciseDemo.vue';
 import ExerciseVideo from './ExerciseVideo.vue';
+import ExerciseEvidence from './ExerciseEvidence.vue';
 
 const props = defineProps<{ exercise: Exercise; swappable?: boolean }>();
 const emit = defineEmits<{ swap: [] }>();
@@ -69,6 +70,8 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
         <OctagonAlert class="mt-0.5 size-3.5 shrink-0" />{{ item }}
       </li>
     </ul>
+
+    <ExerciseEvidence v-if="guide?.evidence" :evidence="guide.evidence" />
 
     <details v-if="guide?.comparison" class="group/compare bg-secondary/60 rounded-xl px-3">
       <summary class="flex min-h-11 items-center gap-1.5 text-xs font-bold">

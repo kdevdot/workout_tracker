@@ -1,0 +1,531 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "date": "2026-11-09",
+    "workoutId": "upperA",
+    "phase": "baseline",
+    "startedAt": "2026-11-09T10:00:00.000Z",
+    "completedAt": "2026-11-09T11:00:00.000Z",
+    "status": "completed",
+    "exercises": [
+      {
+        "exercise": {
+          "id": "barbell-bench-press",
+          "name": "Barbell bench press",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 240,
+          "restLabel": "3–4 min",
+          "targetRir": "1–2",
+          "loadKind": "barbell",
+          "equipment": "Olympic half rack, Olympic bar, plates, flat bench, safety arms",
+          "primary": ["Chest"],
+          "supporting": ["Triceps", "Front delts"],
+          "cues": [
+            "Eyes under the bar, shoulder blades set, feet planted; unrack with straight arms.",
+            "Lower to mid/lower chest with forearms near vertical; touch, then press without bouncing.",
+            "Set the half-rack safety arms just below your lowest point and test them with the empty bar. Training alone: safeties every set, and end the set before a grinding rep.",
+            "Stop for shoulder pain or losing bar control."
+          ],
+          "alternative": {
+            "name": "Smith flat bench press",
+            "movement": {
+              "id": "smith-flat-bench-press",
+              "min": 5,
+              "max": 8,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "smith"
+            },
+            "note": "Same sets, RIR and rest. Learn the hooks and test the stops with a light load. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.",
+            "prescription": "4 × 5–8 reps"
+          },
+          "sets": 4,
+          "min": 4,
+          "max": 6
+        },
+        "logs": [
+          {
+            "index": 1,
+            "load": 20,
+            "reps": 5,
+            "effort": 2,
+            "loggedAt": "2026-11-09T10:05:00.000Z"
+          }
+        ]
+      },
+      {
+        "exercise": {
+          "id": "fixed-handle-pull-up",
+          "name": "Fixed-handle pull-up or chin-up",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 180,
+          "restLabel": "2–3 min",
+          "targetRir": "2",
+          "loadKind": "bodyweight",
+          "equipment": "Smith station's fixed overhead handles",
+          "primary": ["Lats"],
+          "supporting": ["Biceps", "Upper back"],
+          "cues": [
+            "Use fixed overhead grips, never a moving cable arm. Choose a comfortable grip supported by the handles; do not force an underhand wrist position.",
+            "Brace from a comfortable overhead position, pull elbows toward ribs and lower under control.",
+            "Stop before kipping, craning the neck or losing controlled lowering. No weight belt or uncontrolled jumping negatives."
+          ],
+          "alternative": {
+            "name": "UNICA lat pulldown",
+            "movement": {
+              "id": "unica-lat-pulldown",
+              "min": 8,
+              "max": 12,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "machine"
+            },
+            "note": "Use if five clean pull-ups are unavailable; same sets, RIR and rest. Lat bar on the high hook, thighs braced under the pads; pull to the upper chest without leaning back.",
+            "prescription": "3 × 8–12 reps"
+          },
+          "sets": 3,
+          "min": 5,
+          "max": 8
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "landmine-t-bar-row",
+          "name": "T-bar row (landmine)",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 180,
+          "restLabel": "2–3 min",
+          "targetRir": "1–2",
+          "loadKind": "barbell",
+          "equipment": "Olympic bar with one end anchored, plates on the free end, V-grip or hands on the bar",
+          "primary": ["Mid-back", "Lats"],
+          "supporting": ["Rear delts", "Biceps"],
+          "cues": [
+            "Anchor the bar end so it cannot slide; straddle the bar and hold it close to the plates.",
+            "Hinge to a flat back, chest up; row to the lower chest and lower under control.",
+            "Stop when the torso starts jerking up to move the weight."
+          ],
+          "alternative": {
+            "name": "UNICA seated row",
+            "movement": {
+              "id": "unica-seated-row",
+              "min": 8,
+              "max": 12,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "machine"
+            },
+            "note": "Same sets, RIR and rest. Chest against the pad, row the long bars to the stomach.",
+            "prescription": "3 × 8–12 reps"
+          },
+          "sets": 3,
+          "min": 6,
+          "max": 10
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "seated-db-shoulder-press",
+          "name": "Seated DB shoulder press",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 120,
+          "restLabel": "2 min",
+          "targetRir": "2",
+          "loadKind": "dumbbell",
+          "equipment": "DB pair, locked nearly upright bench",
+          "primary": ["Front delts"],
+          "supporting": ["Triceps", "Side delts"],
+          "cues": [
+            "Lock backrest nearly upright, plant feet and keep ribs controlled.",
+            "Press from a comfortable shoulder-level start along a natural arc; a neutral/semi-neutral grip is acceptable.",
+            "Stop for excessive back arch, pain or inability to return DBs safely."
+          ],
+          "alternative": {
+            "name": "One-arm standing cable press on an upward path",
+            "movement": {
+              "id": "one-arm-standing-cable-press",
+              "min": 10,
+              "max": 15,
+              "unit": "reps",
+              "perSide": true,
+              "loadKind": "cable"
+            },
+            "note": "Same sets, RIR and rest. Set D-handle below shoulder level, face away in a staggered stance and press upward/forward without twisting. Reduce load if unstable or the cable contacts you.",
+            "prescription": "2 × 10–15 reps/side"
+          },
+          "sets": 2,
+          "min": 6,
+          "max": 10
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "db-lateral-raise",
+          "name": "DB lateral raise",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 90,
+          "restLabel": "75–90 s",
+          "targetRir": "1–2",
+          "loadKind": "dumbbell",
+          "equipment": "Light DB pair",
+          "primary": ["Side delts"],
+          "supporting": [],
+          "cues": [
+            "Stand tall with soft elbows; raise slightly forward of your sides toward shoulder height, then lower slowly.",
+            "Allow comfortable individual shoulder motion; stop before shrugging, swinging or heaving takes over.",
+            "Start at the lightest setting; add reps before weight.",
+            "After the intro phase, take the last set to 0–1 RIR."
+          ],
+          "alternative": {
+            "name": "One-arm low-cable lateral raise",
+            "movement": {
+              "id": "one-arm-low-cable-lateral-raise",
+              "min": 12,
+              "max": 20,
+              "unit": "reps",
+              "perSide": true,
+              "loadKind": "cable"
+            },
+            "note": "Same sets, RIR and rest. Low pulley, D-handle in outside hand, standing side-on; use a comfortable arc without leaning for momentum. Stop if the cable path is awkward.",
+            "prescription": "3 × 12–20 reps/side"
+          },
+          "sets": 3,
+          "min": 12,
+          "max": 20
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "unica-arm-curl",
+          "name": "UNICA arm curl",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 90,
+          "restLabel": "60–90 s",
+          "targetRir": "1–2",
+          "loadKind": "machine",
+          "equipment": "UNICA arm-curl bar and pad",
+          "primary": ["Biceps"],
+          "supporting": ["Brachialis"],
+          "cues": [
+            "Set the handles, sit close with legs wrapped under the frame and elbows on the pad.",
+            "Lower until the arms are fully straight, then curl without lifting the elbows.",
+            "Superset with the triceps extension: one set of each, then rest.",
+            "After the intro phase, take the last set to 0–1 RIR."
+          ],
+          "alternative": {
+            "name": "Standing DB curl",
+            "movement": {
+              "id": "standing-db-curl",
+              "min": 10,
+              "max": 15,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "dumbbell"
+            },
+            "note": "Same sets, RIR and rest. Upper arms still, no hip drive.",
+            "prescription": "2 × 10–15 reps"
+          },
+          "sets": 2,
+          "min": 10,
+          "max": 15
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "one-arm-cable-overhead-triceps-extension",
+          "name": "One-arm cable overhead triceps extension",
+          "unit": "reps",
+          "perSide": true,
+          "restSeconds": 90,
+          "restLabel": "60–90 s",
+          "targetRir": "1–2",
+          "loadKind": "cable",
+          "equipment": "Cable column, D-handle, low or middle pulley",
+          "primary": ["Triceps"],
+          "supporting": [],
+          "cues": [
+            "Face away from the pulley in a staggered stance, D-handle behind your head, elbow pointing up.",
+            "Let the elbow bend fully for the stretch, then extend without the upper arm drifting.",
+            "Superset with the arm curl: one set of each, then rest.",
+            "Complete both sides for one set. Start with the weaker side and match clean reps; allow 20–30 seconds to switch sides, then take the listed rest.",
+            "Start at the lightest setting; add reps before weight.",
+            "After the intro phase, take the last set to 0–1 RIR."
+          ],
+          "alternative": {
+            "name": "One-DB two-hand overhead extension",
+            "movement": {
+              "id": "one-db-two-hand-overhead-triceps-extension",
+              "min": 10,
+              "max": 15,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "dumbbell"
+            },
+            "note": "Same sets, RIR and rest. Hold one DB securely in both hands overhead and extend from a deep, comfortable elbow bend.",
+            "prescription": "2 × 10–15 reps"
+          },
+          "sets": 2,
+          "min": 10,
+          "max": 15
+        },
+        "logs": []
+      }
+    ]
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "date": "2026-11-13",
+    "workoutId": "lowerB",
+    "phase": "baseline",
+    "startedAt": "2026-11-13T10:00:00.000Z",
+    "completedAt": null,
+    "status": "active",
+    "exercises": [
+      {
+        "exercise": {
+          "id": "barbell-deadlift",
+          "name": "Barbell deadlift",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 240,
+          "restLabel": "3–4 min",
+          "targetRir": "1–2",
+          "loadKind": "barbell",
+          "equipment": "Olympic bar, urethane plates, floor or rack pins",
+          "primary": ["Hamstrings", "Glutes"],
+          "supporting": ["Upper back", "Trunk and spinal bracing"],
+          "cues": [
+            "Bar over mid-foot, shins near the bar; grip just outside the legs.",
+            "Brace, pull the slack out, then push the floor away with the bar dragging up the legs.",
+            "Reset each rep; stop if the lower back rounds or the bar drifts forward."
+          ],
+          "alternative": {
+            "name": "Smith Romanian deadlift",
+            "movement": {
+              "id": "smith-romanian-deadlift",
+              "min": 6,
+              "max": 8,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "smith"
+            },
+            "note": "Same sets, RIR and rest. Controlled hinge, stops below the bottom position. Learn the hooks and test the stops with a light load. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.",
+            "prescription": "3 × 6–8 reps"
+          },
+          "sets": 3,
+          "min": 3,
+          "max": 5
+        },
+        "logs": [
+          {
+            "index": 1,
+            "load": 20,
+            "reps": 5,
+            "effort": 2,
+            "loggedAt": "2026-11-13T10:05:00.000Z"
+          }
+        ]
+      },
+      {
+        "exercise": {
+          "id": "paused-barbell-squat",
+          "name": "Paused barbell squat (2 s)",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 180,
+          "restLabel": "3 min",
+          "targetRir": "2",
+          "loadKind": "barbell",
+          "equipment": "Olympic half rack, Olympic bar, plates, safety arms",
+          "primary": ["Quads", "Glutes"],
+          "supporting": ["Trunk and spinal bracing"],
+          "cues": [
+            "Lighter than your heavy squat day. Descend under control and hold the bottom for 2 seconds, still braced.",
+            "Drive up from a dead stop; no bounce.",
+            "Set the half-rack safety arms just below your lowest point and test them with the empty bar. Training alone: safeties every set, and end the set before a grinding rep."
+          ],
+          "alternative": {
+            "name": "Paused Smith squat",
+            "movement": {
+              "id": "paused-smith-squat",
+              "min": 5,
+              "max": 6,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "smith"
+            },
+            "note": "Same sets, RIR, rest and 2 s pause. Learn the hooks and test the stops with a light load. Never assume the unloaded Smith bar weighs 20 kg or convert it to free-bar load.",
+            "prescription": "3 × 5–6 reps"
+          },
+          "sets": 3,
+          "min": 5,
+          "max": 6
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "seated-leg-curl",
+          "name": "Seated leg curl",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 90,
+          "restLabel": "60–90 s",
+          "targetRir": "1–2",
+          "loadKind": "machine",
+          "equipment": "Technogym Selection 700 Dual Leg Curl/Extension, curl mode",
+          "primary": ["Hamstrings"],
+          "supporting": [],
+          "cues": [
+            "Knee lined up with the pivot, thigh pad snug, lean slightly forward to stretch the hamstrings.",
+            "Curl as far as you can, then return slowly to straight legs.",
+            "Stop for cramping or hips lifting.",
+            "After the intro phase, take the last set to 0–1 RIR."
+          ],
+          "alternative": {
+            "name": "Standing one-leg cable curl",
+            "movement": {
+              "id": "standing-one-leg-cable-curl",
+              "min": 10,
+              "max": 15,
+              "unit": "reps",
+              "perSide": true,
+              "loadKind": "cable"
+            },
+            "note": "Same sets, RIR and rest. Ankle strap on the low pulley, face the column holding the frame; curl the heel up without the hip moving.",
+            "prescription": "3 × 10–15 reps/side"
+          },
+          "sets": 3,
+          "min": 10,
+          "max": 15
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "db-stationary-split-squat",
+          "name": "DB stationary split squat, rear foot on floor",
+          "unit": "reps",
+          "perSide": true,
+          "restSeconds": 180,
+          "restLabel": "2–3 min",
+          "targetRir": "2",
+          "loadKind": "dumbbell",
+          "equipment": "DB pair, floor",
+          "primary": ["Quads", "Glutes"],
+          "supporting": [],
+          "cues": [
+            "Keep both feet on the floor in a stable staggered stance; no rear-foot platform is needed.",
+            "Lower straight down through comfortable front-knee/hip range and drive through front foot. Knee travel over toes is normal; avoid tightrope stance.",
+            "Stop for balance loss or rear-leg pushing dominating.",
+            "Complete both sides for one set. Start with the weaker side and match clean reps; allow 20–30 seconds to switch sides, then take the listed rest."
+          ],
+          "alternative": {
+            "name": "Smith squat",
+            "movement": {
+              "id": "smith-squat",
+              "min": 8,
+              "max": 12,
+              "unit": "reps",
+              "perSide": false,
+              "loadKind": "smith"
+            },
+            "note": "Same sets, RIR and rest. Use plates and safeties, test hooks/stops and adjust feet to the fixed path; keep whole feet planted and trunk controlled. No rear-foot platform is needed.",
+            "prescription": "2 × 8–12 reps"
+          },
+          "sets": 2,
+          "min": 8,
+          "max": 12
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "seated-db-calf-raise",
+          "name": "Seated DB calf raise",
+          "unit": "reps",
+          "perSide": false,
+          "restSeconds": 90,
+          "restLabel": "90 s",
+          "targetRir": "1–2",
+          "loadKind": "dumbbell",
+          "equipment": "Locked bench, DBs on thighs, floor",
+          "primary": ["Calves (bent-knee/soleus emphasis)"],
+          "supporting": [],
+          "cues": [
+            "Sit on locked bench with knees about 90°. Place manageable DBs securely on distal thighs above knees, never on kneecaps.",
+            "Raise heels through forefeet, pause and lower to floor; remove DBs safely after the set.",
+            "Stop if load slides, setup hurts or bouncing replaces control.",
+            "After the intro phase, take the last set to 0–1 RIR."
+          ],
+          "alternative": {
+            "name": "Supported single-leg standing DB calf raise",
+            "movement": {
+              "id": "supported-single-leg-standing-db-calf-raise",
+              "min": 10,
+              "max": 20,
+              "unit": "reps",
+              "perSide": true,
+              "loadKind": "dumbbell"
+            },
+            "note": "Same sets, RIR and rest; not identical knee-angle emphasis. One DB, fixed upright for balance, floor; mostly straight knee, controlled rise and lowering without bouncing or a loose-plate platform.",
+            "prescription": "3 × 10–20 reps/side"
+          },
+          "sets": 3,
+          "min": 12,
+          "max": 20
+        },
+        "logs": []
+      },
+      {
+        "exercise": {
+          "id": "cable-anti-rotation-press",
+          "name": "One-arm cable anti-rotation press",
+          "unit": "reps",
+          "perSide": true,
+          "restSeconds": 75,
+          "restLabel": "60–75 s",
+          "targetRir": "2",
+          "loadKind": "cable",
+          "equipment": "Cable at chest height, D-handle",
+          "primary": ["Lateral trunk", "Obliques"],
+          "supporting": [],
+          "cues": [
+            "Stand side-on to the pulley, D-handle at the sternum, feet a little wider than hips.",
+            "Press straight out and back without letting the cable turn your torso.",
+            "Stop when the torso turns or the shoulder is pulled uncomfortably.",
+            "Complete both sides for one set. Start with the weaker side and match clean reps; allow 20–30 seconds to switch sides, then take the listed rest."
+          ],
+          "alternative": {
+            "name": "DB suitcase hold",
+            "movement": {
+              "id": "db-suitcase-hold",
+              "min": 20,
+              "max": 40,
+              "unit": "seconds",
+              "perSide": true,
+              "loadKind": "dumbbell"
+            },
+            "note": "Same sets and rest. Stand tall holding one heavy DB at your side without leaning toward it.",
+            "prescription": "2 × 20–40 s/side"
+          },
+          "sets": 2,
+          "min": 10,
+          "max": 15
+        },
+        "logs": []
+      }
+    ]
+  }
+]

@@ -33,6 +33,13 @@ const error = shallowRef('');
 const weighted = computed(() => props.exercise.loadKind !== 'bodyweight');
 const sided = computed(() => props.exercise.perSide);
 const timed = computed(() => props.exercise.unit === 'seconds');
+const loadLabel = computed(() =>
+  props.exercise.loadKind === 'barbell'
+    ? 'Total · kg'
+    : props.exercise.loadKind === 'dumbbell'
+      ? 'Per DB · kg'
+      : 'Load · kg',
+);
 const maxEffort = computed(() => (timed.value ? 120 : 10));
 const fields = computed(() => {
   const unit = props.exercise.unit;
@@ -50,7 +57,7 @@ const fields = computed(() => {
       ? [
           {
             key: 'load' as const,
-            label: 'Load · kg',
+            label: loadLabel.value,
             inputmode: 'decimal',
             min: 0,
             max: 1000,

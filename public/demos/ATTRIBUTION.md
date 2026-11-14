@@ -14,7 +14,7 @@ Each player displays the required linked credit. Streaming depends on the provid
 
 ## Goulart / wger: bundled adaptations, CC BY-SA 4.0
 
-The thirteen MP4 files and thirteen JPEG posters in this directory are adapted from exercise videos attributed by the [wger API](https://wger.de/api/v2/video/?limit=100) to **Goulart**. Each selected source's licence is ID 2, identified by the [licence API](https://wger.de/api/v2/license/) as **Creative Commons Attribution-ShareAlike 4.0**. Author URL and source-title fields were blank; titles below identify the movements rather than inventing creator-supplied titles.
+The fourteen MP4 files and fourteen JPEG posters in this directory are adapted from exercise videos attributed by the [wger API](https://wger.de/api/v2/video/?limit=100) to **Goulart**. Each selected source's licence is ID 2, identified by the [licence API](https://wger.de/api/v2/license/) as **Creative Commons Attribution-ShareAlike 4.0**. Author URL and source-title fields were blank; titles below identify the movements rather than inventing creator-supplied titles.
 
 These modified videos and posters are provided under the same [CC BY-SA 4.0 licence](https://creativecommons.org/licenses/by-sa/4.0/). You may share and adapt them, including commercially, subject to that licence's attribution and ShareAlike conditions. No endorsement by Goulart or wger is implied. The licence does not necessarily grant other rights, such as personality or privacy rights.
 
@@ -37,6 +37,7 @@ All clips: one video stream, H.264, 1280 × 720, 30 fps, yuv420p, fast-start MP4
 | `seated-rear-delt-raise.mp4`              | 82 / 8                   | Start to end, approximately 7 s    | [Original](https://wger.de/media/exercise-video/82/ebf1e6d2-df48-44b8-a791-97f77e801bf3.MOV)  |
 | `standing-calf-raise.mp4`                 | 622 / 15                 | 0–12 s                             | [Original](https://wger.de/media/exercise-video/622/461171e5-2b16-407d-bf27-27aeef43f105.MOV) |
 | `seated-calf-raise.mp4`                   | 590 / 13                 | 0–12 s                             | [Original](https://wger.de/media/exercise-video/590/a325ae2e-686b-4a1f-aff2-ba37fa3fa157.MOV) |
+| `incline-dumbbell-press.mp4`              | 537 / 24                 | 6–21 s                             | [Original](https://wger.de/media/exercise-video/537/b9c937e9-daeb-42a9-be8e-7a77e368478c.MOV) |
 
 Reproduction command, with the interval from the table:
 
@@ -63,8 +64,13 @@ b701c23b9d3eff830ba7a1a784e7aa928abc24a3eb3523a8796c9c4f96cab7c5  seated-calf-ra
 9778dfe0473677e49850c477d6416c047c71ec8d819af9db0c98c21caf111242  seated-rear-delt-raise.mp4
 ec80d1563ed0d7b1a208dfbfa5a4b9fd3be8b730f9ded32e5bd80f55f7f08fac  split-squat.mp4
 0bae8635c4d87e82c0f70c66ed6fd53544c75ecd6a2783e29cabe08fd25fd070  standing-calf-raise.mp4
+e3e5af4983a9c32d2f4c7c2e66f3356bfe86c5d73e5c6fcfd5afe57ba8450f30  incline-dumbbell-press.mp4
 ```
 
 ## YouTube: optional detailed explanations
 
 Creator-hosted tutorials remain available separately through the privacy-enhanced YouTube player. They are not downloaded, bundled or covered by either media licence above. Creator names and video IDs remain in `src/domain/guides.ts`. YouTube may show ads or restrict playback.
+
+## Programme revision — 14 November 2026
+
+The barbell-RDL entry reuses the audited dumbbell-RDL clip as an explicitly labelled related reference; the supported split squat similarly reuses the unsupported two-DB clip with the support/one-DB difference stated before playback. Candidate wger 507 / 2 was visually rejected as an exact barbell reference because it also shows dumbbells. No new rights are asserted for reused media. The incline DB curl and floor reverse crunch retain honest quick-demo gaps and verified, in-app YouTube explanations; YouTube footage is not downloaded or bundled.

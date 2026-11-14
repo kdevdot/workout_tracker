@@ -6,40 +6,40 @@ const workoutIds: WorkoutId[] = ['upperA', 'lowerA', 'upperB', 'lowerB'];
 
 const expectedTables = {
   upperA: [
-    ['barbell-bench-press', 4, 4, 6, 'reps', false, 240, '1–2', 'barbell'],
-    ['fixed-handle-pull-up', 3, 5, 8, 'reps', false, 180, '2', 'bodyweight'],
-    ['landmine-t-bar-row', 3, 6, 10, 'reps', false, 180, '1–2', 'barbell'],
-    ['seated-db-shoulder-press', 2, 6, 10, 'reps', false, 120, '2', 'dumbbell'],
-    ['db-lateral-raise', 3, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['unica-arm-curl', 2, 10, 15, 'reps', false, 90, '1–2', 'machine'],
-    ['one-arm-cable-overhead-triceps-extension', 2, 10, 15, 'reps', true, 90, '1–2', 'cable'],
+    ['barbell-bench-press', 3, 5, 8, 'reps', false, 240, '2', 'barbell'],
+    ['unica-lat-pulldown', 3, 8, 12, 'reps', false, 180, '2', 'machine'],
+    ['unica-seated-row', 2, 8, 12, 'reps', false, 120, '2', 'machine'],
+    ['machine-pec-fly', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['db-lateral-raise', 3, 12, 20, 'reps', false, 120, '1–2', 'dumbbell'],
+    ['machine-reverse-fly', 2, 12, 20, 'reps', false, 120, '1–2', 'machine'],
+    ['unica-arm-curl', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['one-arm-cable-overhead-triceps-extension', 2, 10, 15, 'reps', true, 120, '1–2', 'cable'],
   ],
   lowerA: [
-    ['barbell-back-squat', 4, 4, 6, 'reps', false, 240, '1–2', 'barbell'],
-    ['db-romanian-deadlift', 3, 6, 10, 'reps', false, 180, '2', 'dumbbell'],
-    ['seated-leg-curl', 3, 10, 15, 'reps', false, 90, '1–2', 'machine'],
-    ['selection-leg-extension', 2, 12, 15, 'reps', false, 90, '1–2', 'machine'],
-    ['supported-single-leg-standing-db-calf-raise', 3, 10, 15, 'reps', true, 90, '1–2', 'dumbbell'],
-    ['hanging-knee-raise', 2, 8, 15, 'reps', false, 75, '2', 'bodyweight'],
+    ['barbell-back-squat', 3, 5, 8, 'reps', false, 240, '2', 'barbell'],
+    ['barbell-romanian-deadlift', 2, 6, 10, 'reps', false, 180, '2', 'barbell'],
+    ['seated-leg-curl', 3, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['selection-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['supported-single-leg-standing-db-calf-raise', 3, 8, 15, 'reps', true, 120, '1–2', 'dumbbell'],
+    ['hanging-knee-raise', 2, 8, 15, 'reps', false, 90, '2', 'bodyweight'],
   ],
   upperB: [
-    ['paused-barbell-bench-press', 3, 6, 8, 'reps', false, 180, '2', 'barbell'],
-    ['unica-lat-pulldown', 3, 8, 12, 'reps', false, 120, '1–2', 'machine'],
-    ['unica-seated-row', 3, 10, 12, 'reps', false, 120, '1–2', 'machine'],
-    ['dips', 2, 6, 12, 'reps', false, 180, '1–2', 'bodyweight'],
-    ['machine-pec-fly', 2, 12, 15, 'reps', false, 90, '1–2', 'machine'],
-    ['machine-reverse-fly', 2, 12, 20, 'reps', false, 90, '1–2', 'machine'],
-    ['db-lateral-raise', 2, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['standing-db-curl', 2, 10, 15, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['one-db-two-hand-overhead-triceps-extension', 2, 10, 15, 'reps', false, 90, '1–2', 'dumbbell'],
+    ['low-incline-db-bench-press', 3, 8, 12, 'reps', false, 180, '2', 'dumbbell'],
+    ['unica-lat-pulldown', 3, 8, 12, 'reps', false, 180, '2', 'machine'],
+    ['unica-seated-row', 2, 8, 12, 'reps', false, 120, '2', 'machine'],
+    ['machine-pec-fly', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['db-lateral-raise', 3, 12, 20, 'reps', false, 120, '1–2', 'dumbbell'],
+    ['machine-reverse-fly', 2, 12, 20, 'reps', false, 120, '1–2', 'machine'],
+    ['incline-db-curl', 2, 10, 15, 'reps', false, 120, '1–2', 'dumbbell'],
+    ['one-arm-cable-overhead-triceps-extension', 2, 10, 15, 'reps', true, 120, '1–2', 'cable'],
   ],
   lowerB: [
-    ['barbell-deadlift', 3, 3, 5, 'reps', false, 240, '1–2', 'barbell'],
-    ['paused-barbell-squat', 3, 5, 6, 'reps', false, 180, '2', 'barbell'],
-    ['seated-leg-curl', 3, 10, 15, 'reps', false, 90, '1–2', 'machine'],
-    ['db-stationary-split-squat', 2, 8, 12, 'reps', true, 180, '2', 'dumbbell'],
-    ['seated-db-calf-raise', 3, 12, 20, 'reps', false, 90, '1–2', 'dumbbell'],
-    ['cable-anti-rotation-press', 2, 10, 15, 'reps', true, 75, '2', 'cable'],
+    ['barbell-romanian-deadlift', 2, 6, 10, 'reps', false, 180, '2', 'barbell'],
+    ['supported-db-stationary-split-squat', 3, 8, 12, 'reps', true, 180, '2', 'dumbbell'],
+    ['seated-leg-curl', 3, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['selection-leg-extension', 2, 10, 15, 'reps', false, 120, '1–2', 'machine'],
+    ['supported-single-leg-standing-db-calf-raise', 3, 8, 15, 'reps', true, 120, '1–2', 'dumbbell'],
+    ['floor-reverse-crunch', 2, 10, 20, 'reps', false, 90, '2', 'bodyweight'],
   ],
 };
 
@@ -68,12 +68,12 @@ describe('programme tables', () => {
       workoutIds.map((workoutId) =>
         getExercises(workoutId, 'baseline').reduce((total, exercise) => total + exercise.sets, 0),
       ),
-    ).toEqual([19, 17, 21, 16]);
+    ).toEqual([19, 15, 19, 15]);
     expect(
       workoutIds.map((workoutId) =>
         getExercises(workoutId, 'intro').reduce((total, exercise) => total + exercise.sets, 0),
       ),
-    ).toEqual([14, 12, 18, 12]);
+    ).toEqual([16, 12, 16, 12]);
   });
 
   it.each(workoutIds)(
@@ -163,14 +163,57 @@ describe('programme tables', () => {
     }
   });
 
-  it('only uses gym equipment, never floor work', () => {
-    for (const exercise of Object.values(workouts).flatMap((workout) => workout.exercises)) {
-      expect(exercise.equipment).not.toMatch(/^Body weight|mat/i);
-      expect(exercise.unit).toBe('reps');
+  it('includes the approved floor reverse crunch without assuming extra attachments', () => {
+    const reverse = workouts.lowerB.exercises.at(-1)!;
+    expect(reverse).toMatchObject({
+      id: 'floor-reverse-crunch',
+      loadKind: 'bodyweight',
+      unit: 'reps',
+      perSide: false,
+    });
+    expect(reverse.equipment).toContain('floor');
+    expect(
+      workouts.lowerB.exercises.some((exercise) => exercise.id === 'cable-anti-rotation-press'),
+    ).toBe(false);
+    const curl = workouts.lowerA.exercises.find((exercise) => exercise.id === 'seated-leg-curl')!;
+    expect(curl.alternative.movement).toMatchObject({ unit: 'cycles', loadKind: 'bodyweight' });
+    expect(curl.alternative.note).not.toContain('ankle strap');
+  });
+
+  it('matches the approved weekly muscle coverage without doubling unilateral sets', () => {
+    const all = Object.values(workouts);
+    const expected: Record<string, number> = {
+      Chest: 10,
+      Quads: 10,
+      Hamstrings: 10,
+      Glutes: 10,
+      'Side delts': 6,
+      'Rear delts': 4,
+      Biceps: 4,
+      Triceps: 4,
+      Calves: 6,
+      Abdominals: 4,
+    };
+    for (const [muscle, sets] of Object.entries(expected)) {
+      expect(
+        all
+          .flatMap((w) => w.exercises)
+          .filter((e) => e.primary.includes(muscle))
+          .reduce((n, e) => n + e.sets, 0),
+        muscle,
+      ).toBe(sets);
+      expect(
+        all.filter((w) => w.exercises.some((e) => e.primary.includes(muscle))),
+        muscle,
+      ).toHaveLength(2);
     }
     expect(
-      workouts.upperA.exercises.find((exercise) => exercise.id === 'fixed-handle-pull-up'),
-    ).toMatchObject({ loadKind: 'bodyweight', unit: 'reps', perSide: false });
+      all
+        .flatMap((w) => w.exercises)
+        .filter((e) => e.primary.some((m) => ['Lats', 'Mid-back'].includes(m)))
+        .reduce((n, e) => n + e.sets, 0),
+    ).toBe(10);
+    expect(new Set(all.flatMap((w) => w.exercises.map((e) => e.id))).size).toBe(18);
   });
 
   it.each(workoutIds)('%s has no duplicate IDs', (workoutId) => {
@@ -199,9 +242,9 @@ describe('programme tables', () => {
         else definitions.set(exercise.id, movement);
       }
     }
-    expect(workouts.lowerA.exercises[1].id).not.toBe(workouts.lowerB.exercises[0].id);
+    expect(workouts.lowerA.exercises[1].id).toBe(workouts.lowerB.exercises[0].id);
     expect(workouts.upperA.exercises[0].id).not.toBe(workouts.upperB.exercises[0].id);
-    expect(workouts.lowerA.exercises[4].id).not.toBe(workouts.lowerB.exercises[4].id);
+    expect(workouts.lowerA.exercises[4].id).toBe(workouts.lowerB.exercises[4].id);
   });
 
   it('uses the real leg curl on both lower days instead of a workaround', () => {

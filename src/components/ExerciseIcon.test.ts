@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import ExerciseIcon from './ExerciseIcon.vue';
 import { workouts } from '@/domain/programme';
 
@@ -30,7 +30,10 @@ describe('exercise thumbnails', () => {
 
   it('retains provenance for every bundled drawing', () => {
     const provenance = JSON.parse(readFileSync('public/exercises/provenance.json', 'utf8'));
-    expect(provenance.exercises).toHaveLength(24);
+    const files = readdirSync('public/exercises').filter((file) => file.endsWith('.svg'));
+    expect(new Set(provenance.exercises.map((entry: { slug: string }) => entry.slug))).toEqual(
+      new Set(files.map((file) => file.replace(/\.svg$/, ''))),
+    );
     expect(existsSync('public/exercises/LICENSE-ASSETS')).toBe(true);
   });
 

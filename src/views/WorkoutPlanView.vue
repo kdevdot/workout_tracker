@@ -43,6 +43,15 @@ const exercises = computed(
 );
 const totalSets = computed(() => exercises.value.reduce((sum, exercise) => sum + exercise.sets, 0));
 const activePhase = computed(() => shown.value?.phase ?? props.phase);
+const warmup = computed(() =>
+  shown.value
+    ? 'For this saved workout, warm up 5 minutes on the bike or rower, then use progressively heavier practice sets for its first exercise and any unfamiliar loaded movements. Follow the saved exercise setup cues; warm-ups stay well away from failure.'
+    : workout.value?.warmup,
+);
+const muscleFocus = computed(() => ({
+  primary: [...new Set(exercises.value.flatMap((exercise) => exercise.primary))],
+  supporting: [...new Set(exercises.value.flatMap((exercise) => exercise.supporting))],
+}));
 const progress = computed(() => (shown.value ? sessionProgress(shown.value) : null));
 const done = computed(() => !props.session && props.completed !== null);
 const future = computed(() => props.date > props.today);
@@ -191,11 +200,11 @@ function chooseWorkout(event: Event) {
           <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
         </summary>
         <div class="flex flex-col gap-2 pb-4 text-sm leading-6">
-          <p>{{ workout.warmup }}</p>
+          <p>{{ warmup }}</p>
           <p v-if="activePhase === 'intro'">
-            Use 2 working sets per exercise for the introduction. If this is substantially more than
-            recent training, reduce isolation work further. Increase only when recovery is
-            acceptable.
+            Use 2 working sets at 3 RIR for the introduction. Give each new movement at least two
+            exposures. Build toward the full prescription when execution and recovery are
+            consistent; phase changes remain your choice in Settings.
           </p>
         </div>
       </details>
@@ -213,7 +222,7 @@ function chooseWorkout(event: Event) {
           <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />
         </summary>
         <div class="pb-4">
-          <MuscleMap :primary="workout.primary" :supporting="workout.supporting" />
+          <MuscleMap :primary="muscleFocus.primary" :supporting="muscleFocus.supporting" />
         </div>
       </details>
     </div>

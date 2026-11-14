@@ -1,6 +1,22 @@
 # Short exercise demonstration audit
 
-Date: 10 November 2026, extended 12 November 2026. Scope: current 26 exercise-guide entries, including substitutions. This is a media change, not a programme, technique-cue, training-log or storage-schema change.
+Original audit: 10 November 2026, extended 12 November 2026. The original coverage table below records the 26 pre-revision guide entries. Those entries remain available for saved sessions.
+
+## Programme revision — 14 November 2026
+
+The approved programme now has 18 distinct primary movements, with 31 guide entries including retained historical movements. There are 26 short-demo mappings backed by 22 distinct clips: eight remote Your Move clips and fourteen bundled Goulart / wger adaptations. Fifteen of the eighteen current primary movements have a short reference, with equipment/support differences labelled before playback.
+
+| New primary movement                | Short-demo decision | Source / limit                                                                                                                                                      |
+| ----------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Barbell Romanian deadlift           | Related             | Existing audited DB-RDL clip; barbell/equipment difference explicit. Candidate wger 507 / 2 also showed DBs and was not accepted as an exact barbell demonstration. |
+| Low-incline DB bench press          | Movement            | Goulart / wger 537 / 24, trimmed to 6–21 s; confirmed incline DB pressing in sampled frames.                                                                        |
+| Incline DB curl                     | Gap                 | Verified optional Renaissance Periodization explanation; no matching freely licensed short clip added.                                                              |
+| Supported DB stationary split squat | Related             | Existing unsupported two-DB clip; upright support, one DB and floor rear-foot position stated.                                                                      |
+| Floor reverse crunch                | Gap                 | Verified PureGym explanation; no matching freely licensed short clip added.                                                                                         |
+
+The hanging knee raise remains a current quick-demo gap. Retired landmine-row and Pallof-press gaps also remain explicit. Optional YouTube IDs were checked against creator-hosted search results and the official PureGym reverse-crunch page. Four attributed frame-one thumbnails were added from the pinned Workout Guide revision.
+
+The new incline adaptation was inspected in sampled contact frames and decoded with FFmpeg: H.264, one video stream, 1280 × 720, 30 fps, exactly 15 seconds, no audio. No new browser-playback or physical-iPhone validation is claimed by this addition. Existing component tests cover disclosure, variation notices, failure/retry and preserving entered workout values.
 
 ## Implementation decision
 

@@ -14,6 +14,10 @@ Live: https://kdevdot.github.io/workout_tracker/
 - Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a month calendar. Tap a calendar day to log or review it, including missed days; the logging card shows the full selected date.
 - Exports and restores all data as a JSON backup.
 
+## Programme
+
+The approved four-day prescription, weekly volume, exercise-selection evidence and progression rules are in [the programme reference](docs/PROGRAMME.md). The target baseline is 68 working sets; Introduction remains 56 sets at 3 RIR. Programme updates apply to new sessions, while saved sessions keep their snapshots. Exercise guides include a read-only “Why this exercise” disclosure with linked primary research.
+
 ## Code organisation
 
 - `src/views/` composes screens; view filenames end in `View.vue`.
@@ -65,7 +69,7 @@ Every push to `main` runs `.github/workflows/check.yml`. The `deploy.yml` workfl
 
 - Muscle maps: [wger](https://wger.de), CC BY-SA 4.0, with colours changed. See `public/muscles/LICENSE.txt`.
 - Exercise illustrations: [Workout Guide](https://github.com/bryllim/workout-guide) / [Everkinetic](https://github.com/everkinetic/data), CC BY-SA 4.0. See `public/exercises/ATTRIBUTION.md`.
-- Quick demos: eight remotely hosted [Your Move](https://ymove.app/free-exercise-videos) clips and thirteen adapted Goulart / [wger](https://wger.de) clips (CC BY-SA 4.0), covering 23 of 26 guide entries including explicitly labelled related variations. Your Move files are not redistributed in the repository. See `public/demos/ATTRIBUTION.md` and `docs/SHORT-DEMO-AUDIT.md` for sources, changes and gaps. Videos load only after a tap and are not precached offline.
+- Quick demos: eight remotely hosted [Your Move](https://ymove.app/free-exercise-videos) clips and fourteen adapted Goulart / [wger](https://wger.de) clips (CC BY-SA 4.0), covering 26 of 31 current/retained guide entries including explicitly labelled related variations. Your Move files are not redistributed in the repository. See `public/demos/ATTRIBUTION.md` and `docs/SHORT-DEMO-AUDIT.md` for sources, changes and gaps. Videos load only after a tap and are not precached offline.
 - Detailed explanations: optional YouTube clips via privacy-enhanced embeds, loaded only after a tap. Sources remain in `src/domain/guides.ts`.
 - Fonts: Geist and Bricolage Grotesque, OFL.
 

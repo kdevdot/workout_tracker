@@ -13,12 +13,12 @@ A personal companion for the approved four-day upper/lower strength and hypertro
 ## Confirmed constraints
 
 - Monday Upper A, Tuesday Lower A, Thursday Upper B, Friday Lower B; other days rest. If Friday is missed, use the workout switcher to select Lower B on Saturday.
-- Preserve the researched exercise order, conditional equipment, introductory phase, and progression guidance.
+- The approved 14 November programme is defined in src/domain/programme.ts and documented in docs/PROGRAMME.md: 68 baseline sets, 56 Introduction sets, 18 distinct movements. Preserve exercise order, conditional equipment, the manual introductory phase and displayed-range progression. Floor reverse crunches are approved.
 - Date-first interface; one session title; readable prescriptions and front/back target-region maps.
 - Device-local saving first, independent JSON backup/restore, Google Drive backup later.
 - Personal research, gym photos, logs, and supplement labels must not enter public source control by default.
 - Exact video variations and licences must be audited; no placeholder pretending to play a video.
-- Demonstrations must play inside the exercise guide without requiring an external search or another app. Short, silent demonstrations cover 23 of 26 programme guide entries, with variation notes where required. YouTube is an optional detailed explanation. Missing clips remain explicit. Videos need internet and load only after a tap.
+- Demonstrations must play inside the exercise guide without requiring an external search or another app. Short, silent demonstrations cover 26 of 31 current/retained guide entries, with variation notes where required. YouTube is an optional detailed explanation. Missing clips remain explicit. Videos need internet and load only after a tap.
 
 ## Stack
 
@@ -31,7 +31,7 @@ Vue 3, TypeScript, Vite, Tailwind CSS v4 with shadcn-vue components (`src/compon
 - History shows real entries only. Rest timer survives reload and backgrounding.
 - Failed or invalid storage never silently resets or reports successful saving.
 - Validated JSON export/restore protects the first real records.
-- All four workout tables match the research document and are covered by tests.
+- All four workout tables match the approved programme reference and are covered by tests. Primary exercises have linked evidence and explicit limits; no targeting percentages are invented.
 - Session prescriptions remain stable when swapping exercises and restoring backups. Existing backup formats and exercise identities remain readable.
 - Progress counts each whole exercise once, after all its working sets are recorded.
 - Progression guidance uses previous performances of the same movement and does not suggest a load increase after mixed-load sets.

@@ -107,7 +107,7 @@ function save() {
           />
           <p class="text-muted-foreground text-xs">
             Any time from 0.5 to 10 minutes, e.g. 1.5 = 90 s. Leave blank to use each exercise's
-            programme rest (60 s–4 min). Applies to the next set you save.
+            programme rest. Applies to the next set you save.
           </p>
         </div>
         <div class="flex flex-col gap-1.5">

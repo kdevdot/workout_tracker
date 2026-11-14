@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getExercises, workouts } from './programme';
+import legacySessions from './__fixtures__/legacy-programme-sessions.json';
 import type { WorkoutId } from './programme-types';
 import { MAX_BACKUP_BYTES, emptyState, encodeBackup, parseBackup, sessionSchema } from './state';
 import {
@@ -20,12 +21,23 @@ function set(index = 1) {
   return { index, load: 20, reps: 7, effort: 3, loggedAt: new Date().toISOString() };
 }
 
+function legacySession(workoutId: 'upperA' | 'lowerB') {
+  const saved = legacySessions.find((session) => session.workoutId === workoutId)!;
+  return sessionSchema.parse({
+    ...saved,
+    date: workoutId === 'upperA' ? '2026-11-02' : '2026-11-06',
+    status: 'active',
+    completedAt: null,
+    exercises: saved.exercises.map((entry) => ({ ...entry, logs: [] })),
+  });
+}
+
 describe('session lifecycle', () => {
   it('snapshots prescriptions and preserves the actual calendar date', () => {
     const session = startSession('upperA', '2026-11-02', 'intro');
     expect(session.date).toBe('2026-11-02');
-    expect(sessionProgress(session)).toEqual({ done: 0, total: 7 });
-    expect(startSession('upperA', '2026-11-02', 'baseline').exercises[0]!.exercise.sets).toBe(4);
+    expect(sessionProgress(session)).toEqual({ done: 0, total: 8 });
+    expect(startSession('upperA', '2026-11-02', 'baseline').exercises[0]!.exercise.sets).toBe(3);
     expect(session.exercises[0]!.exercise.sets).toBe(2);
   });
   it('records and corrects a set without duplicates or mutations', () => {
@@ -57,7 +69,7 @@ describe('session lifecycle', () => {
     expect(() => finishSession(session)).toThrow();
     const completed = finishSession(recordSet(session, session.exercises[0]!.exercise.id, set()));
     expect(completed.status).toBe('completed');
-    expect(sessionProgress(completed)).toEqual({ done: 0, total: 7 });
+    expect(sessionProgress(completed)).toEqual({ done: 0, total: 8 });
     expect(() => recordSet(completed, completed.exercises[0]!.exercise.id, set())).toThrow();
   });
   it('finds previous completed performances, not future dates or drafts', () => {
@@ -78,7 +90,7 @@ describe('session lifecycle', () => {
     expect(previousPerformance([completed], current, current.exercises[0]!.exercise.id)).toBeNull();
   });
   it('still records timed holds kept in older saved sessions', () => {
-    const lower = startSession('lowerB', '2026-11-06', 'intro');
+    const lower = legacySession('lowerB');
     const last = lower.exercises.at(-1)!;
     const older = {
       ...lower,
@@ -99,7 +111,7 @@ describe('session lifecycle', () => {
 });
 
 describe('next-session target', () => {
-  // Bench press in the intro phase: 2 sets of 4–6 at 3 RIR.
+  // Approved bench prescription in Introduction: 2 sets of 5–8 at 3 RIR.
   function done(date: string, logs: Array<[load: number, reps: number, rir?: number]>) {
     let session = startSession('upperA', date, 'intro');
     const id = session.exercises[0]!.exercise.id;
@@ -113,35 +125,35 @@ describe('next-session target', () => {
     return nextTarget(history, current, current.exercises[0]!.exercise);
   };
 
-  it('adds 2.5 kg once every set reaches the top of the range at about target RIR', () => {
+  it('suggests the smallest available increase without guessing plate increments', () => {
     expect(
       target([
         done('2026-11-02', [
-          [40, 6],
-          [40, 6],
+          [40, 8],
+          [40, 8],
         ]),
       ]),
     ).toMatchObject({
       ready: true,
-      load: 42.5,
+      load: null,
       stalled: false,
     });
   });
   it('keeps the load when a set is short, grinding or missing', () => {
     for (const logs of [
       [
-        [40, 6],
+        [40, 8],
         [40, 5],
       ],
       [
-        [40, 6, 3],
-        [40, 6, 0],
+        [40, 8, 3],
+        [40, 8, 0],
       ],
-      [[40, 6]],
+      [[40, 8]],
     ] as Array<Array<[number, number, number?]>>) {
       const result = target([done('2026-11-02', logs)]);
       expect(result).toMatchObject({ ready: false, load: null });
-      expect(result!.text).toContain('Same 40 kg');
+      expect(result!.text).not.toContain('Try the smallest');
     }
   });
   it('flags a stall when two sessions fail to beat the one before', () => {
@@ -176,31 +188,58 @@ describe('next-session target', () => {
     ];
     expect(target(rising)!.stalled).toBe(false);
   });
-  it('builds hard isolation lifts slowly: lightest first, 3 extra reps before more weight', () => {
-    const raise = (date: string, reps: number) => {
-      let session = startSession('upperA', date, 'intro');
+  it('uses the displayed upper bound for raises and overhead extensions with no hidden extra reps', () => {
+    for (const id of ['db-lateral-raise', 'one-arm-cable-overhead-triceps-extension']) {
+      let prior = startSession('upperA', '2026-11-02', 'intro');
+      const exercise = prior.exercises.find((entry) => entry.exercise.id === id)!.exercise;
       for (const index of [1, 2]) {
-        session = recordSet(session, 'db-lateral-raise', { ...set(index), load: 2, reps });
+        prior = recordSet(prior, id, { ...set(index), load: 2, reps: exercise.max });
       }
-      return finishSession(session);
-    };
-    const current = startSession('upperA', '2026-12-01', 'intro');
-    const exercise = current.exercises.find(
-      (item) => item.exercise.id === 'db-lateral-raise',
-    )!.exercise;
-    expect(nextTarget([], current, exercise)!.text).toContain('lightest dumbbells');
-    expect(nextTarget([raise('2026-11-02', 20)], current, exercise)!.ready).toBe(false);
-    expect(nextTarget([raise('2026-11-02', 23)], current, exercise)!.ready).toBe(true);
+      const completed = finishSession(prior);
+      const current = startSession('upperA', '2026-12-01', 'intro');
+      const result = nextTarget([completed], current, exercise);
+      expect(result.ready).toBe(true);
+      expect(result.text).toContain('Every set reached ' + exercise.max);
+      expect(result.text).not.toContain(String(exercise.max + 3));
+    }
   });
-  it('has no target without a previous session', () => {
-    expect(target([])).toBeNull();
+
+  it('gives capacity-based first-session guidance instead of forcing the lightest load', () => {
+    const result = target([]);
+    expect(result).toMatchObject({ ready: false, load: null, stalled: false });
+    expect(result.text).toContain('5–8 reps');
+    expect(result.text).toContain('3 RIR');
+    expect(result.text).not.toContain('even if it feels easy');
+  });
+
+  it('adds the current working sets before suggesting more load after a phase change', () => {
+    const prior = done('2026-11-02', [
+      [40, 8],
+      [40, 8],
+    ]);
+    const current = startSession('upperA', '2026-12-01', 'baseline');
+    const result = nextTarget([prior], current, current.exercises[0]!.exercise);
+    expect(result.ready).toBe(false);
+    expect(result.text).toContain('all 3 working sets');
+  });
+
+  it('requires the displayed compound reserve even when all baseline reps are achieved', () => {
+    let prior = startSession('upperA', '2026-11-02', 'baseline');
+    const exercise = prior.exercises[0]!.exercise;
+    for (const index of [1, 2, 3]) {
+      prior = recordSet(prior, exercise.id, { ...set(index), load: 40, reps: 8, effort: 1 });
+    }
+    const current = startSession('upperA', '2026-12-01', 'baseline');
+    const result = nextTarget([finishSession(prior)], current, current.exercises[0]!.exercise);
+    expect(result.ready).toBe(false);
+    expect(result.text).toContain('Prioritise 2 RIR');
   });
 
   it('does not increase the top load when later sets used a lighter load', () => {
     const result = target([
       done('2026-11-02', [
-        [40, 6],
-        [20, 6],
+        [40, 8],
+        [20, 8],
       ]),
     ]);
     expect(result).toMatchObject({ ready: false, load: null });
@@ -222,10 +261,7 @@ describe('swapping to the alternative', () => {
   });
 
   it('shares history for the same movement used as a swap and in the regular plan', () => {
-    let previous = swapExercise(
-      startSession('upperA', '2026-11-02', 'intro'),
-      'fixed-handle-pull-up',
-    );
+    let previous = swapExercise(legacySession('upperA'), 'fixed-handle-pull-up');
     const id = previous.exercises[1]!.exercise.id;
     previous = finishSession(recordSet(previous, id, set()));
     const current = startSession('upperB', '2026-11-05', 'intro');
@@ -242,14 +278,14 @@ describe('swapping to the alternative', () => {
         }
       }
     }
-    const [bench, pullUp] = getExercises('upperA', 'baseline');
+    const [bench, pulldown] = getExercises('upperA', 'baseline');
     expect(alternativeOf(bench!)).toMatchObject({
       name: 'Smith flat bench press',
       loadKind: 'smith',
       min: 5,
       max: 8,
     });
-    expect(alternativeOf(pullUp!)).toMatchObject({ loadKind: 'machine' });
+    expect(alternativeOf(pulldown!)).toMatchObject({ loadKind: 'bodyweight' });
   });
   it('swaps an untouched exercise and back, but never one with sets logged', () => {
     const session = startSession('upperA', '2026-11-02', 'intro');
@@ -262,10 +298,7 @@ describe('swapping to the alternative', () => {
   });
 
   it('reads legacy swap IDs without rewriting history or replacing saved reverse targets', () => {
-    const session = swapExercise(
-      startSession('upperA', '2026-11-02', 'intro'),
-      'fixed-handle-pull-up',
-    );
+    const session = swapExercise(legacySession('upperA'), 'fixed-handle-pull-up');
     const entry = session.exercises[1]!;
     entry.exercise.id = 'fixed-handle-pull-up~alt';
     delete entry.originalExercise;
@@ -292,7 +325,7 @@ describe('swapping to the alternative', () => {
 
   it('restores both-side logging for an old unilateral exercise with no /side in its reverse text', () => {
     const id = 'db-stationary-split-squat';
-    const session = swapExercise(startSession('lowerB', '2026-11-06', 'intro'), id);
+    const session = swapExercise(legacySession('lowerB'), id);
     const entry = session.exercises.find((item) => item.originalExercise?.id === id)!;
     delete entry.originalExercise;
     delete entry.exercise.alternative.movement;
@@ -312,6 +345,40 @@ describe('rest between sets', () => {
 });
 
 describe('backup validation', () => {
+  it('preserves completed and in-progress pre-revision sessions exactly alongside new workouts', () => {
+    const saved = legacySessions.map((session) => sessionSchema.parse(session));
+    const next = startSession('lowerB', '2026-11-20', 'intro');
+    const state = { ...emptyState(), sessions: [...saved, next] };
+    const restored = parseBackup(encodeBackup(state)).data;
+    expect(restored.schemaVersion).toBe(1);
+    expect(restored.settings.phase).toBe('intro');
+    expect(restored.sessions.slice(0, 2)).toEqual(saved);
+    expect(restored.sessions[1]!.exercises[0]!.exercise.id).toBe('barbell-deadlift');
+    expect(restored.sessions[2]!.exercises[0]!.exercise.id).toBe('barbell-romanian-deadlift');
+    const resumed = recordSet(restored.sessions[1]!, 'barbell-deadlift', set(2));
+    expect(resumed.exercises[0]!.exercise).toEqual(saved[1]!.exercises[0]!.exercise);
+    expect(resumed.exercises[0]!.logs).toHaveLength(2);
+  });
+
+  it('does not compare the supported single-DB split squat with older two-DB sets', () => {
+    const previous = legacySession('lowerB');
+    const completed = finishSession(recordSet(previous, 'db-stationary-split-squat', set()));
+    const current = startSession('lowerB', '2026-11-20', 'intro');
+    expect(
+      previousPerformance([completed], current, 'supported-db-stationary-split-squat'),
+    ).toBeNull();
+  });
+
+  it('continues barbell-RDL history recorded under the old alternative alias', () => {
+    const prior = startSession('lowerA', '2026-11-03', 'intro');
+    prior.exercises[1]!.exercise.id = 'db-romanian-deadlift~alt';
+    const completed = finishSession(recordSet(prior, 'db-romanian-deadlift~alt', set()));
+    const current = startSession('lowerB', '2026-11-20', 'intro');
+    expect(previousPerformance([completed], current, 'barbell-romanian-deadlift')?.date).toBe(
+      '2026-11-03',
+    );
+  });
+
   it('still opens saves from the retired body-weight log', () => {
     const old = { ...emptyState(), bodyWeights: [{ date: '2026-11-10', kg: 63 }] };
     expect(parseBackup(encodeBackup(old as never)).data).not.toHaveProperty('bodyWeights');

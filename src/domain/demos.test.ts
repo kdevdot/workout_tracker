@@ -6,7 +6,7 @@ import { guides } from './guides';
 
 describe('audited short demonstrations', () => {
   it('only maps known exercises and records source, rights and duration', () => {
-    expect(Object.keys(demos)).toHaveLength(23);
+    expect(Object.keys(demos)).toHaveLength(26);
     for (const [exerciseId, demo] of Object.entries(demos)) {
       expect(guides[exerciseId]).toBeDefined();
       expect(demo).toBeDefined();
@@ -63,8 +63,19 @@ describe('audited short demonstrations', () => {
       'landmine-t-bar-row',
       'hanging-knee-raise',
       'cable-anti-rotation-press',
+      'incline-db-curl',
+      'floor-reverse-crunch',
     ]) {
       expect(demos[exerciseId]).toBeUndefined();
+    }
+  });
+
+  it('keeps new related demonstrations honest about equipment and support', () => {
+    expect(demos['low-incline-db-bench-press']?.match).toBe('movement');
+    for (const id of ['barbell-romanian-deadlift', 'supported-db-stationary-split-squat']) {
+      const demo = demos[id]!;
+      expect(demo.match).toBe('related');
+      if (demo.match === 'related') expect(demo.difference).toContain('shown');
     }
   });
 });

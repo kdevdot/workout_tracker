@@ -136,8 +136,8 @@ watch(
               <span class="font-medium">Today's target:</span> {{ target.text }}
             </p>
             <p v-if="target.stalled" class="text-muted-foreground">
-              No progress in 3 sessions. Check sleep, food and rest times first. Still stuck: drop
-              5–10% and build back up.
+              No load/rep increase across 3 logged exposures. Review setup, reserve and rest before
+              changing the plan. This alone does not establish a plateau.
             </p>
           </div>
         </div>

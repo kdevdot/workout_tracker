@@ -4,7 +4,8 @@ import { deleteDB, openDB } from 'idb';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TrainingApp from './TrainingApp.vue';
 import { finishSession, recordSet, startSession } from '../domain/sessions';
-import { emptyState, encodeBackup, type AppState } from '../domain/state';
+import { emptyState, encodeBackup, sessionSchema, type AppState } from '../domain/state';
+import legacySessions from '../domain/__fixtures__/legacy-programme-sessions.json';
 import { WorkoutDatabase } from '../storage/database';
 
 const wrappers: VueWrapper[] = [];
@@ -43,6 +44,29 @@ async function begin(wrapper: VueWrapper) {
 }
 
 describe('working app integration', () => {
+  it('resumes an old workout unchanged and uses the approved template for the next session', async () => {
+    vi.setSystemTime(new Date(2026, 10, 20, 9));
+    const sessions = legacySessions.map((session) => sessionSchema.parse(session));
+    const database = await openDB(databaseName, 1, {
+      upgrade: (entry) => entry.createObjectStore('records'),
+    });
+    await database.put('records', { ...emptyState(), sessions }, 'state');
+    database.close();
+    const wrapper = await app();
+    await wrapper.get('input[type="date"]').setValue('2026-11-13');
+    expect(wrapper.text()).toContain('Barbell deadlift');
+    await button(wrapper, 'Resume workout').trigger('click');
+    await vi.waitFor(() => expect(wrapper.get('main h1').text()).toBe('Barbell deadlift'));
+    await button(wrapper, 'Back to plan').trigger('click');
+    await wrapper.get('input[type="date"]').setValue('2026-11-20');
+    await button(wrapper, 'Start workout').trigger('click');
+    await vi.waitFor(() => expect(wrapper.get('main h1').text()).toBe('Barbell Romanian deadlift'));
+    const saved = await savedData();
+    expect(saved.sessions.slice(0, 2)).toEqual(sessions);
+    expect(saved.settings.phase).toBe('intro');
+    expect(saved.sessions.at(-1)!.exercises.at(-1)!.exercise.id).toBe('floor-reverse-crunch');
+  });
+
   it('keeps a shared page frame across tabs and workout logging', async () => {
     const wrapper = await app();
     const frame = wrapper.get('main').attributes('class');
@@ -60,15 +84,15 @@ describe('working app integration', () => {
     const wrapper = await app();
     await wrapper.get('input[type="date"]').setValue('2026-11-02');
     const symbols = wrapper.findAll('summary [data-exercise-icon]');
-    expect(symbols).toHaveLength(7);
+    expect(symbols).toHaveLength(8);
     expect(symbols[0]!.attributes('data-exercise-icon')).toBe('bench-press');
-    expect(symbols[1]!.attributes('data-exercise-icon')).toBe('pull-up');
+    expect(symbols[1]!.attributes('data-exercise-icon')).toBe('lat-pulldown');
     const summaries = wrapper
       .findAll('summary')
       .filter((summary) => summary.find('[data-exercise-icon]').exists());
     expect(summaries.every((summary) => !/^\d/.test(summary.text()))).toBe(true);
     expect(summaries[0]!.text()).toContain('Barbell bench press');
-    expect(summaries[0]!.text()).toContain('2 × 4–6');
+    expect(summaries[0]!.text()).toContain('2 × 5–8');
   });
 
   it('keeps an unfinished workout form in place while opening and closing an inline demo', async () => {
@@ -415,7 +439,7 @@ describe('working app integration', () => {
   it('applies a phase change to the plan and to a started workout with nothing logged', async () => {
     const wrapper = await app();
     await begin(wrapper);
-    expect(wrapper.text()).toContain('0/7 exercises done');
+    expect(wrapper.text()).toContain('0/8 exercises done');
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Settings').trigger('click');
     await wrapper.get('#phase').setValue('baseline');
@@ -424,7 +448,7 @@ describe('working app integration', () => {
     await button(wrapper, 'Plan').trigger('click');
     expect(wrapper.text()).toContain('19 working sets');
     await button(wrapper, 'Start workout').trigger('click');
-    await vi.waitFor(() => expect(wrapper.text()).toContain('0/7 exercises done'));
+    await vi.waitFor(() => expect(wrapper.text()).toContain('0/8 exercises done'));
     expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['baseline']);
   });
 
@@ -443,7 +467,7 @@ describe('working app integration', () => {
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('Settings saved.'));
     await button(wrapper, 'Plan').trigger('click');
-    expect(wrapper.text()).toContain('0 / 7 exercises done');
+    expect(wrapper.text()).toContain('0 / 8 exercises done');
     expect(wrapper.get('.segments i').attributes('style')).toContain('scaleX(0)');
     expect((await savedData()).sessions.map((session) => session.phase)).toEqual(['intro']);
   });
@@ -492,7 +516,7 @@ describe('working app integration', () => {
     }
     await button(wrapper, 'Back to plan').trigger('click');
     await button(wrapper, 'Resume workout').trigger('click');
-    expect(wrapper.get('main h1').text()).toBe('Fixed-handle pull-up or chin-up');
+    expect(wrapper.get('main h1').text()).toBe('UNICA lat pulldown');
   });
 
   it('suggests full baseline after two weeks of introduction', async () => {

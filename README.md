@@ -11,7 +11,7 @@ Live: https://kdevdot.github.io/workout_tracker/
 - Runs a rest timer below the set form, with adjustment and dismissal controls. It survives reloads and backgrounding. Rest follows the programme per exercise, or a fixed time you pick in Settings.
 - Shows short, looping demos for audited movements, plus muscle maps and form checks. YouTube tutorials remain optional detailed explanations; unmatched movements are clearly labelled.
 - Tracks whey and creatine intake.
-- Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a month calendar. Use the date field, calendar or Yesterday shortcut to record a missed day.
+- Tracks daily push-ups against a target (100 by default): quick-add buttons, streaks and a month calendar. Tap a calendar day to log or review it, including missed days; the logging card shows the full selected date.
 - Exports and restores all data as a JSON backup.
 
 ## Code organisation

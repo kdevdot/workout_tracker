@@ -80,10 +80,10 @@ function addCustom() {
       </div>
     </div>
     <div class="flex min-w-0 flex-col gap-1">
-      <h2 class="text-base font-medium">
+      <p class="text-base font-medium">
         <template v-if="day">Day {{ dayNumber }}</template>
         <template v-else>Before you started</template>
-      </h2>
+      </p>
       <p
         v-if="day"
         :class="

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const props = defineProps<{ challenge: AppState['pushups']; today: string; busy: boolean }>();
+const emit = defineEmits<{ choose: [] }>();
 const selected = defineModel<string>({ required: true });
 const month = defineModel<string>('month', { required: true });
 const firstMonth = computed(() => `${(props.challenge.startDate ?? props.today).slice(0, 7)}-01`);
@@ -33,6 +34,7 @@ function chooseDay(item: ChallengeDay) {
   if (props.busy || item.date > props.today || item.state === 'before') return;
   selected.value = item.date;
   month.value = `${item.date.slice(0, 7)}-01`;
+  emit('choose');
 }
 
 function dayLabel(item: ChallengeDay) {

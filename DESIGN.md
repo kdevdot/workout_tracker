@@ -26,8 +26,8 @@ The accepted design uses dark graphite surfaces, a volt accent and coral highlig
 - Plan shows exercise order before the folded muscle map. Warm-up guidance remains easy to find. Rest days show a compact recovery panel without an empty anatomy map.
 - Supplement forms come before recorded nutrition. Product-label setup remains available, and missing historical nutrition stays explicit.
 - Workout progress counts whole exercises. Plan and History show static segments; an active workout uses one tappable bar. Do not reintroduce a second row of progress controls.
-- Push-up logging has a visible date input, previous/next-day controls and Today/Yesterday shortcuts. The full selected date remains visible; late entries belong to the chosen day.
-- Use a Monday-first month calendar with readable dates and 44 px-high day targets. Bound month navigation to the challenge start and current month. Browsing a month does not change the logging date; selecting a day does. Date-field choices and shortcuts reveal their month, even when the selected day is unchanged.
+- The month calendar is the sole date selector for push-ups. The logging card opens on today and displays the full selected date. Tapping any enabled calendar day reveals and focuses its logging card, including when choosing the same day again. Record entries only after a logging action.
+- Use a Monday-first month calendar with readable dates and 44 px-high day targets. Bound month navigation to the challenge start and current month. Browsing a month does not change the logging date; selecting a day does. Keep daily logging above the calendar for quick access; omit the redundant date input and day shortcuts.
 - Unsubmitted custom push-up amounts clear only after a successful save. Midnight must not move a half-entered push-up set to another date.
 
 ## Components and styling

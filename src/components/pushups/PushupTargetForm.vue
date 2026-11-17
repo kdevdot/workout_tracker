@@ -27,8 +27,11 @@ function submit() {
 </script>
 
 <template>
-  <form class="flex items-end gap-2" @submit.prevent="submit">
-    <div class="flex flex-1 flex-col gap-1.5">
+  <form
+    class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8rem),1fr))] items-end gap-3"
+    @submit.prevent="submit"
+  >
+    <div class="flex min-w-0 flex-col gap-1.5">
       <Label :for="inputId">Push-ups per day</Label>
       <Input
         :id="inputId"

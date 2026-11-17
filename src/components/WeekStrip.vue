@@ -24,13 +24,13 @@ const days = computed(() =>
 </script>
 
 <template>
-  <section class="flex flex-col gap-4">
-    <div class="flex items-end justify-between gap-3">
+  <section class="week-strip flex flex-col gap-4">
+    <div class="flex flex-wrap items-end justify-between gap-3">
       <!-- The title is the date picker: a transparent native input sits on top of it. -->
       <div
-        class="has-focus-visible:ring-ring/60 relative -ml-1 rounded-lg px-1 has-focus-visible:ring-2"
+        class="has-focus-visible:ring-ring/60 relative -ml-1 flex min-h-11 min-w-0 max-w-full items-center rounded-lg px-1 has-focus-visible:ring-2"
       >
-        <h1 class="page-heading flex items-center">
+        <h1 class="page-heading flex flex-wrap items-center">
           {{ formatDate(date, { weekday: 'short' })
           }}<span class="text-muted-foreground mx-2 font-normal">/</span
           >{{ formatDate(date, { day: 'numeric', month: 'short' }) }}
@@ -64,7 +64,7 @@ const days = computed(() =>
       </div>
     </div>
 
-    <div class="bg-card grid grid-cols-7 gap-1 rounded-xl p-1.5" aria-label="Week dates">
+    <div class="bg-card grid grid-cols-7 gap-[4px] rounded-xl p-[6px]" aria-label="Week dates">
       <button
         v-for="item in days"
         :key="item.day"
@@ -82,7 +82,10 @@ const days = computed(() =>
         "
         @click="emit('date', item.day)"
       >
-        <span class="text-xs">{{ formatDate(item.day, { weekday: 'short' }) }}</span>
+        <span class="week-day-short text-xs">{{ formatDate(item.day, { weekday: 'short' }) }}</span>
+        <span class="week-day-narrow text-xs" aria-hidden="true">{{
+          formatDate(item.day, { weekday: 'narrow' })
+        }}</span>
         <strong class="font-display text-[22px] leading-none font-semibold tabular-nums">{{
           Number(item.day.slice(-2))
         }}</strong>

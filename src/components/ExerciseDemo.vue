@@ -61,7 +61,7 @@ useEventListener(disclosure, 'toggle', () => {
 
 <template>
   <figure ref="root" class="flex min-w-0 flex-col gap-2">
-    <div class="flex min-h-11 items-center justify-between gap-3">
+    <div class="flex min-h-11 flex-wrap items-center justify-between gap-3">
       <p class="text-sm font-semibold">Exercise demonstration</p>
       <Button v-if="watching" type="button" variant="ghost" class="min-h-11" @click="close">
         <X class="size-4" />Close demo

@@ -111,7 +111,7 @@ const statTiles = computed(() => [
       />
     </section>
 
-    <dl class="grid grid-cols-4 gap-2 border-y py-4">
+    <dl class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,3rem),1fr))] gap-2 border-y py-4">
       <div
         v-for="stat in statTiles"
         :key="stat.label"

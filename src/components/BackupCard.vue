@@ -58,7 +58,7 @@ async function readFile(event: Event) {
 <template>
   <Card class="gap-4 py-5">
     <CardHeader class="px-5">
-      <CardTitle>JSON backup</CardTitle>
+      <CardTitle>Back up your records</CardTitle>
       <CardDescription>
         {{ state.sessions.length }} workout sessions · {{ state.intakes.length }} supplement entries
       </CardDescription>
@@ -81,7 +81,8 @@ async function readFile(event: Event) {
         />
       </label>
       <p class="text-muted-foreground text-xs">
-        Restoring replaces current records; it does not merge them. Export your current data first.
+        Saves a JSON file you can restore on this or another device. Restoring replaces current
+        records; download a backup first.
       </p>
       <p v-if="error" class="text-destructive text-sm font-medium" role="alert">{{ error }}</p>
       <div v-if="pending" class="bg-coral-soft/60 flex flex-col gap-3 rounded-xl p-4">

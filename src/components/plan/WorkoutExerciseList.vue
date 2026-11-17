@@ -31,7 +31,7 @@ const emit = defineEmits<{ swap: [exerciseId: string] }>();
               }}{{ exercise.unit === 'seconds' ? '' : ' RIR' }}</small
             >
           </span>
-          <span class="flex shrink-0 flex-col items-end gap-1 text-right">
+          <span class="exercise-prescription flex shrink-0 flex-col items-end gap-1 text-right">
             <strong class="font-display text-lg leading-none font-semibold tabular-nums"
               >{{ exercise.sets }} × {{ exercise.min }}–{{ exercise.max }}</strong
             >

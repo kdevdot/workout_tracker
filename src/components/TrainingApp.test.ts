@@ -44,6 +44,21 @@ async function begin(wrapper: VueWrapper, date = '2026-11-02') {
 }
 
 describe('working app integration', () => {
+  it('connects empty history to the plan and moves keyboard focus into the selected page', async () => {
+    const wrapper = mount(TrainingApp, { attachTo: document.body });
+    wrappers.push(wrapper);
+    await vi.waitFor(() => expect(wrapper.text()).toContain('On-device storage ready'));
+    await button(wrapper, 'History').trigger('click');
+    expect(document.activeElement).toBe(wrapper.get('main').element);
+    expect(wrapper.get('main h1').text()).toBe('Training history');
+    await button(wrapper, 'Go to your plan').trigger('click');
+    expect(document.activeElement).toBe(wrapper.get('main').element);
+    expect(wrapper.get('nav[aria-label="Main navigation"] [aria-current="page"]').text()).toBe(
+      'Plan',
+    );
+    expect(wrapper.find('.workout-hero').exists()).toBe(true);
+  });
+
   it('resumes an old workout unchanged and uses the approved template for the next session', async () => {
     vi.setSystemTime(new Date(2026, 10, 20, 9));
     const sessions = legacySessions.map((session) => sessionSchema.parse(session));
@@ -287,12 +302,14 @@ describe('working app integration', () => {
       .mockRejectedValueOnce(new Error('Storage is full.'));
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() => expect(wrapper.text()).toContain('Storage is full.'));
+    expect(wrapper.get('.app-header [role="status"]').text()).toBe('Not saved · check below');
     expect(input.element.value).toBe('37');
     expect((await savedData()).pushups.entries).toHaveLength(0);
     save.mockRestore();
     await wrapper.get('form').trigger('submit');
     await vi.waitFor(() => expect(input.element.value).toBe(''));
     expect((await savedData()).pushups.entries[0]!.reps).toBe(37);
+    expect(wrapper.get('.app-header [role="status"]').text()).toContain('Saved on this device');
   });
 
   it('uses the rest minutes chosen in Settings for the timer', async () => {

@@ -83,7 +83,7 @@ watch(
 <template>
   <section class="flex flex-col gap-4">
     <header class="flex flex-col gap-2">
-      <h1 class="page-heading">{{ exercise.name }}</h1>
+      <h1 id="active-exercise-title" class="page-heading">{{ exercise.name }}</h1>
       <p class="text-muted-foreground text-sm leading-5">
         {{ loadHint }}{{ exercise.perSide ? ' Log both sides for each set.' : '' }}
       </p>
@@ -115,6 +115,7 @@ watch(
     </p>
 
     <slot name="rest-timer" />
+    <slot name="navigation" />
 
     <section class="flex gap-2.5 py-1 text-sm">
       <History class="text-muted-foreground mt-0.5 size-4 shrink-0" />
@@ -151,7 +152,7 @@ watch(
         class="bg-card flex items-center gap-3 rounded-xl py-1 pr-1 pl-3 text-sm"
       >
         <span class="text-muted-foreground shrink-0 text-xs">Set {{ log.index }}</span>
-        <span class="flex-1 tabular-nums">{{ formatSet(log, exercise) }}</span>
+        <span class="min-w-0 flex-1 tabular-nums">{{ formatSet(log, exercise) }}</span>
         <Button
           variant="ghost"
           size="sm"

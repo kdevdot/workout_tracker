@@ -170,16 +170,16 @@ function chooseWorkout(event: Event) {
       <!-- Out of the way: only for a missed day or a busy station, not a change of plan. -->
       <details class="group/switch text-xs">
         <summary
-          class="text-muted-foreground hover:text-foreground mx-auto flex min-h-10 w-fit items-center gap-1.5 font-medium"
+          class="text-muted-foreground hover:text-foreground mx-auto flex min-h-11 w-fit items-center gap-1.5 font-medium"
         >
           <Repeat class="size-3.5" />Training on a different day?
         </summary>
-        <label class="flex items-center justify-between gap-3 pt-2 text-sm font-medium">
+        <label class="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm font-medium">
           <span class="text-muted-foreground">Do this workout today</span>
           <select
             :value="workoutId ?? ''"
             :disabled="busy"
-            class="border-input bg-background/60 focus-visible:ring-ring/50 h-10 rounded-xl border px-3 outline-none focus-visible:ring-3"
+            class="border-input bg-background focus-visible:ring-ring/50 h-11 min-w-0 max-w-full rounded-lg border px-3 text-base outline-none focus-visible:ring-3"
             @change="chooseWorkout"
           >
             <option value="">Rest day</option>

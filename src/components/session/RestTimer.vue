@@ -15,7 +15,7 @@ const circumference = 2 * Math.PI * 20;
     aria-label="Rest timer"
     :class="
       cn(
-        'flex items-center gap-2 rounded-xl py-2 pr-1 pl-2',
+        'flex flex-wrap items-center gap-2 rounded-xl py-2 pr-1 pl-2',
         done ? 'bg-coral-soft text-coral' : 'bg-card',
       )
     "

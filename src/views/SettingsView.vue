@@ -4,7 +4,7 @@ import { ShieldCheck } from '@lucide/vue';
 import type { AppState } from '@/domain/state';
 import type { Phase } from '@/domain/programme-types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import BackupCard from '@/components/BackupCard.vue';
@@ -67,88 +67,99 @@ function save() {
   <header class="page-header">
     <h1 class="page-heading">Settings & data</h1>
     <p class="text-muted-foreground text-sm">
-      Local-first storage, with an independent backup you control.
+      Set up your training, product label and device backups.
     </p>
   </header>
 
   <Card class="gap-4 py-5">
-    <CardHeader class="px-5">
-      <CardTitle>Training & product label</CardTitle>
-      <CardDescription
-        >No automatic increase. Existing sessions retain their original
-        prescriptions.</CardDescription
-      >
-    </CardHeader>
     <CardContent class="px-5">
-      <form class="flex flex-col gap-4" @submit.prevent="save">
-        <div class="flex flex-col gap-1.5">
-          <Label for="phase">Default phase for new sessions</Label>
-          <select
-            id="phase"
-            v-model="phase"
-            class="border-input bg-background focus-visible:ring-ring/50 h-11 rounded-lg border px-3 text-sm outline-none focus-visible:ring-3"
-          >
-            <option value="intro">Introduction · 2 sets, 3 RIR</option>
-            <option value="baseline">Full baseline · when ready</option>
-          </select>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="rest">Rest between sets · minutes</Label>
-          <Input
-            id="rest"
-            v-model="restMinutes"
-            type="number"
-            min="0.5"
-            max="10"
-            step="any"
-            inputmode="decimal"
-            placeholder="Programme default"
-            class="h-11"
-          />
-          <p class="text-muted-foreground text-xs">
-            Any time from 0.5 to 10 minutes, e.g. 1.5 = 90 s. Leave blank to use each exercise's
-            programme rest. Applies to the next set you save.
+      <form class="flex flex-col gap-6" @submit.prevent="save">
+        <fieldset class="flex min-w-0 flex-col gap-4">
+          <legend class="section-heading mb-3">Training</legend>
+          <p class="text-muted-foreground text-sm leading-5">
+            You choose when to change phase. Saved workouts keep their original prescriptions.
           </p>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="whey-name">Exact whey product / flavour</Label>
-          <Input id="whey-name" v-model="name" maxlength="250" required class="h-11" />
-        </div>
-        <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,6rem),1fr))] gap-3">
           <div class="flex flex-col gap-1.5">
-            <Label for="whey-kcal">kcal per serving</Label>
-            <Input
-              id="whey-kcal"
-              v-model="calories"
-              type="number"
-              min="0"
-              max="10000"
-              step="any"
-              inputmode="decimal"
-              placeholder="Label needed"
-              class="h-11"
-            />
+            <Label for="phase">Phase for new workouts</Label>
+            <select
+              id="phase"
+              v-model="phase"
+              class="border-input bg-background focus-visible:ring-ring/50 h-11 min-w-0 rounded-lg border px-3 text-base outline-none focus-visible:ring-3"
+            >
+              <option value="intro">Introduction · 2 sets, 3 RIR</option>
+              <option value="baseline">Full baseline · when ready</option>
+            </select>
           </div>
           <div class="flex flex-col gap-1.5">
-            <Label for="whey-protein">Protein g per serving</Label>
+            <Label for="rest">Rest between sets · minutes</Label>
             <Input
-              id="whey-protein"
-              v-model="protein"
+              id="rest"
+              v-model="restMinutes"
               type="number"
-              min="0"
-              max="10000"
+              min="0.5"
+              max="10"
               step="any"
               inputmode="decimal"
-              placeholder="Label needed"
+              placeholder="Programme default"
               class="h-11"
+              aria-describedby="rest-help"
+            />
+            <p id="rest-help" class="text-muted-foreground text-xs leading-5">
+              Leave blank for each exercise's rest. Or enter 0.5–10 minutes (1.5 = 90 s). Applies to
+              the next set you save.
+            </p>
+          </div>
+        </fieldset>
+        <fieldset class="flex min-w-0 flex-col gap-4">
+          <legend class="section-heading mb-3">Whey label</legend>
+          <p id="whey-help" class="text-muted-foreground text-sm leading-5">
+            Use the values on your pack. These apply to new whey entries only.
+          </p>
+          <div class="flex flex-col gap-1.5">
+            <Label for="whey-name">Exact whey product / flavour</Label>
+            <Input
+              id="whey-name"
+              v-model="name"
+              maxlength="250"
+              required
+              aria-describedby="whey-help"
             />
           </div>
-        </div>
-        <p class="text-muted-foreground text-xs">
-          Enter your label, not a generic brand value. Values apply to new whey entries only.
-        </p>
+          <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,6rem),1fr))] gap-3">
+            <div class="flex flex-col gap-1.5">
+              <Label for="whey-kcal">kcal per serving</Label>
+              <Input
+                id="whey-kcal"
+                v-model="calories"
+                type="number"
+                min="0"
+                max="10000"
+                step="any"
+                inputmode="decimal"
+                placeholder="Label needed"
+                class="h-11"
+              />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="whey-protein">Protein · g per serving</Label>
+              <Input
+                id="whey-protein"
+                v-model="protein"
+                type="number"
+                min="0"
+                max="10000"
+                step="any"
+                inputmode="decimal"
+                placeholder="Label needed"
+                class="h-11"
+              />
+            </div>
+          </div>
+        </fieldset>
         <p v-if="error" class="text-destructive text-sm font-medium" role="alert">{{ error }}</p>
-        <Button type="submit" size="lg" :disabled="busy">Save settings</Button>
+        <Button type="submit" size="lg" :disabled="busy">{{
+          busy ? 'Saving…' : 'Save settings'
+        }}</Button>
       </form>
     </CardContent>
   </Card>
@@ -168,10 +179,12 @@ function save() {
           and then.
         </li>
         <li>No account, analytics or tracking. Nothing is uploaded.</li>
-        <li>Works offline once installed. Demo videos need internet.</li>
+        <li>Works offline once installed. Videos need internet; movement diagrams work offline.</li>
       </ul>
       <details>
-        <summary class="text-foreground py-2 font-semibold">Exercise media credits</summary>
+        <summary class="text-foreground flex min-h-11 items-center py-2 font-semibold">
+          Exercise media credits
+        </summary>
         <p>
           Exercise-list artwork: Bryl Lim / Workout Guide and Everkinetic, CC BY-SA 4.0. Selected
           stills are cropped and displayed in monochrome on neutral backgrounds, without animation.
@@ -188,9 +201,9 @@ function save() {
           highlight colours changed. Modified files are shared under the same licence.
         </p>
         <p class="mt-2">
-          Demonstrations use licensed Your Move and Goulart / wger videos, plus creator-hosted Vimeo
-          embeds. Each preview belongs to its selected video. Source credits and any setup
-          differences appear beside the player.
+          Demonstrations use licensed Your Move and Goulart / wger videos, creator-hosted Vimeo
+          embeds and original movement diagrams. Each preview uses its selected video or diagram.
+          Source credits and any setup differences appear beside the demonstration.
         </p>
         <a class="text-primary underline underline-offset-4" :href="`${base}demos/ATTRIBUTION.md`">
           Video credits and modifications

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import {
   CalendarDays,
   CircleAlert,
@@ -24,6 +24,9 @@ import WorkoutPlanView from '@/views/WorkoutPlanView.vue';
 
 const app = useTrainingApp();
 const { state, ready, busy, error, view, date, today, timer } = app;
+const mainContent = useTemplateRef<HTMLElement>('mainContent');
+
+watch(view, () => mainContent.value?.focus({ preventScroll: true }), { flush: 'post' });
 
 const nav = [
   { view: 'plan', label: 'Plan', icon: CalendarDays },
@@ -35,9 +38,14 @@ const nav = [
 const activeTab = computed<View>(() => (view.value === 'session' ? 'plan' : view.value));
 const saveStatus = computed(() => {
   if (busy.value) return 'Saving…';
+  if (error.value) return 'Not saved · check below';
   const savedAt = state.value.savedAt;
   if (!savedAt) return 'On-device storage ready';
-  const time = new Date(savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const time = new Date(savedAt).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
   return `Saved on this device · ${time}`;
 });
 
@@ -48,8 +56,11 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
 
 <template>
   <div class="app-shell flex flex-col">
-    <header class="app-header sticky top-0 z-20 flex items-center justify-between px-5 pb-3">
-      <span class="wordmark flex items-center gap-1"
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <header
+      class="app-header sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 px-5 pb-3"
+    >
+      <span class="wordmark flex shrink-0 items-center gap-1"
         >steady<MoveUpRight class="text-primary size-5" :stroke-width="3"
       /></span>
       <span
@@ -58,13 +69,23 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
         role="status"
       >
         <span
-          :class="cn('size-1.5 shrink-0 rounded-full', busy ? 'bg-coral' : 'bg-muted-foreground')"
+          :class="
+            cn(
+              'size-1.5 shrink-0 rounded-full',
+              error ? 'bg-destructive' : busy ? 'bg-coral' : 'bg-muted-foreground',
+            )
+          "
         />
         {{ saveStatus }}
       </span>
     </header>
 
-    <main class="app-main flex w-full flex-1 flex-col gap-5 px-5">
+    <main
+      id="main-content"
+      ref="mainContent"
+      class="app-main flex w-full flex-1 flex-col gap-5 px-5 outline-none"
+      tabindex="-1"
+    >
       <section v-if="!ready" class="flex flex-col items-start gap-3 py-16">
         <h1 class="text-2xl font-bold tracking-tight">
           {{ error ? 'Storage needs attention' : 'Opening your training log…' }}
@@ -114,7 +135,12 @@ async function recordPushups(day: string, reps: number, onSaved?: () => void) {
           @stop-timer="app.stopTimer"
           @adjust-timer="app.adjustTimer"
         />
-        <HistoryView v-else-if="view === 'history'" :sessions="state.sessions" @resume="app.open" />
+        <HistoryView
+          v-else-if="view === 'history'"
+          :sessions="state.sessions"
+          @resume="app.open"
+          @plan="view = 'plan'"
+        />
         <PushupsView
           v-else-if="view === 'pushups'"
           :challenge="state.pushups"

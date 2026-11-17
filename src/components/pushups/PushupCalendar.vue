@@ -15,7 +15,7 @@ const firstMonth = computed(() => `${(props.challenge.startDate ?? props.today).
 const lastMonth = computed(() => `${props.today.slice(0, 7)}-01`);
 const days = computed(() => calendarMonth(props.challenge, props.today, month.value));
 const monthLabel = computed(() => formatDate(month.value, { month: 'long', year: 'numeric' }));
-const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const dayClass: Record<ChallengeDay['state'], string> = {
   done: 'bg-success-soft text-success',
   partial: 'bg-secondary text-foreground',
@@ -44,8 +44,8 @@ function dayLabel(item: ChallengeDay) {
 </script>
 
 <template>
-  <section class="bg-card flex flex-col gap-3 rounded-2xl p-4">
-    <div class="flex items-center justify-between gap-2">
+  <section class="bg-card flex flex-col gap-3 rounded-2xl p-[16px]">
+    <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="section-heading" aria-live="polite">{{ monthLabel }}</h2>
       <div class="flex gap-1">
         <Button
@@ -67,10 +67,13 @@ function dayLabel(item: ChallengeDay) {
       </div>
     </div>
     <p class="text-muted-foreground text-sm">Choose a day to log or review it.</p>
-    <ol class="text-muted-foreground grid grid-cols-7 gap-1 text-center text-xs" aria-hidden="true">
-      <li v-for="day in weekdays" :key="day">{{ day }}</li>
+    <ol
+      class="text-muted-foreground grid grid-cols-7 gap-[4px] text-center text-xs"
+      aria-hidden="true"
+    >
+      <li v-for="(day, index) in weekdays" :key="index">{{ day }}</li>
     </ol>
-    <div class="grid grid-cols-7 gap-1" role="group" aria-label="Push-up days">
+    <div class="grid grid-cols-7 gap-[4px]" role="group" aria-label="Push-up days">
       <button
         v-for="item in days"
         :key="item.date"
@@ -81,7 +84,7 @@ function dayLabel(item: ChallengeDay) {
         :disabled="busy || item.date > today || item.state === 'before'"
         :class="
           cn(
-            'relative flex min-h-11 items-center justify-center rounded-lg text-sm font-medium tabular-nums transition-colors',
+            'calendar-day font-display relative flex min-h-11 items-center justify-center rounded-lg text-sm font-medium tabular-nums transition-colors',
             'focus-visible:ring-ring outline-none focus-visible:ring-2',
             dayClass[item.state],
             !item.date.startsWith(month.slice(0, 7)) && 'enabled:text-muted-foreground',
@@ -111,3 +114,9 @@ function dayLabel(item: ChallengeDay) {
     </ul>
   </section>
 </template>
+
+<style scoped>
+.calendar-day {
+  font-stretch: 75%;
+}
+</style>

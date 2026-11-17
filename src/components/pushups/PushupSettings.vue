@@ -33,7 +33,7 @@ function reset() {
       >
       <div v-else class="bg-coral-soft/60 flex flex-col gap-2 rounded-lg p-3 text-sm">
         <p>This deletes all push-up entries and starts from zero. It can't be undone.</p>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <Button variant="destructive" :disabled="busy" @click="reset">Delete and restart</Button>
           <Button variant="ghost" @click="confirmingReset = false">Keep it</Button>
         </div>

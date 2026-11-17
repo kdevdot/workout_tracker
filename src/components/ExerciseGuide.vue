@@ -17,7 +17,7 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 text-sm">
+  <div class="exercise-guide flex flex-col gap-4 text-sm [overflow-wrap:anywhere]">
     <ExerciseDemo
       v-if="demo"
       :demo="demo"
@@ -28,8 +28,14 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
       A matching video is not available for this saved variation. Follow its form checks below.
     </p>
 
-    <div class="grid grid-cols-[minmax(5rem,7.5rem)_minmax(0,1fr)] items-start gap-4">
-      <BodyMap :primary="exercise.primary" :supporting="exercise.supporting" />
+    <div
+      class="form-check-grid grid grid-cols-[minmax(5rem,7.5rem)_minmax(0,1fr)] items-start gap-4"
+    >
+      <BodyMap
+        :primary="exercise.primary"
+        :supporting="exercise.supporting"
+        class="w-full max-w-30"
+      />
       <div class="flex flex-col gap-2">
         <h4 class="text-muted-foreground text-sm font-medium">Form check</h4>
         <ol class="flex flex-col gap-1.5">
@@ -103,3 +109,14 @@ const checks = computed(() => guide.value?.checks ?? props.exercise.cues);
     </p>
   </div>
 </template>
+
+<style scoped>
+.exercise-guide {
+  container: exercise-guide / inline-size;
+}
+@container exercise-guide (width < 16em) {
+  .form-check-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+</style>

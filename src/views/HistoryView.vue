@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { ChevronDown, Dumbbell } from '@lucide/vue';
 import type { Session } from '@/domain/state';
 import { formatDate } from '@/domain/dates';
-import { bestSet, formatSet, sessionProgress, shortSet } from '@/domain/sessions';
+import { formatSet, sessionProgress } from '@/domain/sessions';
 import { workouts } from '@/domain/programme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import ExerciseProgress from '@/components/session/ExerciseProgress.vue';
 import ExerciseIcon from '@/components/ExerciseIcon.vue';
 
 const props = defineProps<{ sessions: Session[] }>();
-const emit = defineEmits<{ resume: [id: string] }>();
+const emit = defineEmits<{ resume: [id: string]; plan: [] }>();
 
 const entries = computed(() =>
   [...props.sessions]
@@ -27,11 +27,8 @@ const entries = computed(() =>
           : progress.done < progress.total
             ? 'Completed · partial'
             : 'Completed';
-      const tops = session.exercises.flatMap((item) => {
-        const top = bestSet(item.logs);
-        return top ? [{ name: item.exercise.name, set: shortSet(top) }] : [];
-      });
-      return { session, progress, status, tops };
+      const recordedSets = session.exercises.reduce((sum, item) => sum + item.logs.length, 0);
+      return { session, progress, status, recordedSets };
     }),
 );
 </script>
@@ -39,6 +36,9 @@ const entries = computed(() =>
 <template>
   <header class="page-header">
     <h1 class="page-heading">Training history</h1>
+    <p class="text-muted-foreground text-sm leading-5">
+      Open a session to review your sets or pick up where you left off.
+    </p>
   </header>
 
   <div
@@ -50,32 +50,37 @@ const entries = computed(() =>
     <p class="text-muted-foreground text-sm">
       Record a set from the plan. It will appear here immediately after saving.
     </p>
+    <Button class="mt-3" @click="emit('plan')">Go to your plan</Button>
   </div>
 
   <details
-    v-for="{ session, progress, status, tops } in entries"
+    v-for="{ session, progress, status, recordedSets } in entries"
     :key="session.id"
     class="group bg-card rounded-2xl"
   >
     <summary class="flex flex-col gap-3 p-4">
-      <div class="flex items-start justify-between gap-3">
-        <div class="flex min-w-0 flex-col gap-1">
-          <strong class="font-display text-xl font-semibold">{{
-            workouts[session.workoutId].name
-          }}</strong>
-          <small class="text-muted-foreground text-xs">{{
-            formatDate(session.date, {
-              weekday: 'short',
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })
-          }}</small>
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <strong class="font-display min-w-0 text-xl font-semibold">{{
+          workouts[session.workoutId].name
+        }}</strong>
+        <div class="flex max-w-full shrink-0 items-center gap-2">
+          <Badge variant="secondary" class="min-w-0 whitespace-normal">{{ status }}</Badge>
+          <ChevronDown
+            class="size-4 transition-transform group-open:rotate-180"
+            aria-hidden="true"
+          />
         </div>
-        <div class="flex items-center gap-2">
-          <Badge variant="secondary">{{ status }}</Badge>
-          <ChevronDown class="size-4 transition-transform group-open:rotate-180" />
-        </div>
+      </div>
+      <div class="text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 text-xs">
+        <time :datetime="session.date">{{
+          formatDate(session.date, {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })
+        }}</time>
+        <span class="tabular-nums">{{ recordedSets }} sets recorded</span>
       </div>
       <div class="flex items-center gap-3">
         <ExerciseProgress :exercises="session.exercises" class="flex-1" />
@@ -83,16 +88,6 @@ const entries = computed(() =>
           >{{ progress.done }}/{{ progress.total }} exercises</span
         >
       </div>
-      <ul
-        v-if="tops.length"
-        class="flex flex-col gap-1 text-xs group-open:hidden"
-        aria-label="Top set per exercise"
-      >
-        <li v-for="top in tops" :key="top.name" class="flex justify-between gap-3">
-          <span class="text-muted-foreground truncate">{{ top.name }}</span>
-          <strong class="shrink-0 font-semibold tabular-nums">{{ top.set }}</strong>
-        </li>
-      </ul>
     </summary>
     <div class="flex flex-col gap-3 border-t p-4">
       <p class="text-muted-foreground text-xs">

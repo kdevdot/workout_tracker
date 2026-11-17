@@ -71,7 +71,7 @@ function remove(id: string) {
   <header class="page-header">
     <h1 class="page-heading">Daily supplements</h1>
     <p class="text-muted-foreground text-sm">
-      Whey and creatine, on training and rest days. No food diary.
+      Record what you took. Choose an earlier date to add a missed entry.
     </p>
   </header>
 
@@ -97,8 +97,8 @@ function remove(id: string) {
 
   <Card v-for="product in products" :key="product.kind" class="gap-3 py-4">
     <CardHeader class="px-4">
-      <CardTitle class="flex items-center justify-between gap-2"
-        >{{ product.title }}
+      <CardTitle class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1"
+        ><span>{{ product.title }}</span>
         <span
           v-if="taken[product.kind]"
           class="bg-success-soft text-success flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums"
@@ -109,8 +109,12 @@ function remove(id: string) {
       <CardDescription>{{ product.description }}</CardDescription>
     </CardHeader>
     <CardContent class="px-4">
-      <form class="flex items-end gap-2" @submit.prevent="add(product.kind)">
-        <div class="flex flex-1 flex-col gap-1.5">
+      <form
+        :aria-label="product.title"
+        class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8rem),1fr))] items-end gap-3"
+        @submit.prevent="add(product.kind)"
+      >
+        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
           <Label :for="`amount-${product.kind}`">{{ product.label }}</Label>
           <Input
             :id="`amount-${product.kind}`"
@@ -128,7 +132,8 @@ function remove(id: string) {
           type="submit"
           size="lg"
           :variant="taken[product.kind] ? 'outline' : 'default'"
-          class="h-11"
+          class="h-11 min-w-0 px-3"
+          :aria-label="taken[product.kind] ? `Log more ${product.kind}` : product.action"
           :disabled="busy || future"
           >{{ taken[product.kind] ? 'Log more' : product.action }}</Button
         >
@@ -146,9 +151,9 @@ function remove(id: string) {
       <li
         v-for="entry in entries"
         :key="entry.id"
-        class="bg-card flex items-center justify-between gap-3 rounded-xl border py-2 pr-2 pl-4"
+        class="bg-card flex flex-wrap items-center justify-between gap-3 rounded-xl border py-2 pr-2 pl-4"
       >
-        <div class="flex flex-col">
+        <div class="flex min-w-0 flex-1 flex-col [overflow-wrap:anywhere]">
           <strong class="text-sm"
             >{{ entry.amount }} {{ entry.kind === 'whey' ? 'serving(s)' : 'g' }}</strong
           >

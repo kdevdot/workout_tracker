@@ -25,7 +25,7 @@
   --success: #d4f53c;
   --success-soft: #d4f53c1c;
   --border: #30353e;
-  --input: #3b424d;
+  --input: #626c79;
   --ring: #d4f53c;
 }
 
@@ -117,6 +117,24 @@
   min-height: 100dvh;
 }
 
+.skip-link {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 60;
+  min-height: 44px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  transform: translate(-50%, -200%);
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
 .app-header {
   min-height: 56px;
   padding-top: max(env(safe-area-inset-top), 12px);
@@ -181,6 +199,7 @@
 }
 
 .workout-hero {
+  container: workout-hero / inline-size;
   background: var(--card);
   border-radius: 16px;
   padding: 20px;
@@ -220,6 +239,7 @@
 }
 
 .exercise-list {
+  container: exercise-list / inline-size;
   display: flex;
   flex-direction: column;
   background: var(--card);
@@ -246,6 +266,39 @@
 .exercise-row [data-exercise-icon] {
   background: var(--secondary);
   border-radius: 8px;
+}
+
+.week-strip {
+  container: week-strip / inline-size;
+}
+
+.week-day-narrow {
+  display: none;
+}
+
+@container week-strip (width < 20em) {
+  .week-day-short {
+    display: none;
+  }
+  .week-day-narrow {
+    display: inline;
+  }
+}
+
+@container exercise-list (width < 20em) {
+  .exercise-row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    align-items: start;
+  }
+  .exercise-prescription {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
 }
 
 /* An opaque, quiet dock leaves lime for the logging action. */

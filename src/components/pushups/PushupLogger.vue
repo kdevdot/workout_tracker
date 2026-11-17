@@ -44,7 +44,7 @@ function addCustom() {
 </script>
 
 <template>
-  <div class="flex items-center gap-5">
+  <div class="flex flex-wrap items-center gap-5">
     <div class="relative size-24 shrink-0">
       <svg viewBox="0 0 120 120" class="size-full -rotate-90 overflow-visible" aria-hidden="true">
         <circle
@@ -100,7 +100,7 @@ function addCustom() {
   </div>
 
   <div v-if="day && day.state !== 'upcoming'" class="flex flex-col gap-2">
-    <div class="grid grid-cols-4 gap-2">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,3rem),1fr))] gap-2">
       <Button
         v-for="amount in quickAdds"
         :key="amount"
@@ -112,7 +112,7 @@ function addCustom() {
         >+{{ amount }}</Button
       >
     </div>
-    <form class="flex gap-2" @submit.prevent="addCustom">
+    <form class="pushup-custom flex gap-2" @submit.prevent="addCustom">
       <Input
         v-model="customReps"
         aria-label="Custom number of push-ups"
@@ -130,8 +130,8 @@ function addCustom() {
       <Button
         type="button"
         variant="ghost"
-        size="lg"
-        class="h-11"
+        size="icon-lg"
+        class="min-h-12"
         aria-label="Undo last entry"
         :disabled="busy || reps === 0"
         @click="emit('undo', date)"
@@ -140,3 +140,15 @@ function addCustom() {
     </form>
   </div>
 </template>
+
+<style scoped>
+@container workout-hero (width < 15em) {
+  .pushup-custom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .pushup-custom > input {
+    grid-column: 1 / -1;
+  }
+}
+</style>

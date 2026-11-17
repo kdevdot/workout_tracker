@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef } from 'vue';
+import { computed, nextTick, shallowRef, useTemplateRef } from 'vue';
 import { ArrowLeft, ChevronLeft, ChevronRight } from '@lucide/vue';
 import { formatDate } from '@/domain/dates';
 import { workouts } from '@/domain/programme';
@@ -35,19 +35,30 @@ const selected = shallowRef(firstOpen === -1 ? props.session.exercises.length - 
 const confirmingFinish = shallowRef(false);
 const entry = computed(() => props.session.exercises[selected.value]!);
 const progress = computed(() => sessionProgress(props.session));
+const exerciseContent = useTemplateRef<HTMLElement>('exerciseContent');
+
+async function selectExercise(index: number) {
+  if (index === selected.value) return;
+  selected.value = index;
+  await nextTick();
+  exerciseContent.value?.scrollIntoView?.({ block: 'start' });
+  exerciseContent.value?.focus({ preventScroll: true });
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-3">
-    <div class="flex items-center justify-between gap-2">
-      <Button variant="ghost" class="-ml-3" @click="emit('back')"><ArrowLeft />Back to plan</Button>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <Button variant="ghost" class="-ml-[12px]" @click="emit('back')"
+        ><ArrowLeft />Back to plan</Button
+      >
       <span class="text-muted-foreground text-right text-xs">
         {{ formatDate(session.date, { weekday: 'short', day: 'numeric', month: 'short' }) }} ·
         {{ workouts[session.workoutId].name }}
       </span>
     </div>
     <div class="flex flex-col gap-2">
-      <div class="flex items-baseline justify-between">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
         <span class="text-muted-foreground text-xs"
           >Exercise {{ selected + 1 }} of {{ session.exercises.length }}</span
         >
@@ -58,46 +69,53 @@ const progress = computed(() => sessionProgress(props.session));
       <ExerciseProgress
         :exercises="session.exercises"
         :selected="selected"
-        @select="selected = $event"
+        @select="selectExercise"
       />
     </div>
   </div>
 
-  <SessionExercise
-    :key="entry.exercise.id"
-    :entry="entry"
-    :session="session"
-    :history="history"
-    :rest-minutes="restMinutes"
-    :busy="busy"
-    @record="(exerciseId, log) => emit('record', exerciseId, log)"
-    @swap="emit('swap', $event)"
+  <section
+    ref="exerciseContent"
+    class="outline-none"
+    aria-labelledby="active-exercise-title"
+    tabindex="-1"
   >
-    <template #rest-timer>
-      <RestTimer
-        v-if="timerVisible"
-        :display="timerDisplay"
-        :done="timerDone"
-        :busy="busy"
-        :fraction="timerFraction"
-        @dismiss="emit('stopTimer')"
-        @adjust="emit('adjustTimer', $event)"
-      />
-    </template>
-  </SessionExercise>
-
-  <div class="grid grid-cols-2 gap-2">
-    <Button variant="outline" size="lg" :disabled="selected === 0" @click="selected--"
-      ><ChevronLeft />Previous</Button
+    <SessionExercise
+      :key="entry.exercise.id"
+      :entry="entry"
+      :session="session"
+      :history="history"
+      :rest-minutes="restMinutes"
+      :busy="busy"
+      @record="(exerciseId, log) => emit('record', exerciseId, log)"
+      @swap="emit('swap', $event)"
     >
-    <Button
-      variant="outline"
-      size="lg"
-      :disabled="selected === session.exercises.length - 1"
-      @click="selected++"
-      >Next exercise<ChevronRight
-    /></Button>
-  </div>
+      <template #rest-timer>
+        <RestTimer
+          v-if="timerVisible"
+          :display="timerDisplay"
+          :done="timerDone"
+          :busy="busy"
+          :fraction="timerFraction"
+          @dismiss="emit('stopTimer')"
+          @adjust="emit('adjustTimer', $event)"
+        />
+      </template>
+      <template #navigation>
+        <nav class="grid grid-cols-2 gap-2" aria-label="Exercise navigation">
+          <Button variant="outline" :disabled="selected === 0" @click="selectExercise(selected - 1)"
+            ><ChevronLeft />Previous</Button
+          >
+          <Button
+            variant="outline"
+            :disabled="selected === session.exercises.length - 1"
+            @click="selectExercise(selected + 1)"
+            >Next exercise<ChevronRight
+          /></Button>
+        </nav>
+      </template>
+    </SessionExercise>
+  </section>
 
   <section class="flex flex-col gap-3 border-t pt-5">
     <Button

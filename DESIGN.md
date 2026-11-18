@@ -43,6 +43,7 @@ The accepted design uses dark graphite surfaces, a volt accent and coral highlig
 - Compose substantial session and push-up sections from their feature folders. Keep props and events typed and responsibilities focused.
 - Retain visible keyboard focus, disabled/error states and reduced-motion support.
 - Set-entry validation names, marks and focuses the invalid field, and associates its error with `aria-describedby`. The header reports unsuccessful saving instead of showing a previous success as the current status.
+- Rep, side-count, time and reserve hints come from the active session's saved prescription. Prefill new count fields only with previous results inside that range; otherwise leave them empty with the target as a hint. Corrections retain the exact recorded counts, and actual results outside the target range remain valid entries. Hints are never saved as performed results.
 
 ## Media and data truth
 

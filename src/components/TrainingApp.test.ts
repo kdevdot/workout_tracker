@@ -44,6 +44,44 @@ async function begin(wrapper: VueWrapper, date = '2026-11-02') {
 }
 
 describe('working app integration', () => {
+  it('uses current rep-range hints instead of out-of-range history and preserves the actual logs', async () => {
+    let previous = startSession('upperA', '2026-11-02', 'intro');
+    const exerciseId = previous.exercises[0]!.exercise.id;
+    previous = finishSession(
+      recordSet(previous, exerciseId, {
+        index: 1,
+        load: 20,
+        reps: 10,
+        effort: 3,
+        loggedAt: '2026-11-02T10:00:00Z',
+      }),
+    );
+    const database = await openDB(databaseName, 1, {
+      upgrade: (entry) => entry.createObjectStore('records'),
+    });
+    await database.put('records', { ...emptyState(), sessions: [previous] }, 'state');
+    database.close();
+
+    const wrapper = await app();
+    await begin(wrapper, '2026-11-09');
+    expect(wrapper.text()).toContain('2 × 5–8');
+    expect(wrapper.text()).toContain('20 kg × 10');
+    expect(wrapper.get<HTMLInputElement>('.set-fields [name="load"]').element.value).toBe('20');
+    const reps = wrapper.get<HTMLInputElement>('.set-fields [name="reps"]');
+    expect(reps.element.value).toBe('');
+    expect(reps.attributes('placeholder')).toBe('5–8');
+
+    await reps.setValue('10');
+    await wrapper.get('form.set-form').trigger('submit');
+    await vi.waitFor(() => expect(wrapper.get('form.set-form h2').text()).toBe('Record set 2'));
+    expect(wrapper.get<HTMLInputElement>('.set-fields [name="reps"]').element.value).toBe('');
+    await button(wrapper, 'Edit').trigger('click');
+    expect(wrapper.get<HTMLInputElement>('.set-fields [name="reps"]').element.value).toBe('10');
+    const saved = await savedData();
+    expect(saved.sessions[0]).toEqual(previous);
+    expect(saved.sessions[1]!.exercises[0]!.logs[0]!.reps).toBe(10);
+  });
+
   it('connects empty history to the plan and moves keyboard focus into the selected page', async () => {
     const wrapper = mount(TrainingApp, { attachTo: document.body });
     wrappers.push(wrapper);

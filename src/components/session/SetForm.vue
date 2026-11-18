@@ -13,19 +13,25 @@ const props = defineProps<{
   exercise: Exercise;
   index: number;
   initial: SetLog | null;
-  /** Values to start a new set with: the last set logged, so a repeat set is one tap. */
+  /** Previous results; only counts within this exercise's range are repeated in a new set. */
   defaults: SetLog | null;
   busy: boolean;
 }>();
 const emit = defineEmits<{ submit: [log: SetLog]; cancel: [] }>();
 
 const start = props.initial ?? props.defaults;
+function startingCount(value: number | undefined) {
+  if (value === undefined) return '';
+  // Corrections show the recorded result exactly, including above/below-target sets.
+  if (props.initial) return value;
+  return value >= props.exercise.min && value <= props.exercise.max ? value : '';
+}
 type Key = 'load' | 'reps' | 'left' | 'right' | 'effort';
 const values = reactive<Record<Key, string | number>>({
   load: start?.load ?? '',
-  reps: start?.reps ?? '',
-  left: start?.sides?.left ?? start?.reps ?? '',
-  right: start?.sides?.right ?? start?.reps ?? '',
+  reps: startingCount(start?.reps),
+  left: startingCount(start?.sides?.left ?? start?.reps),
+  right: startingCount(start?.sides?.right ?? start?.reps),
   effort: start?.effort ?? '',
 });
 const error = shallowRef('');
@@ -47,7 +53,14 @@ const maxEffort = computed(() => (timed.value ? 120 : 10));
 const fields = computed(() => {
   const unit = props.exercise.unit;
   const unitShort = timed.value ? 's' : unit;
-  const count = { inputmode: 'numeric', min: 1, max: 3600, step: 1 } as const;
+  const { min, max } = props.exercise;
+  const count = {
+    inputmode: 'numeric',
+    min: 1,
+    max: 3600,
+    step: 1,
+    placeholder: min === max ? String(min) : `${min}–${max}`,
+  } as const;
   const list: {
     key: Key;
     label: string;
@@ -55,6 +68,7 @@ const fields = computed(() => {
     min: number;
     max: number;
     step: number | 'any';
+    placeholder: string;
   }[] = [
     ...(weighted.value
       ? [
@@ -65,6 +79,7 @@ const fields = computed(() => {
             min: 0,
             max: 1000,
             step: 'any' as const,
+            placeholder: '—',
           },
         ]
       : []),
@@ -81,6 +96,7 @@ const fields = computed(() => {
       min: 0,
       max: maxEffort.value,
       step: 0.5,
+      placeholder: props.exercise.targetRir,
     },
   ];
   // With four fields, pair load/RIR on the first row and left/right on the next.
@@ -179,7 +195,7 @@ function submit() {
           :aria-invalid="errorKey === item.key || undefined"
           :aria-describedby="errorKey === item.key ? errorId : undefined"
           required
-          placeholder="—"
+          :placeholder="item.placeholder"
           class="set-input h-12 px-1 text-center text-lg font-bold tabular-nums"
         />
       </div>

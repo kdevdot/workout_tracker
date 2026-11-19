@@ -216,7 +216,7 @@ function chooseWorkout(event: Event) {
         @swap="emit('swap', $event)"
       />
 
-      <details class="group bg-card rounded-2xl px-4">
+      <details class="group bg-card surface-edge rounded-2xl px-4">
         <summary class="flex min-h-12 items-center text-sm font-medium">
           Muscle focus
           <ChevronDown class="ml-auto size-4 transition-transform group-open:rotate-180" />

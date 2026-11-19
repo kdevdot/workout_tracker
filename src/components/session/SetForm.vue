@@ -163,7 +163,7 @@ function submit() {
 <template>
   <form
     ref="formElement"
-    class="set-form bg-card flex flex-col gap-4 rounded-xl p-4"
+    class="set-form bg-card surface-edge flex flex-col gap-4 rounded-xl p-4"
     :class="{
       'set-form--three-fields': fields.length === 3,
       'set-form--four-fields': fields.length === 4,

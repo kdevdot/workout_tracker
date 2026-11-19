@@ -44,7 +44,7 @@ function dayLabel(item: ChallengeDay) {
 </script>
 
 <template>
-  <section class="bg-card flex flex-col gap-3 rounded-2xl p-[16px]">
+  <section class="bg-card surface-edge flex flex-col gap-3 rounded-2xl p-[16px]">
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="section-heading" aria-live="polite">{{ monthLabel }}</h2>
       <div class="flex gap-1">

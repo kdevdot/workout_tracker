@@ -56,7 +56,7 @@ const entries = computed(() =>
   <details
     v-for="{ session, progress, status, recordedSets } in entries"
     :key="session.id"
-    class="group bg-card rounded-2xl"
+    class="group bg-card surface-edge rounded-2xl"
   >
     <summary class="flex flex-col gap-3 p-4">
       <div class="flex flex-wrap items-start justify-between gap-3">

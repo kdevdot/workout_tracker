@@ -14,12 +14,13 @@ The accepted design uses dark graphite surfaces, a volt accent and coral highlig
 - Form-control borders use `#626c79`, providing at least 3:1 contrast against the canvas and panel surfaces. Keep decorative dividers quieter. Shared inputs have a 44 px default height, 16 px text and a flat canvas fill.
 - Geist Variable is the UI font. Bricolage Grotesque Variable carries headings and tabular training numbers. Both are self-hosted and OFL-licensed.
 - At the default text size, page headings are 28 px, workout headings 30 px, section headings 18 px, body copy 14–16 px and supporting labels 12 px. Set-entry numbers remain 30 px in 64 px inputs. Use relative type sizes to respect larger text settings. Keep the compact five-item navigation readable at narrow phone widths.
-- Reserve lime emphasis for actions, selection and meaningful progress. Use 12–16 px panel radii, flat fills and subtle dividers. Avoid decorative grain, background glows, watermark letters and repeated entrance animations.
+- Reserve lime emphasis for actions, selection and meaningful progress. Static progress summaries (Plan, History) use thin 4 px segments in a muted lime; full-strength lime stays for actions and the active workout bar. Use 12–16 px panel radii, flat fills, a 6% white hairline edge (`surface-edge`, `--edge`) on panels and subtle dividers. Avoid decorative grain, background glows, watermark letters and repeated entrance animations.
+- Buttons, the hero action and nav items scale down slightly (0.97–0.98) on press for tactile feedback, without shifting layout.
 
 ## Layout and interaction
 
 - Use one fluid, centred frame up to 480 px, with 20 px gutters and safe-area support.
-- Preserve the existing bottom navigation and consistent alignment between tabs. The dock is opaque, with a quiet selected background and no sliding accent pill.
+- Preserve the existing bottom navigation and consistent alignment between tabs. The header and dock are frosted (translucent surface with backdrop blur); the dock floats with a soft shadow, and the selected tab has a faint lime-tinted background, with no sliding accent pill.
 - Use generous touch targets for logging. Keep the selected date, exercise name and load convention clear.
 - During a workout, show the exercise name and compact prescription before the set form. Put previous performance, progression guidance, saved-set corrections, technique and swaps below it. Keep the rest timer in the page immediately after the form so it cannot cover inputs or the record button; retain adjustment, dismissal, persistence and completion states.
 - Put Previous/Next directly after the form and rest timer, before supporting information. Selecting another exercise brings its heading into view and moves focus to the exercise region. Changing tabs moves keyboard focus into the new page; a skip link provides direct access to the main content.

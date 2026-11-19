@@ -127,7 +127,7 @@ async function selectExercise(index: number) {
     >
       Finish workout
     </Button>
-    <div v-if="confirmingFinish" class="bg-card flex flex-col gap-3 rounded-2xl p-4">
+    <div v-if="confirmingFinish" class="bg-card surface-edge flex flex-col gap-3 rounded-2xl p-4">
       <p class="text-sm leading-6">
         {{ progress.done }} of {{ progress.total }} exercises done.
         {{

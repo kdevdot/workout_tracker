@@ -64,7 +64,10 @@ const days = computed(() =>
       </div>
     </div>
 
-    <div class="bg-card grid grid-cols-7 gap-[4px] rounded-xl p-[6px]" aria-label="Week dates">
+    <div
+      class="bg-card surface-edge grid grid-cols-7 gap-[4px] rounded-xl p-[6px]"
+      aria-label="Week dates"
+    >
       <button
         v-for="item in days"
         :key="item.day"

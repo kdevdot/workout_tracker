@@ -6,6 +6,14 @@ import { workouts } from '@/domain/programme';
 import { isExerciseComplete, sessionProgress } from '@/domain/sessions';
 import type { Session, SetLog } from '@/domain/state';
 import { Button } from '@/components/ui/button';
+import {
+  DialogRoot,
+  DialogPortal,
+  DialogOverlay,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from 'reka-ui';
 import RestTimer from '@/components/session/RestTimer.vue';
 import SessionExercise from '@/components/session/SessionExercise.vue';
 import ExerciseProgress from '@/components/session/ExerciseProgress.vue';
@@ -123,21 +131,34 @@ async function selectExercise(index: number) {
       size="lg"
       class="border-primary/40 text-primary rounded-2xl bg-transparent"
       :disabled="busy || !session.exercises.some((item) => item.logs.length)"
-      @click="confirmingFinish = !confirmingFinish"
+      @click="confirmingFinish = true"
     >
       Finish workout
     </Button>
-    <div v-if="confirmingFinish" class="bg-card surface-edge flex flex-col gap-3 rounded-2xl p-4">
-      <p class="text-sm leading-6">
-        {{ progress.done }} of {{ progress.total }} exercises done.
-        {{
-          progress.done < progress.total
-            ? 'This will be recorded as a partial workout, not full completion.'
-            : 'Ready to complete this session?'
-        }}
-      </p>
-      <Button size="lg" :disabled="busy" @click="emit('finish')">Confirm finish</Button>
-      <Button variant="ghost" @click="confirmingFinish = false">Keep training</Button>
-    </div>
   </section>
+
+  <DialogRoot v-model:open="confirmingFinish">
+    <DialogPortal>
+      <DialogOverlay class="fixed inset-0 z-50 bg-black/70 backdrop-blur-[2px]" />
+      <DialogContent
+        class="bg-card surface-edge fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-32px)] max-w-sm -translate-x-1/2 -translate-y-1/2 flex-col gap-3 rounded-2xl p-5 shadow-2xl outline-none"
+      >
+        <DialogTitle class="text-lg font-semibold">Finish this workout?</DialogTitle>
+        <DialogDescription class="text-muted-foreground text-sm leading-6">
+          {{ progress.done }} of {{ progress.total }} exercises done.
+          {{
+            progress.done < progress.total
+              ? 'This will be saved as a partial workout.'
+              : 'Your session will be marked complete.'
+          }}
+        </DialogDescription>
+        <div class="mt-1 grid grid-cols-2 gap-2">
+          <Button variant="outline" size="lg" :disabled="busy" @click="confirmingFinish = false">
+            Keep training
+          </Button>
+          <Button size="lg" :disabled="busy" @click="emit('finish')">Finish workout</Button>
+        </div>
+      </DialogContent>
+    </DialogPortal>
+  </DialogRoot>
 </template>

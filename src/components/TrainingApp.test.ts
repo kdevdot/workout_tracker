@@ -470,7 +470,13 @@ describe('working app integration', () => {
     expect((await savedData()).sessions[0]!.exercises[0]!.logs).toHaveLength(1);
     expect((await savedData()).timer!.endsAt).toBe(deadline);
     await button(wrapper, 'Finish workout').trigger('click');
-    await button(wrapper, 'Confirm finish').trigger('click');
+    // The confirmation is a modal teleported to <body>, outside the wrapper.
+    await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
+    const dialog = document.querySelector<HTMLElement>('[role="dialog"]')!;
+    expect(dialog.textContent).toContain('saved as a partial workout');
+    [...dialog.querySelectorAll('button')]
+      .find((entry) => entry.textContent?.trim() === 'Finish workout')!
+      .click();
     await vi.waitFor(() => expect(wrapper.text()).toContain('Completed · partial'));
     expect((await savedData()).sessions[0]!.status).toBe('completed');
     expect((await savedData()).timer).toBeNull();
